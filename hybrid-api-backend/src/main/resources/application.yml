@@ -1,0 +1,20 @@
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+    com:
+      mycompany: INFO
+
+
+spring:
+    security:
+      user:
+        name: admin
+        password: admin
+    application:
+        name: hybrid-api
+
+
+
+

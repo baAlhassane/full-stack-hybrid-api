@@ -1,0 +1,41 @@
+
+
+a, h1, body, p{
+  box-sizing: border-box;
+}
+a{
+  text-decoration:none;
+  color:var(--text-black-color);
+}
+ul{
+  /*display:flex;*/
+  list-style-type: none;
+  /*background-color: #ADD8E680;*/
+  margin: 0;
+  padding: 0;
+  height: 60px;
+  /*width: 100%;*/
+
+}
+
+li {
+  margin-right: 1rem ; /* Espacement entre les éléments */
+  margin-left: 1rem ;
+}
+
+div{
+  /*display: flex;*/
+}
+
+.ulcontainer{
+  /*width: 600px;*/
+  padding-left: 20px;
+
+}
+
+.container{
+  /*background-color: #ADD8E680;*/
+}
+
+
+
