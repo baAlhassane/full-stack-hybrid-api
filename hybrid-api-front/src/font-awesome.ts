@@ -4,7 +4,7 @@ import {
   faBriefcase, faBullhorn, faChartLine,
   faClipboardCheck, faClipboardList, faDonate, faFileAlt, faFire, faHandHoldingHeart,
   faHandshake, faHeart, faLightbulb, faNewspaper, faPeopleCarry, faRss, faStar,
-  faTasks, faUser, faUserAlt, faUserCircle, faUserTie
+  faTasks, faUser, faUserAlt, faUserCircle, faUserTie, faBars
 } from "@fortawesome/free-solid-svg-icons";
 
 export const fontAwesomeIcons: IconDefinition []= [
@@ -17,5 +17,6 @@ export const fontAwesomeIcons: IconDefinition []= [
   faClipboardCheck, faLightbulb, faBookReader,
   faHandHoldingHeart,
   faDonate, faHeart,
-  faStar
+  faStar,
+  faBars
 ]

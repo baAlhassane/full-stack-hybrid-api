@@ -1,4 +1,14 @@
 package com.alhas.hybrid_api.provider;
 
-public class Provider {
+import com.alhas.hybrid_api.user.User;
+
+import java.util.List;
+
+public class Provider extends User {
+
+    String companieName;
+    CompanieType companieType;
+    TypeOfProvider typeOfProvider;
+    List<User> clients;
+
 }

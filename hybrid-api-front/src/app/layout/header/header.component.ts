@@ -11,7 +11,8 @@ import {
   faHandshake, faHeart, faLightbulb, faNewspaper, faPeopleCarry, faRss,
   faTasks, faUser,
   faUserAlt,
-  faUserTie
+  faUserTie,
+  faBars
 } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
