@@ -2,7 +2,8 @@ package com.alhas.hybrid_api.comment;
 
 public class Comment {
 
-    Integer jobId;
-    String comment;
-    int nots;
+    private Integer jobId;
+    private  String JobName;
+    private String comment;
+    private  int nots;
  }
