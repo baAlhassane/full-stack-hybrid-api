@@ -1,5 +1,4 @@
-package com.alhas.hybrid_api.notification;
-
+package com.alhas.hybrid_api.product;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,10 +13,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification {
+public class ProductPicture {
     @Id
     @GeneratedValue
     private long id;
-
-
 }

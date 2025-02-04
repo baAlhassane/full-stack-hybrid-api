@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.article;
+package com.alhas.hybrid_api.product;
 
 public enum ProductType {
     ELECTROMENAGER,
