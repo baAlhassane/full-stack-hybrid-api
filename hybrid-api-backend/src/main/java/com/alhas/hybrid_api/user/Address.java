@@ -17,11 +17,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Embeddable
 public class Address {
-    private long id;
+    private long address;
     private String street;
     private String city;
     private String state = "France";
-    private String zip;
+    private int zipCode;
     private int streetNumber;
 
 }

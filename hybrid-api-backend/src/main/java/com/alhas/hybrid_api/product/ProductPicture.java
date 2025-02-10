@@ -1,8 +1,7 @@
 package com.alhas.hybrid_api.product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.alhas.hybrid_api.comment.Comment;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +14,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductPicture {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_pictures_seq")
+    @SequenceGenerator(name = "product_picture_seq", sequenceName = "sequence_picture_for_pg")
+    @Column(name = "picture_id")
     private long id;
+    private byte [] file;
+    private String fileContentype;
+    private boolean isCover;
+    @ManyToOne
+    @JoinColumn(name = "picture_product" )
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "picture_comment")
+    private Comment comment;
+
+
 }

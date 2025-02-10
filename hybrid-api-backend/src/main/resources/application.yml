@@ -6,15 +6,20 @@ logging:
     com:
       mycompany: INFO
 
-
 spring:
-    security:
-      user:
-        name: admin
-        password: admin
-    application:
-        name: hybrid-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hybrid_api
+    username: postgres
+    password: draslom3
+    driverClassName: org.postgresql.Driver
 
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+    show-sql: true
 
-
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 

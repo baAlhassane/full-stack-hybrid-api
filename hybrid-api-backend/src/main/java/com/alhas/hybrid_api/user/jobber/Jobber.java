@@ -21,9 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class Jobber extends User {
 
-
     private  String speciality;
-
 
     @Column(name ="rib_url" , nullable =  false)
     private  String ribUrl;
@@ -32,19 +30,17 @@ public class Jobber extends User {
     private OffsetDateTime startDateTime;
     private OffsetDateTime endDateTime;
 
-
     private boolean disponibility;
     @Column(name = "skill")
     @ElementCollection
     @CollectionTable(name = "jobber_skills", joinColumns = @JoinColumn(name = "jobber_id"))
     private  List<String> skills;
 
-    @OneToMany
-    private Set<Notification> notifications;
+
     @OneToMany
     private  List<Comment> comments;
-    @OneToMany
-    private  List<Job> jobs;
+    @ManyToMany(mappedBy = "jobbers")
+    private  Set<Job> jobs;
 
 
 }

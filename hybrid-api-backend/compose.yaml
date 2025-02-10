@@ -1,9 +1,18 @@
 services:
   postgres:
+    container_name: hybrid_api_container
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=hybrid_api'
+      - 'POSTGRES_PASSWORD=draslom3'
+      - 'POSTGRES_USER=postgres'
+      - 'PGDATA=/var/lib/postgresql/data'
+    volumes:
+      - hybrid_api:/var/lib/postgresql/data
     ports:
-      - '5432'
+      - '5432:5432'
+
+volumes:
+  hybrid_api:
+    name: hybrid_api_volume
+
