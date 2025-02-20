@@ -2,7 +2,7 @@ package com.alhas.hybrid_api.user.provider;
 
 import com.alhas.hybrid_api.job.Job;
 import com.alhas.hybrid_api.product.Product;
-import com.alhas.hybrid_api.user.User;
+import com.alhas.hybrid_api.user.user.User;
 
 
 

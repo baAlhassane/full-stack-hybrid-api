@@ -1,6 +1,8 @@
-package com.alhas.hybrid_api.user;
+package com.alhas.hybrid_api.user.user;
 
 import com.alhas.hybrid_api.notification.Notification;
+import com.alhas.hybrid_api.user.Address;
+import com.alhas.hybrid_api.user.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +11,6 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

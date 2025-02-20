@@ -2,8 +2,7 @@ package com.alhas.hybrid_api.user.jobber;
 
 import com.alhas.hybrid_api.comment.Comment;
 import com.alhas.hybrid_api.job.Job;
-import com.alhas.hybrid_api.notification.Notification;
-import com.alhas.hybrid_api.user.User;
+import com.alhas.hybrid_api.user.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
