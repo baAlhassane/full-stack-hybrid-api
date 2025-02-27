@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.user.provider;
+package com.alhas.hybrid_api.users.provider;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.user.provider;
+package com.alhas.hybrid_api.users.provider;
 
 public enum CompanieType {
     Enterprise,

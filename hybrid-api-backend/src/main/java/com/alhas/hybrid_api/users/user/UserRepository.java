@@ -1,8 +1,10 @@
-package com.alhas.hybrid_api.user;
+package com.alhas.hybrid_api.users.user;
 
-import com.alhas.hybrid_api.user.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    Optional<User> findOneByEmail(String email);
 }

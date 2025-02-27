@@ -25,6 +25,15 @@ body{
 
 fa-icon {
   font-size: 1.4rem;
+  color: rgba(0, 0, 0, 0.4); /* Gris clair */
+  opacity: 0.5;
+
+
+  /*color: #bbb;*/
 }
 
-
+/*fa-icon{*/
+/*  margin-left: 10px;*/
+/*  font-size: 3px;*/
+/*  margin-right: 10px;*/
+/*}*/

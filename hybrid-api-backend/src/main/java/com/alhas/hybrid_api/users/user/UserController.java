@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.user.user;
+package com.alhas.hybrid_api.users.user;
 
 
 import jakarta.servlet.ServletException;

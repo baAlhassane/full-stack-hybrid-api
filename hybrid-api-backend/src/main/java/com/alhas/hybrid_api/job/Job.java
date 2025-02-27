@@ -1,7 +1,7 @@
 package com.alhas.hybrid_api.job;
 
-import com.alhas.hybrid_api.user.jobber.Jobber;
-import com.alhas.hybrid_api.user.provider.Provider;
+import com.alhas.hybrid_api.users.jobber.Jobber;
+import com.alhas.hybrid_api.users.provider.Provider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,6 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

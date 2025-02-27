@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.user;
+package com.alhas.hybrid_api.users;
 
 public enum UserNotification {
     PAYMENT,

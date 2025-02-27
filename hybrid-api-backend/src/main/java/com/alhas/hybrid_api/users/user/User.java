@@ -1,15 +1,16 @@
-package com.alhas.hybrid_api.user.user;
+package com.alhas.hybrid_api.users.user;
 
 import com.alhas.hybrid_api.notification.Notification;
-import com.alhas.hybrid_api.user.Address;
-import com.alhas.hybrid_api.user.Role;
+import com.alhas.hybrid_api.users.Address;
+import com.alhas.hybrid_api.users.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -17,11 +18,13 @@ import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@Table(name="hybrid_api_user")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="hybrid_api_user")
+@Builder
 public class User {
 
     @Id
@@ -52,6 +55,24 @@ public class User {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     Set<Role> roles = new HashSet<>();
+
+
+    @CreatedDate
+    @Column(updatable = false,name = "created_date")
+    private Instant createdDate=Instant.now();
+
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate = Instant.now();
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_authority",
+            joinColumns= {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
+    )
+    private Set<Authority> authorities=new HashSet<>();
 
 
 }

@@ -1,12 +1,12 @@
-package com.alhas.hybrid_api.user.provider;
+package com.alhas.hybrid_api.users.provider;
 
 import com.alhas.hybrid_api.job.Job;
 import com.alhas.hybrid_api.product.Product;
-import com.alhas.hybrid_api.user.user.User;
+import com.alhas.hybrid_api.users.user.User;
 
 
 
-import com.alhas.hybrid_api.user.jobber.Jobber;
+import com.alhas.hybrid_api.users.jobber.Jobber;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
