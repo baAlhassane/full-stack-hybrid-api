@@ -15,4 +15,10 @@ export class LoginComponent {
   login() {
     window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
   }
+
+
+  loginHybridApi(){
+    window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
+
+  }
 }

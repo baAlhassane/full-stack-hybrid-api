@@ -39,4 +39,17 @@ export class AuthService {
       console.error('Erreur de déconnexion', error);
     });
   }
+
+  logoutHybridApi(): void {
+    this.http.post(`${this.API_URL}/hybrid-api/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
+      this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
+      setTimeout(() => {
+        window.location.href = '/login'; // Redirige vers la page de login
+      }, 100);
+    }, error => {
+      console.error('Erreur de déconnexion', error);
+    });
+  }
+
+
 }

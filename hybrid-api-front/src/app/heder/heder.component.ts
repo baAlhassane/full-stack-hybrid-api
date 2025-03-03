@@ -11,7 +11,9 @@ import {HttpClientModule} from "@angular/common/http";
   styleUrl: './heder.component.css'
 })
 export class HederAaComponent {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+  }
+
   user: any | null = null;
 
 
@@ -26,4 +28,11 @@ export class HederAaComponent {
   logout(): void {
     this.authService.logout();
   }
+
+  logoutHybridApi(): void {
+    this.authService.logoutHybridApi();
+  }
+
+
 }
+

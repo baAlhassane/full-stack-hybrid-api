@@ -1,10 +1,34 @@
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
-  faArrowUp, faBookReader,
-  faBriefcase, faBullhorn, faChartLine,
-  faClipboardCheck, faClipboardList, faDonate, faFileAlt, faFire, faHandHoldingHeart,
-  faHandshake, faHeart, faLightbulb, faNewspaper, faPeopleCarry, faRss, faStar,
-  faTasks, faUser, faUserAlt, faUserCircle, faUserTie, faBars
+  faArrowUp,
+  faBookReader,
+  faBriefcase,
+  faBullhorn,
+  faChartLine,
+  faClipboardCheck,
+  faClipboardList,
+  faDonate,
+  faFileAlt,
+  faFire,
+  faHandHoldingHeart,
+  faHandshake,
+  faHeart,
+  faLightbulb,
+  faNewspaper,
+  faPeopleCarry,
+  faRss,
+  faStar,
+  faTasks,
+  faUser,
+  faUserAlt,
+  faUserCircle,
+  faUserTie,
+  faBars,
+  faSignInAlt,
+  faKey,
+  faSignOutAlt,
+  faRightFromBracket,
+  faUnlockKeyhole, faLock
 } from "@fortawesome/free-solid-svg-icons";
 
 export const fontAwesomeIcons: IconDefinition []= [
@@ -18,5 +42,11 @@ export const fontAwesomeIcons: IconDefinition []= [
   faHandHoldingHeart,
   faDonate, faHeart,
   faStar,
-  faBars
+  faBars,
+  faSignInAlt,
+  faKey,
+  faSignOutAlt,
+  faRightFromBracket,
+  faUnlockKeyhole,
+  faLock
 ]

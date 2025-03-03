@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,7 @@ public class UserService {
     }
 
 
-    ReadUserDTO getAuthentificationFromExistingUser() {
+    public ReadUserDTO getAuthentificationFromExistingUser() {
         OAuth2User auth2User = (OAuth2User) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -49,7 +50,7 @@ public class UserService {
 
     }
     @Transactional
-    public ReadUserDTO updateUser(User user) {
+    public ReadUserDTO updateUserWithIdp(User user) {
         OAuth2User auth2User = (OAuth2User) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
@@ -88,9 +89,45 @@ public class UserService {
 
         throw new EntityNotFoundException("Utilisateur non trouvé avec l'email: " + user.getEmail());
     }
+  // methode qui sera appeler dans le controller avant de retourner les infos de l'utilisateur existant
+    // pour les mis a jour de son profil.
+    public void syncWithIdp(OAuth2User oAuth2User, boolean forceResync) {
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        User userFrom0Auth2User = SecurityUtils.mapOauth2AttributesToUser(attributes);
+        Optional<User> existingUser = userRepository.findOneByEmail(userFrom0Auth2User.getEmail());
+        if (existingUser.isPresent()) {
+            if (attributes.get(UPDATED_AT_KEY) != null) {
+                Instant lastModifiedDate = existingUser.orElseThrow().getLastModifiedDate();
+                Instant idpModifiedDate;
+                if (attributes.get(UPDATED_AT_KEY) instanceof Instant instant) {
+                    idpModifiedDate = instant;
+                } else {
+                    idpModifiedDate = Instant.ofEpochSecond((Integer) attributes.get(UPDATED_AT_KEY));
+                }
+                if (idpModifiedDate.isAfter(lastModifiedDate) || forceResync) {
+                    updateUser(userFrom0Auth2User);
+                }
+            }
+        } else {
+            userRepository.saveAndFlush(userFrom0Auth2User);
+        }
+    }
 
+    private void updateUser(User user) {
+        Optional<User> userToUpdateOpt= userRepository.findOneByEmail(user.getEmail());
+        if(userToUpdateOpt.isPresent()){
+            User userToUpdate= userToUpdateOpt.get();
+            userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setFirstname(user.getFirstname());
+            userToUpdate.setLastname(user.getLastname());
+            userToUpdate.setImageUrl(user.getImageUrl());
+            userToUpdate.setAuthorities(user.getAuthorities());
+            //UUID uuid= UUID.randomUUID();
+            userToUpdate.setPublicId(user.getPublicId());
+            userRepository.saveAndFlush(userToUpdate);
 
-
+        }
+    }
 
     @Transactional
     public boolean isSyncIdpModifyByUpdatedAt(OAuth2User oAuth2User) {

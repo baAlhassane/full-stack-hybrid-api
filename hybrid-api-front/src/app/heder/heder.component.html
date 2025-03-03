@@ -5,8 +5,11 @@
   <h2>{{ user.name }}</h2>
   <h3>({{ user.email }})</h3>
   <button (click)="logout()">Déconnexion</button>
+  <br>
 
-<ng-template #loginTemplate>
-  <button routerLink="/login">Se connecter</button>
-</ng-template>
+<!--  <button (click)="logoutHybridApi()">Déconnexion</button>-->
+
+  <ng-template #loginTemplate>
+    <button routerLink="/login">Se connecter</button>
+  </ng-template>
 </div>
