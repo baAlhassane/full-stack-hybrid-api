@@ -34,12 +34,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated() // Toute autre requête nécessite une authentification
                 )
                 .oauth2Login(oauth2 -> oauth2
-                       // .loginPage("/oauth2/authorization/auth0") // Redirige vers Auth0 pour le login
-                        .defaultSuccessUrl("http://localhost:4200/", true) // Après login, aller sur Angular
+                      // .loginPage("/oauth2/authorization/auth0") // Redirige vers Auth0 pour le login
+                        .defaultSuccessUrl("http://localhost:4200/signin", true) // Après login, aller sur Angular
                 )
+                //SecurityConfig.java
                 .logout(logout -> logout
                         .logoutUrl("/api/user/logout") // Définir l'URL de déconnexion
-                        .logoutSuccessUrl("http://localhost:4200/login") // Redirige vers Angular après logout
+                        .logoutSuccessUrl("http://localhost:4200") // Redirige vers Angular après logout
                         .deleteCookies("JSESSIONID") // Supprime le cookie de session
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)

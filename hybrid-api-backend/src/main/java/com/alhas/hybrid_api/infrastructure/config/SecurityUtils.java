@@ -42,6 +42,10 @@ public static User mapOauth2AttributesToUser(Map<String, Object> attributes){
         user.setImageUrl((String) attributes.get("picture"));
     }
 
+    if(attributes.get("Authenticated")!=null){
+        user.setAuthenticated((boolean) attributes.get("Authenticated"));
+    }
+
 
     if(attributes.get(CLAIMS_NAMESPACE)!=null){
 

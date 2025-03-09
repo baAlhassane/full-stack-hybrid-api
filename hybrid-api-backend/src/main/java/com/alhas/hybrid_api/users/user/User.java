@@ -38,6 +38,7 @@ public class User {
     private String lastname;
     private String email;
     private String imageUrl;
+    private boolean isAuthenticated=false;
     @OneToMany
     private Set<Notification> notifications;
     private boolean isJobber;

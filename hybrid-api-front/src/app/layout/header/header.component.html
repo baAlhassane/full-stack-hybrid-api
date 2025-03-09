@@ -13,16 +13,16 @@
   <div  class="" >
     <ul class="flex justify-content-start  align-items-center bg-black-alpha-10">
       <li>
-        <a  href="/home">Home</a>
+        <a  routerLink="">Home</a>
 
       </li>
       <li>
-        <a href="/about">About</a>
+        <a routerLink="/about">About</a>
 
 
       </li>
       <li>
-        <a href="/contacts">Contacts</a>
+        <a routerLink="/contact">Contacts</a>
 
       </li>
     </ul>
@@ -32,40 +32,43 @@
   <div class="" >
     <ul class="flex justify-content-between w-full align-items-center">
       <li>
-        <a href="" >  Job Board</a>
+        <a routerLink="" >  Job Board</a>
       </li>
       <li>
-        <a href="" > News</a>
-      </li>
-
-      <li>
-        <a href="">Tendances </a>
+        <a routerLink="" > News</a>
       </li>
 
       <li>
-        <a href="">Videos Games</a>
+        <a routerLink="">Tendances </a>
+      </li>
+
+      <li>
+        <a routerLink="">Videos Games</a>
 
       </li>
 
       <li>
-        <a href="">vulgarisation</a>
+        <a routerLink="">vulgarisation</a>
       </li>
 
       <li>
-        <a href=""> gift</a>
+        <a routerLink=""> gift</a>
       </li>
     </ul>
   </div>
 
 <div>
-  <ul class="flex justify-content-end align-items-center bg-black-alpha-10">
-  <li class="flex flex-column" >
-    <fa-icon [icon]="['fas', 'lock']" class="icon-label"></fa-icon>
-    <a routerLink="/signout">  SignOut</a>
+  <ul class="flex justify-content-end align-items-center ">
+  <li class="flex flex-column p-button p-button-link"    (click)="toggleShowLogging()" *ngIf="isAuthenticated"  [ngStyle] ="{ 'background-color':  getColor() }" >
+    <fa-icon [icon]="['fas', 'lock']" class="icon-label">
+    </fa-icon>
+    SignOut
+<!--    <a routerLink="/signout">  SignOut</a>-->
   </li>
-  <li class="flex flex-column" >
-    <fa-icon [icon]="['fas', 'key']" class="icon-label"> >  Connexion </fa-icon>
-    <a routerLink="/signin">  SignIn</a>
+  <li class="flex flex-column p-button p-button-link "  (click)="toggleShowLogging()" *ngIf="!isAuthenticated" [ngStyle] ="{ 'background-color':  getColor() }"  >
+    <fa-icon [icon]="['fas', 'key']" class="icon-label"> </fa-icon>
+    SignIn
+<!--    <a routerLink="/signin">  SignIn</a>-->
   </li>
     </ul>
 </div>

@@ -1,7 +1,18 @@
 <p>login works!</p>
-
-<div style="background-color: chartreuse; height: 200px;width: 300px; ">
+<div style="background-color: chartreuse; height: 200px;width: 300px; "  *ngIf="!isAuthenticated" >
   <h2> Se connecter avec Auth0</h2>
   <button pButton  (click)="login()">Connexion </button>
 </div>
+<br>
+<div style="background-color: chartreuse; height: 250px;width: 300px; " *ngIf="isAuthenticated && user" >
+  <img [src]="user.picture" alt="Photo de profil" width="40"> <br>
+  <h2>{{ user.name }}</h2>
+  <h3>{{ user.email }}</h3>
+  <h3>{{ user.claim}}</h3>
+  <button (click)="logout()">Déconnexion</button>
+  <br>
+</div>
+
+
+
 
