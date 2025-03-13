@@ -1,13 +1,24 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  input,
+  InputSignal,
+  OnDestroy,
+  OnInit,
+  Output,
+  Signal
+} from '@angular/core';
 import {ButtonDirective} from "primeng/button";
-import {NgIf} from "@angular/common";
+import {CommonModule, NgIf} from "@angular/common";
 import {AuthService} from "../users/authService/auth.service";
 import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
+  imports: [CommonModule,
     ButtonDirective,
     NgIf
   ],
@@ -22,26 +33,21 @@ export class LoginComponent implements OnInit, OnDestroy {
    user: any;
 
   ngOnInit(): void {
-      this.authService.getUserInfo(); // Récupérer l'info utilisateur au chargement
-    this.subscription= this.authService
-      .emitSubject()
-      .subscribe(
-        {
-          next: (value) => this.isAuthenticated = value,
-          error: error => { console.log(error); },
-        }
-      )
-    this.authService.user$.subscribe(user => {
-      this.user = user;
-    });
-
-
+    this.authService.emitUserSubject().subscribe({
+      next: (user)=>{this.user = user;}
+      }
+    )
+      this.authService.authenticatedSuject$.subscribe({
+        next: (value) => {this.isAuthenticated = value;}
+      });
   }
+
+
 
 
   ngOnDestroy(): void {
 
-    if (this.subscription) {
+    if (this.subscription ) {
       this.subscription.unsubscribe(); // Empêche les erreurs de mémoire
     }
     console.log('LoginComponent détruit');
@@ -53,17 +59,23 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   }
   //dans login.html
-  login() {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
-    console.log("Utilisateur connecté ! ");
 
+  login() {
+
+    console.log(" this.isAuthenticated nlogin in AuthService  ", this.isAuthenticated);
+    this.authService.fetchAuth0();
+    // window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
   }
 
   logout(): void {
-   // this.isAuthenticated = false;
-    //this.authService.upDateisAUthenticated(this.isAuthenticated);
-    //this.authService.toggleIsAuthenticated();
+    this.isAuthenticated = false;
     this.authService.logout();
     console.log("Utilisateur déconnecté ! ");
   }
 }
+
+
+function signalInput<T>(arg0: string): Signal<boolean> {
+    throw new Error('Function not implemented.');
+}
+

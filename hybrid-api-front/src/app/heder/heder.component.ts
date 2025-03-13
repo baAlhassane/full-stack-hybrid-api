@@ -16,11 +16,12 @@ export class HederAaComponent {
   user: any | null = null;
 
   ngOnInit(): void {
+    this.authService.getUserInfo(); // Récupérer l'info utilisateur au chargement
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
 
-    this.authService.getUserInfo(); // Récupérer l'info utilisateur au chargement
+
   }
   logout(): void {
     this.authService.logout();

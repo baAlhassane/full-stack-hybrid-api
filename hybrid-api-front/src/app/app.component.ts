@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent  } from "././layout/header/header.component";
 import { HomeComponent } from './home/home.component';
 import  {FooterComponent } from "././layout/footer/footer.component"
 import {ButtonModule} from "primeng/button";
 import {LoginComponent} from "./login/login.component";
+import {AuthService} from "./users/authService/auth.service";
 
 
 
@@ -18,7 +19,10 @@ import {LoginComponent} from "./login/login.component";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  authService=inject(AuthService);
+  ngOnInit(): void {
+  }
   title = 'my-projet';
 
 

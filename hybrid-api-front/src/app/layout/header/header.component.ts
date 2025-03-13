@@ -4,16 +4,7 @@ import {FaIconComponent, FaIconLibrary, FontAwesomeModule} from "@fortawesome/an
 import {faUber} from "@fortawesome/free-brands-svg-icons";
 import {fontAwesomeIcons} from "../../../font-awesome";
 
-// import {
-//   faArrowUp, faBookReader,
-//   faBriefcase, faBullhorn, faChartLine,
-//   faClipboardCheck, faDonate, faFire, faHandHoldingHeart,
-//   faHandshake, faHeart, faLightbulb, faNewspaper, faPeopleCarry, faRss,
-//   faTasks, faUser,
-//   faUserAlt,
-//   faUserTie,
-//   faBars,
-// } from "@fortawesome/free-solid-svg-icons";
+
 import {Router, RouterLink} from "@angular/router";
 
 import {AuthService} from "../../users/authService/auth.service";
@@ -60,28 +51,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 this.initFontAwesome();
-    this.subscription= this.authService
-      .emitSubject()
-      .subscribe(
-        {
-          next: (value) => {
-            this.isAuthenticated = value;
-            // this.color='chartreuse';
-            console.log("Utilisateur connecte dans header.ngOnInit() ! ", this.isAuthenticated );
-            console.log("------------------------------");
-            },
-          error: error => { console.log(error); },
-        }
-      )
-
-
+   // this.authService.getUserInfo(); // Récupérer l'info utilisateur au chargement
     this.authService.emitUserSubject()
       .subscribe(
         {
-          next: (value) => { this.user = value; },
+          next: (value) => {
+            this.user = value;
+          },
           error: error => { console.log(error); },
         }
       )
+    this.authService.authenticatedSuject$.subscribe(isAuth => {
+      console.log(" in Header  - isAuthenticated:", isAuth);
+      this.isAuthenticated = isAuth;
+    });
+
   }
 
 
@@ -90,37 +74,11 @@ this.initFontAwesome();
     this.authService.logoutHybridApi();
   }
 
-  // toggleShowLogging(){
-  //   if( (!this.isAuthenticated && this.user==null) || (this.isAuthenticated && this.user === null)){
-  //     // this.isAuthenticated = false;
-  //     //  this.authService.upDateisAUthenticated(this.isAuthenticated);
-  //     //  this.authService.toggleIsAuthenticated();
-  //     console.log(" isAuthenticated if 1 : ", this.isAuthenticated)
-  //     this.router.navigate(['/signin']);
-  //   }
-  //   else {
-  //     console.log(" isAuthenticated if 2 : ", this.isAuthenticated );
-  //     //this.router.navigate(['/signout']);
-  //     this.isAuthenticated = true;
-  //     this.authService.upDateisAUthenticated(this.isAuthenticated);
-  //     this.authService.toggleIsAuthenticated();
-  //     //window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
-  //    // this.router.navigate(['/signout']);
-  //     this.authService.logout();
-  //   }
- // }
 
 
   toggleShowLogging() {
-    if (!this.isAuthenticated || this.user == null) {
-      console.log("Utilisateur non authentifié dans headerr.toggleShowLogging(), redirection vers /signin  ");
-      this.router.navigate(['/signin']);
-      return;
-    }
+    this.authService.loging();
 
-    console.log("Utilisateur authentifié headerr.toggleShowLogging(), et va etre deconnecté la ligne suiviante ");
-    this.authService.logout();
-    console.log("Utilisateur déconnecté dasn headerr.toggleShowLogging() ! ");
   }
 
 
@@ -135,16 +93,5 @@ this.initFontAwesome();
   }
 
 
-  logout(): void {
-      //this.router.navigate(['/signout']);
-    if(this.isAuthenticated && this.user!=null){
-      this.isAuthenticated = true;
-      this.authService.upDateisAUthenticated(this.isAuthenticated);
-      this.authService.toggleIsAuthenticated();
-      //window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
-      // this.router.navigate(['/signout']);
-      this.authService.logout();
-    }
 
-  }
 }

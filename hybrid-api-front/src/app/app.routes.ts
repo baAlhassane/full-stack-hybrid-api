@@ -7,6 +7,8 @@ import {ProviderComponent} from "./users/provider/provider.component";
 import {SigInComponent} from "./layout/connexion/sig-in/sig-in.component";
 import {SignoutComponent} from "./layout/connexion/signout/signout.component";
 
+import {authGuard} from "./users/authService/authGuard";
+
 export const routes: Routes = [
     {
         path:"", component: HomeComponent
@@ -33,7 +35,9 @@ export const routes: Routes = [
   },
 
   {
-    path:"provider", component: ProviderComponent
+    path:"provider", component: ProviderComponent,
+    canActivate:[authGuard],
+    data: {authorities: ["ROLE_LANDLORD"]}
   },
   {
     path:"login", component: LoginComponent

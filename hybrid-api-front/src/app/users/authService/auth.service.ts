@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {Observable, BehaviorSubject, of, Subject} from 'rxjs';
+import {Observable, BehaviorSubject, of, Subject, filter} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {Router} from "@angular/router";
 
@@ -9,13 +9,18 @@ import {Router} from "@angular/router";
 })
 export class AuthService {
   private userSubject = new BehaviorSubject<any | null>(null);
-  user$ = this.userSubject.asObservable(); // Observable pour écouter les changements
+ // user$ = this.userSubject.asObservable(); // Observable pour écouter les changements
+  user$ = this.userSubject.asObservable().pipe(
+    filter(user => user !== null) // Ne garde que les valeurs valides
+  );
+
   isAuthenticated: boolean = false;
 
   API_URL = '/api';
   user:any;
 
-  private authenticatedSuject : Subject<boolean>=new Subject();
+  //private authenticatedSuject : Subject<boolean>=new Subject();
+  private authenticatedSuject=new BehaviorSubject<boolean>(false) ;
   authenticatedSuject$=this.authenticatedSuject.asObservable();
   private router=inject(Router);
 
@@ -27,8 +32,10 @@ export class AuthService {
         this.user=userData;
         this.userSubject.next(userData); // Met à jour le `BehaviorSubject`
         this.isAuthenticated=true;
-        this.authenticatedSuject.next(this.isAuthenticated);
-        console.log(" user in getUserInfo() :  ", userData)
+        this.authenticatedSuject.next(true);
+        console.log("🔹--------Start ------------------------");
+        console.log(" userData in getUserInfo() :  ", userData)
+        console.log("🔹-------- End  ------------------------");
       }),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 403) {
@@ -68,11 +75,15 @@ export class AuthService {
   }
 
 
- public emitSubject(): Observable<boolean> {
-    return this.authenticatedSuject$;
+ public emitisAutSubject(): Observable<boolean> {
+    // this.getUserInfo();
+    if(this.user){  return this.authenticatedSuject$; }
+    return of(false);
+
  }
 
   public emitUserSubject(): Observable<any> {
+    this.getUserInfo();
     return this.user$;
   }
 
@@ -81,9 +92,9 @@ export class AuthService {
     this.authenticatedSuject.next(this.isAuthenticated);
   }
 
-  public upDateisAUthenticated( b: boolean): void {
+  public upDateisAUthenticated( isAuth: boolean): void {
 
-    this.authenticatedSuject.next(this.isAuthenticated);
+    this.authenticatedSuject.next(isAuth);
 
   }
 
@@ -97,7 +108,47 @@ export class AuthService {
 
     }
 
-    return this.user.some((authority:string)=>authorities.includes(authority));
+
+    return this.user.tests.some((authority:string)=>authorities.includes(authority));
   }
+
+  public loging() {
+    if (!this.isAuthenticated || this.user == null) {
+      console.log("Utilisateur non authentifié dans headerr.toggleShowLogging(), redirection vers /signin  ");
+      this.router.navigate(['/signin']);
+      // this.authenticatedSuject.next(false);
+      return;
+    }
+    console.log("Utilisateur authentifié headerr.toggleShowLogging(), et va etre deconnecté la ligne suiviante ");
+    this.logout();
+    console.log("Utilisateur déconnecté dasn headerr.toggleShowLogging() ! ");
+  }
+
+  public fetchAuth0(){
+
+    // this.authService.authenticatedSuject$.subscribe({
+    //   next: (value) => {this.isAuthenticated = value;}
+    // })
+    console.log(" this.isAuthenticated nlogin  ", this.isAuthenticated);
+    window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
+    console.log("Utilisateur connecté ! ");
+  }
+
+
+  public convertArrayString(tests:string [] | string): string[]  {
+    console.log("test string",tests)
+    if(!Array.isArray(tests)){
+     tests = tests ? [tests]:[];
+
+    }
+    // console.log("test array in authService ",tests);
+    // console.log(" len(test) in authService  ",tests.length);
+    return tests;
+  }
+
+
+
+
+
 
 }

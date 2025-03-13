@@ -46,6 +46,8 @@ public class UserController {
         System.out.println( " principal.getAttributes() = "+  map.get(claim) );
 
         userInfo.put("claim",map.get(claim));
+        String [] test={"test1"} ; //{"test1","test2"};
+        userInfo.put("tests",test);
 
 
         return userInfo;
