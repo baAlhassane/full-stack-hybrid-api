@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.users.user;
+package com.alhas.hybrid_api.users.user.authRessource;
 
 
 import jakarta.persistence.Column;

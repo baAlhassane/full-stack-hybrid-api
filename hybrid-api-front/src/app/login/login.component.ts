@@ -33,13 +33,22 @@ export class LoginComponent implements OnInit, OnDestroy {
    user: any;
 
   ngOnInit(): void {
+     this.authService.getUserInfo();
     this.authService.emitUserSubject().subscribe({
-      next: (user)=>{this.user = user;}
+      next: (user)=>{
+        this.user = user;
+      console.log("user in login ", user);
+      }
+
       }
     )
-      this.authService.authenticatedSuject$.subscribe({
-        next: (value) => {this.isAuthenticated = value;}
-      });
+      // this.authService.authenticatedSuject$.subscribe({
+      //   next: (value) => {this.isAuthenticated = value;}
+      // });
+
+    this.authService.emitisAutSubject().subscribe({
+      next: (value) => {this.isAuthenticated = value;}
+    });
   }
 
 
@@ -61,15 +70,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   //dans login.html
 
   login() {
-
     console.log(" this.isAuthenticated nlogin in AuthService  ", this.isAuthenticated);
     this.authService.fetchAuth0();
+
+
+    // this.authService.emitisAutSubject().subscribe({
+    //   next: (value) => {this.isAuthenticated = value;}
+    // });
     // window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
   }
 
   logout(): void {
-    this.isAuthenticated = false;
-    this.authService.logout();
+    //this.isAuthenticated = false;
+    this.authService.loging();
+
     console.log("Utilisateur déconnecté ! ");
   }
 }

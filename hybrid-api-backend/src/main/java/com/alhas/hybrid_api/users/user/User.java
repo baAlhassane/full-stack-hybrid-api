@@ -3,6 +3,7 @@ package com.alhas.hybrid_api.users.user;
 import com.alhas.hybrid_api.notification.Notification;
 import com.alhas.hybrid_api.users.Address;
 import com.alhas.hybrid_api.users.Role;
+import com.alhas.hybrid_api.users.user.authRessource.Authority;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "password")
 @Builder
 public class User {
 
@@ -38,7 +40,8 @@ public class User {
     private String lastname;
     private String email;
     private String imageUrl;
-    private boolean isAuthenticated=false;
+    @Column(name = "is_authenticated")
+    private boolean isAuthenticated;
     @OneToMany
     private Set<Notification> notifications;
     private boolean isJobber;
@@ -74,6 +77,5 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
     )
     private Set<Authority> authorities=new HashSet<>();
-
 
 }

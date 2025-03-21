@@ -22,6 +22,7 @@ import {AuthService} from "./users/authService/auth.service";
 export class AppComponent implements OnInit {
   authService=inject(AuthService);
   ngOnInit(): void {
+    // this.authService.getUserInfo();
   }
   title = 'my-projet';
 

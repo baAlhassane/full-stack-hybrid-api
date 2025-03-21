@@ -10,5 +10,6 @@ public record ReadUserDTO(
          String lastname,
          String email,
          String imageUrl,
+         boolean isAuthenticated,
          Set<String> authorities
 ) {}

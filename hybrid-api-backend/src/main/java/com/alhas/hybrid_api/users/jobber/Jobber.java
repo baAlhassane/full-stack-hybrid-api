@@ -22,7 +22,7 @@ public class Jobber extends User {
 
     private  String speciality;
 
-    @Column(name ="rib_url" , nullable =  false)
+//    @Column(name ="rib_url" , nullable =  false)
     private  String ribUrl;
 
     private  int suggestionPricePerHours;

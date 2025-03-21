@@ -1,8 +1,10 @@
-package com.alhas.hybrid_api.users.user;
+package com.alhas.hybrid_api.users.user.authRessource;
 
 
 
 import com.alhas.hybrid_api.infrastructure.config.SecurityUtils;
+import com.alhas.hybrid_api.users.user.ReadUserDTO;
+import com.alhas.hybrid_api.users.user.UserException;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.FieldsFilter;
@@ -16,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service

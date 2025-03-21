@@ -1,6 +1,9 @@
 package com.alhas.hybrid_api.users.user;
 
 import com.alhas.hybrid_api.infrastructure.config.SecurityUtils;
+import com.alhas.hybrid_api.users.user.authRessource.Authority;
+import com.alhas.hybrid_api.users.user.authRessource.AuthorityRepository;
+import com.alhas.hybrid_api.users.user.authRessource.AuthorityService;
 import com.alhas.hybrid_api.users.user.mapper.UserMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -9,8 +12,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -18,10 +23,16 @@ public class UserService {
     private final UserRepository userRepository;
    private final UserMapper userMapper;
     private static final String UPDATED_AT_KEY = "updated_at";
+    private final AuthorityRepository authorityRepository;
+    private final AuthorityService authorityService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    Set<Authority> authorities=new HashSet<>();
+
+    public UserService(UserRepository userRepository, UserMapper userMapper, AuthorityRepository authorityRepository, AuthorityService authorityService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.authorityRepository = authorityRepository;
+        this.authorityService = authorityService;
     }
 
 
@@ -81,7 +92,7 @@ public class UserService {
                 userInDb.setLastModifiedDate(user.getLastModifiedDate());
             }
 
-            // 🔹 Enregistrement en base
+            //  Enregistrement en base
             User updatedUser = userRepository.save(userInDb);
 
             return userMapper.mapUserToReadUserDTO(updatedUser);
@@ -94,6 +105,7 @@ public class UserService {
     public void syncWithIdp(OAuth2User oAuth2User, boolean forceResync) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         User userFrom0Auth2User = SecurityUtils.mapOauth2AttributesToUser(attributes);
+        this.authorities.addAll(userFrom0Auth2User.getAuthorities());
         Optional<User> existingUser = userRepository.findOneByEmail(userFrom0Auth2User.getEmail());
         if (existingUser.isPresent()) {
             if (attributes.get(UPDATED_AT_KEY) != null) {
@@ -102,6 +114,8 @@ public class UserService {
                 if (attributes.get(UPDATED_AT_KEY) instanceof Instant instant) {
                     idpModifiedDate = instant;
                 } else {
+                    //Si l'attribut UPDATED_AT_KEY n'est pas un Instant,
+                    // il est probablement une valeur numérique représentant un timestamp UNIX (en secondes depuis l'époque - 1970-01-01 00:00:00 UTC).
                     idpModifiedDate = Instant.ofEpochSecond((Integer) attributes.get(UPDATED_AT_KEY));
                 }
                 if (idpModifiedDate.isAfter(lastModifiedDate) || forceResync) {
@@ -109,6 +123,8 @@ public class UserService {
                 }
             }
         } else {
+
+            authorityService.saveAuthority(this.authorities);
             userRepository.saveAndFlush(userFrom0Auth2User);
         }
     }
@@ -122,9 +138,11 @@ public class UserService {
             userToUpdate.setLastname(user.getLastname());
             userToUpdate.setImageUrl(user.getImageUrl());
             userToUpdate.setAuthorities(user.getAuthorities());
-            //UUID uuid= UUID.randomUUID();
-            userToUpdate.setPublicId(user.getPublicId());
-            userRepository.saveAndFlush(userToUpdate);
+            //System.out.println(" user.isAuthenticated() "+user.isAuthenticated());
+           // userToUpdate.setAuthenticated(user.isAuthenticated());
+//            userToUpdate.setPublicId(user.getPublicId()); // on doit pas l'ajouter car
+            //Car le update est mis les données de OAuth2USer qui n'a pas de publicId.
+             userRepository.saveAndFlush(userToUpdate);
 
         }
     }
@@ -144,6 +162,9 @@ public class UserService {
     }
 
 
-
+    public Set<Authority> getUserRoles() {
+//        System.out.println(" role1  "+ attributes.get(SecurityUtils.CLAIMS_NAMESPACE));
+        return this.authorities;
+    }
     
 }

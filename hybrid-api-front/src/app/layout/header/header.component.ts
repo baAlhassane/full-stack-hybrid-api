@@ -52,19 +52,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
 this.initFontAwesome();
    // this.authService.getUserInfo(); // Récupérer l'info utilisateur au chargement
-    this.authService.emitUserSubject()
-      .subscribe(
-        {
-          next: (value) => {
-            this.user = value;
-          },
-          error: error => { console.log(error); },
+   //  this.authService.emitUserSubject()
+   //    .subscribe(
+   //      {
+   //        next: (value) => {
+   //          this.user = value;
+   //          console.log("this.user in header  : ",this.user);
+   //        },
+   //        error: error => { console.log(error); },
+   //      }
+   //    );
+    // this.authService.authenticatedSuject$.subscribe(isAuth => {
+    //   console.log(" in Header  - isAuthenticated:", isAuth);
+    //   this.isAuthenticated = isAuth;
+    // });
+
+    this.authService.emitisAutSubject()
+      .subscribe({
+        next: (value) => {
+          this.isAuthenticated = value;
+          console.log("this.isAuthenticated in headerrr : ",this.isAuthenticated);
+
         }
-      )
-    this.authService.authenticatedSuject$.subscribe(isAuth => {
-      console.log(" in Header  - isAuthenticated:", isAuth);
-      this.isAuthenticated = isAuth;
-    });
+      });
 
   }
 
