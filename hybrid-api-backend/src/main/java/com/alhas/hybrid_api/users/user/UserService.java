@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -166,5 +167,7 @@ public class UserService {
 //        System.out.println(" role1  "+ attributes.get(SecurityUtils.CLAIMS_NAMESPACE));
         return this.authorities;
     }
-    
+
+
+
 }

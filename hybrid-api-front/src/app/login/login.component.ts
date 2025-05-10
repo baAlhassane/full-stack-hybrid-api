@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   Component,
   EventEmitter,
   inject,
@@ -7,20 +8,31 @@ import {
   InputSignal,
   OnDestroy,
   OnInit,
-  Output,
-  Signal
+  Output, signal,
+  Signal, ViewChild, WritableSignal
 } from '@angular/core';
 import {ButtonDirective} from "primeng/button";
 import {CommonModule, NgIf} from "@angular/common";
 import {AuthService} from "../users/authService/auth.service";
 import {Subscription} from "rxjs";
 
+import {User} from "../users/models/users";
+import {FormsModule, NgForm} from "@angular/forms";
+import {ChipsModule} from "primeng/chips";
+import {FormLoginComponent} from "./form-login/form-login.component";
+import {RegistrationComponent} from "./registration/registration.component";
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule,
     ButtonDirective,
-    NgIf
+    NgIf,
+    FormsModule,
+    ChipsModule,
+    FormLoginComponent,
+    RegistrationComponent
+
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -28,9 +40,18 @@ import {Subscription} from "rxjs";
 export class LoginComponent implements OnInit, OnDestroy {
 
   authService=inject(AuthService);
-  isAuthenticated: boolean=false;
+   isAuthenticated=signal(false) ;
+  //isAuthenticated:boolean=false;
   private subscription: Subscription= new Subscription();
-   user: any;
+  user: User | undefined;
+
+
+
+
+
+
+  @ViewChild('loginForm')
+  loginForm: NgForm | undefined;
 
   ngOnInit(): void {
      this.authService.getUserInfo();
@@ -42,12 +63,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
       }
     )
-      // this.authService.authenticatedSuject$.subscribe({
-      //   next: (value) => {this.isAuthenticated = value;}
-      // });
 
     this.authService.emitisAutSubject().subscribe({
-      next: (value) => {this.isAuthenticated = value;}
+    //  next: (value) => {this.isAuthenticated=value}
+      next: (value) => {this.isAuthenticated.set(value)}
     });
   }
 
@@ -70,15 +89,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   //dans login.html
 
   login() {
-    console.log(" this.isAuthenticated nlogin in AuthService  ", this.isAuthenticated);
+    console.log(" this.isAuthenticated login in AuthService  ", this.isAuthenticated);
     this.authService.fetchAuth0();
-
-
-    // this.authService.emitisAutSubject().subscribe({
-    //   next: (value) => {this.isAuthenticated = value;}
-    // });
     // window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
   }
+
 
   logout(): void {
     //this.isAuthenticated = false;
@@ -86,10 +101,22 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     console.log("Utilisateur déconnecté ! ");
   }
+
+  onSubmitForm() {
+    // console.log( form )
+    if(this.loginForm?.valid){
+      console.log(this.loginForm.value);
+    }
+  }
+
+
+
+  onRegister() {
+
+  }
 }
 
 
-function signalInput<T>(arg0: string): Signal<boolean> {
-    throw new Error('Function not implemented.');
-}
+
+
 

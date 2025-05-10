@@ -16,16 +16,15 @@ public class UserMapper {
 
     public ReadUserDTO mapUserToReadUserDTO(User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            user.setAuthenticated(authentication.isAuthenticated());
-        }
+        boolean isAuthenticated = authentication.isAuthenticated();
         return  ReadUserDTO.builder()
               .firstname(user.getFirstname())
               .lastname(user.getLastname())
               .email(user.getEmail())
               .imageUrl(user.getImageUrl())
-              .isAuthenticated(user.isAuthenticated())
-//              .authorities(user.getAuthorities().)
+              .isAuthenticated(isAuthenticated)
+                .userType(user.getUserType())
+              .authorities(SecurityUtils.getAuthorities(user.getAuthorities()))
               .build();
     }
 

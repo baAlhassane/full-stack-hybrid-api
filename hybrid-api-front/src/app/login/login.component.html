@@ -1,24 +1,28 @@
 <p>login works!</p>
-<div style="background-color: chartreuse; height: 200px;width: 300px; "  *ngIf="!isAuthenticated" >
+ <div class="flex justify-content-start">
+<div
+  *ngIf="!isAuthenticated()"
+  style="background-color: chartreuse; height: 200px;width: 300px; padding-left:10px  ;margin-right: 20px;"   >
   <h2> Se connecter avec Auth0</h2>
   <button pButton  (click)="login()">Connexion </button>
 </div>
 <br>
-<div style="background-color: chartreuse; height: 250px;width: 300px; " *ngIf="isAuthenticated" >
-  <img [src]="user?.picture" alt="Photo de profil" width="40"> <br>
-  <h2>{{ user?.name }}</h2>
-  <h3>{{ user?.email }}</h3>
-<!--  <h3>{{ user?.claim}}</h3>-->
-<!--  <h3>{{ user?.test}}</h3>-->
+<!--<div style="background-color: chartreuse; height: 250px;width: 300px; " [hidden]="!isAuthenticated" >-->
 
+<div style="background-color: chartreuse; height: 250px;width: 300px;margin-left: 5px " *ngIf="isAuthenticated()" >
+  <img [src]="user?.imageUrl" alt="Photo de profil" width="40"> <br>
+  <h2>{{ user?.firstname }} {{ user?.lastname }}</h2>
+  <h3>{{ user?.email }}</h3>
   <button (click)="
   logout()">Déconnexion</button>
   <br>
 </div>
 
-<!--<h3 *ngIf="user?.test">Test:</h3>-->
-<!--<ul>-->
-<!--  <li *ngFor="let item of user?.test">{{ item }}</li>-->
-<!--</ul>-->
+   <app-form-login [isAuthenticated]="isAuthenticated()"></app-form-login>
+   <app-registration [isAuthenticated]="isAuthenticated()"></app-registration>
+
+
+ </div>
+
 
 

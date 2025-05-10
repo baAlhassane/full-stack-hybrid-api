@@ -1,7 +1,5 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {FaIconComponent, FaIconLibrary, FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-
-import {faUber} from "@fortawesome/free-brands-svg-icons";
+import { FaIconLibrary, FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {fontAwesomeIcons} from "../../../font-awesome";
 
 
@@ -48,25 +46,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.faIconLibrary.addIcons(...fontAwesomeIcons)
   }
 
-
   ngOnInit() {
 this.initFontAwesome();
-   // this.authService.getUserInfo(); // Récupérer l'info utilisateur au chargement
-   //  this.authService.emitUserSubject()
-   //    .subscribe(
-   //      {
-   //        next: (value) => {
-   //          this.user = value;
-   //          console.log("this.user in header  : ",this.user);
-   //        },
-   //        error: error => { console.log(error); },
-   //      }
-   //    );
-    // this.authService.authenticatedSuject$.subscribe(isAuth => {
-    //   console.log(" in Header  - isAuthenticated:", isAuth);
-    //   this.isAuthenticated = isAuth;
-    // });
-
     this.authService.emitisAutSubject()
       .subscribe({
         next: (value) => {
@@ -75,10 +56,7 @@ this.initFontAwesome();
 
         }
       });
-
   }
-
-
 
   logoutHybridApi(): void {
     this.authService.logoutHybridApi();
@@ -88,13 +66,9 @@ this.initFontAwesome();
 
   toggleShowLogging() {
     this.authService.loging();
-
   }
 
-
-
   getColor() {
-    // console.log(this.isAuthenticated, this.color);
     return this.isAuthenticated ? 'red': 'chartreuse' ;
   }
 

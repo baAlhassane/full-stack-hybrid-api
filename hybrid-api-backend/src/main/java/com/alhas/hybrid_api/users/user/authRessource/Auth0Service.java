@@ -33,10 +33,11 @@ public class Auth0Service {
     private long tokenExpirationTime = 0;
 
     public Auth0Service(
-            @Value("${auth0.client-id}") String clientId,
-            @Value("${auth0.oauth2.client-id}") String clientSecret,
+            @Value("${auth0.oauth2.client-id}") String clientId,
+            @Value("${auth0.oauth2.client-secret}") String clientSecret,
             @Value("${auth0.oauth2.issuer}")  String domain,
-            @Value("${application.auth0.role-landlord-id}") String roleLandlordId) {
+            @Value("${application.auth0.role-landlord-id}") String roleLandlordId)
+    {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.domain = domain;

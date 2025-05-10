@@ -17,7 +17,6 @@ public class AuthorityService {
         authorities.stream().forEach(authority -> {
             authorityRepository.save(authority);
         });
-
     }
 }
 

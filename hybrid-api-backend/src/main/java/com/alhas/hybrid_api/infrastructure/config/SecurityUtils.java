@@ -115,22 +115,13 @@ public class SecurityUtils {
         return Instant.EPOCH; // Valeur par défaut si `updated_at` est absent ou mal formé
     }
 
-/*/
-**
-User Attributes: {
-    sub=google-oauth2|111350909395437156056,
-    email_verified=true,
-    https://alhas.com/roles=[ROLE_LANDLORD],
-    iss=https://dev-lbu4c820m2nza8vh.us.auth0.com/,
-    given_name=Alhassane,
-    nickname=alhassanebai36,
-    name=Alhassane BA,
-    family_name=BA,
-    email=alhassanebai36@gmail.com
-}
- */
 
-
+    public static Set<String> getAuthorities(Set<Authority> authorities) {
+//        System.out.println(" role1  "+ attributes.get(SecurityUtils.CLAIMS_NAMESPACE));
+        return authorities.stream()
+                .map(authority -> authority.getName())
+                .collect(Collectors.toSet());
+    }
 
 
 }

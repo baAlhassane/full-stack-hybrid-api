@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../users/authService/auth.service";
 import {CommonModule} from "@angular/common";
 import {HttpClientModule} from "@angular/common/http";
+import {User} from "../users/models/users";
 
 @Component({
   selector: 'app-heder',
@@ -13,11 +14,11 @@ import {HttpClientModule} from "@angular/common/http";
 export class HederAaComponent {
   constructor(private authService: AuthService) {
   }
-  user: any | null = null;
+  user: User | null = null;
 
   ngOnInit(): void {
     this.authService.getUserInfo(); // Récupérer l'info utilisateur au chargement
-    this.authService.user$.subscribe(user => {
+    this.authService.emitUserSubject().subscribe(user => {
       this.user = user;
     });
 

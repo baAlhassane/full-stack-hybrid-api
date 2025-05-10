@@ -7,7 +7,7 @@ import {LoginComponent} from "../../../login/login.component";
   standalone: true,
   imports: [
     HederAaComponent,
-    LoginComponent
+
   ],
   templateUrl: './signout.component.html',
   styleUrl: './signout.component.css'

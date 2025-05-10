@@ -4,6 +4,7 @@ import com.alhas.hybrid_api.notification.Notification;
 import com.alhas.hybrid_api.users.Address;
 import com.alhas.hybrid_api.users.Role;
 import com.alhas.hybrid_api.users.user.authRessource.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -40,8 +41,10 @@ public class User {
     private String lastname;
     private String email;
     private String imageUrl;
-    @Column(name = "is_authenticated")
-    private boolean isAuthenticated;
+    @JsonIgnore
+    private String password;
+    @Column(name = "user_type", insertable = false, updatable = false)
+    private String userType;
     @OneToMany
     private Set<Notification> notifications;
     private boolean isJobber;
