@@ -28,8 +28,8 @@ spring:
       client:
         registration:
           auth0:
-            client-id: ${AUTH0_CLIENT_ID} #VWfz84xd6cDGD3u6g7loNHb4ykuCnu9a #${AUTH0_CLIENT_ID}
-            client-secret: ${AUTH0_CLIENT_SECRET} #f_a2FEN3JuNO7pCImmWHUSBE2suLOQOwMPb9HKDaDLHyNsfyIC9zMZyquM3OpA3t #${AUTH0_CLIENT_SECRET}
+            client-id: ${AUTH0_CLIENT_ID}
+            client-secret: ${AUTH0_CLIENT_SECRET}
             scope:
               - openid
               - profile
@@ -48,8 +48,8 @@ spring:
 auth0:
   oauth2: 
     issuer: https://dev-lbu4c820m2nza8vh.us.auth0.com/
-    client-id: ${AUTH0_CLIENT_ID} #VWfz84xd6cDGD3u6g7loNHb4ykuCnu9a #
-    client-secret: ${AUTH0_CLIENT_SECRET} #f_a2FEN3JuNO7pCImmWHUSBE2suLOQOwMPb9HKDaDLHyNsfyIC9zMZyquM3OpA3t #
+    client-id: ${AUTH0_CLIENT_ID}
+    client-secret: ${AUTH0_CLIENT_SECRET}
     redirect-uri: "{baseUrl}/login/oauth2/code/auth0" #http://localhost:8080/login/oauth2/code/auth0
   #    redirect-uri: "{baseUrl}/login/oauth2/code/auth0"
   #rol_bMjiQLmAN3LUSbqi
