@@ -1,8 +1,9 @@
 
-<div style="margin-left: 20px">
+<div style="margin-left: 20px"
+     *ngIf="!isAuthenticated()">
 <form
-  *ngIf="!isAuthenticated()"
-  #loginForm="ngForm" (ngSubmit)="onRegister()"
+
+  #loginForm="ngForm" (ngSubmit)="onRegister(loginForm)"
   class="flex flex-column justify-content-around align-items-center"
   style="background-color: chartreuse;height: 200px;width: 300px "
 >
@@ -10,7 +11,7 @@
     <label style="margin-right: 10px"> Firsname</label>
     <input type="text" name="firstname" id="firstname"
            placeholder="firstname" pInputText
-           #firstnameInput="ngModel" requered
+           #firstnameInput="ngModel" required
            [ngModel]="firstname()"
            (ngModelChange)="firstname.set($event)"
     >
@@ -27,11 +28,11 @@
     >
   </div>
 
-  <div  class="flex justify-content-center align-items-center" #emailInput pInputText required>
+  <div  class="flex justify-content-center align-items-center"  pInputText required>
     <label for="email" style="margin-right: 10px"> Email</label>
-    <input type="text" name="email" id="email" placeholder="Email"
+    <input type="text" name="email" id="email" placeholder="Email" required
            class="p-inputtext p-component p-element ng-untouched ng-pristine ng-invalid"
-           autocomplete="username"
+           autocomplete="email"
            [ngModel]="email()"
            (ngModelChange)="email.set($event)"
     >
@@ -39,18 +40,47 @@
 
   <div  class="flex justify-content-center align-items-center" #emailInput pInputText required>
     <label for="password" style="margin-right: 10px"> password</label>
-    <input type="password" name="email" id="password" placeholder="password"
-           autocomplete="new-password"
-           autocomplete="current-password"
+    <input type="password" name="password" id="password" placeholder="password"
+           autocomplete="new-password" required
+           #passwordInput="ngModel"
+           minlength="8"
            class="p-inputtext p-component p-element ng-untouched ng-pristine ng-invalid"
            [ngModel]="password()"
            (ngModelChange)="password.set($event)"
     >
   </div>
-  <button type="submit" [disabled]="''">Registration</button>
+  <div class="flex justify-content-center align-items-center" pInputText>
+    <label for="role" style="margin-right: 20px;">Choisir un rôle :</label>
+    <select id="role" style="width: 100px;" name="role" id="role" required
+            [ngModel]="role()"
+            (ngModelChange)="role.set($event)">
+      <option value="USER">User</option>
+      <option value="JOBBER">Jobber</option>
+      <option value="PROVIDER">Provider</option>
+    </select>
+  </div>
+
+  <button type="submit" [disabled]="!loginForm.valid">Registration</button>
 </form>
+  <div *ngIf="validationErrors['password']">
+    {{ validationErrors['password'] }}
+  </div>
+
+  <div *ngIf="passwordInput.errors?.['minlength'] && passwordInput.touched"
+       class="error-message" style="color: red; font-size: 0.9rem;">
+    Le mot de passe doit contenir au moins 8 caractères.
+  </div>
+  <div *ngIf="this.validationErrors['email']"
+       class="error-message" style="color: red; font-size: 0.9rem;">
+    L'email est deja utilisé ! choisissez un autre email !
+  </div>
+<!--  <div *ngIf="emailAlreadyUsed" style="color: red; font-size: 0.9rem;">-->
+<!--    Cet email est déjà utilisé. Veuillez en choisir un autre.-->
+<!--  </div>-->
 </div>
-<h1> {{ firstname()}} </h1>
-<h1> {{ lastname()}} </h1>
-<h1> {{ email()}} </h1>
-<h1> {{ password()}} </h1>
+
+<!--{{ this.validationErrors['email']}}-->
+<!--<h1> {{ firstname()}} </h1>-->
+<!--<h1> {{ lastname()}} </h1>-->
+<!--<h1> {{ email()}} </h1>-->
+<!--<h1> {{ password()}} </h1>-->

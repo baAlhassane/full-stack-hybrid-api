@@ -11,11 +11,13 @@ import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -28,7 +30,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString(exclude = "password")
 @Builder
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hybrid_api_user_seq_for_hib")
@@ -39,6 +41,7 @@ public class User {
     private UUID publicId;
     private String firstname;
     private String lastname;
+    @Column(unique = true)
     private String email;
     private String imageUrl;
     @JsonIgnore
@@ -58,12 +61,6 @@ public class User {
     private Address address;
     private String phoneNumber;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    Set<Role> roles = new HashSet<>();
-
-
     @CreatedDate
     @Column(updatable = false,name = "created_date")
     private Instant createdDate=Instant.now();
@@ -80,5 +77,9 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
     )
     private Set<Authority> authorities=new HashSet<>();
+
+    @Column(name="password_set" ,nullable = false)
+    private boolean passwordSet = false;
+
 
 }

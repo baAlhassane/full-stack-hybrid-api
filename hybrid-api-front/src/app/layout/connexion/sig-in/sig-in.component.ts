@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit, signal} from '@angular/core';
-import {HederAaComponent} from "../../../heder/heder.component";
 import {LoginComponent} from "../../../login/login.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {RouterLink} from "@angular/router";
@@ -13,7 +12,6 @@ import {authGuard} from "../../../users/authService/authGuard";
   selector: 'app-sig-in',
   standalone: true,
   imports: [CommonModule,
-    HederAaComponent,
     LoginComponent,
     FaIconComponent,
     RouterLink,

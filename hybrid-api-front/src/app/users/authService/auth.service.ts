@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Observable, BehaviorSubject, of, Subject, filter, audit, throwError} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {Router} from "@angular/router";
-import {FormLogin, User} from "../models/users";
+import {FormLogin, FormRegister, RegistrationResponse, User} from "../models/users";
 
 @Injectable({
   providedIn: 'root'
@@ -11,51 +11,84 @@ import {FormLogin, User} from "../models/users";
 export class AuthService {
 
   private userSubject = new BehaviorSubject<any | null>(null);
- private user$ = this.userSubject.asObservable().pipe(
+ public user$ = this.userSubject.asObservable().pipe(
     filter(user => user !== null) // Ne garde que les valeurs valides
   );
 
-  private authenticatedSuject=new BehaviorSubject<boolean>(false) ;
-  private authenticatedSuject$=this.authenticatedSuject.asObservable();
+  private isAuthenticated=new BehaviorSubject<boolean>(false) ;
+  isAuthenticated$=this.isAuthenticated.asObservable();
 
-
-  isAuthenticated: boolean = false;
 
   API_URL = '/api';
   H_API_URL = "/api/hybrid-api";
   user:any;
 
 
+
   private router=inject(Router);
+
+
+  validationErrors: { [key: string]: string } = {};
+  private validationErrorsSubject=new BehaviorSubject<any>(this.validationErrors) ;
+  validationErrorsObs=this.validationErrorsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getUserInfo(): void {
-    this.http.get<User>(`${this.H_API_URL}/auth/get-authenticated-user-auth0`).pipe(
+// MODIFIÉ : getUserInfo() ne retourne PLUS un Observable.
+  // L'abonnement est géré en interne.
+  getUserInfo(): void { // Le type de retour est 'void'
+    const token = this.getToken();
+    console.log("getUserInfo() called.");
+    if (!token) {
+      console.warn("Token is null in getUserInfo(). Cannot fetch user info.");
+      this.userSubject.next(null);
+     // this.authenticatedSuject.next(false);
+      return; // Retourne simplement, car il n'y a pas d'Observable à retourner
+    }
+    console.log("tocken ", token);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    this.http.get<User>(`${this.H_API_URL}/auth/get-authenticated-user-auth0`, { headers: headers }).pipe(
       tap(userData => {
-        this.user=userData;
-        this.userSubject.next(userData); // Met à jour le `BehaviorSubject`
-        this.isAuthenticated=true;
-        this.authenticatedSuject.next(true);
+        this.userSubject.next(userData);
+        this.isAuthenticated.next(true);
         console.log("🔹--------Start ------------------------");
-        console.log(" userData in getUserInfo() :  ", userData)
+        console.log(" userData in getUserInfo() : ", userData);
         console.log("🔹-------- End  ------------------------");
       }),
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 403) {
-          window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
+        console.error("❌ [AuthService] Erreur lors de la récupération de l'utilisateur :", error);
+        if (error.status === 401 || error.status === 403) {
+          console.warn("Unauthorized or Forbidden access. Clearing token.");
+          this.removeToken(); // Supprime le token invalide
+          this.router.navigate(['/login']); // Redirige vers la page de login
         }
-        this.userSubject.next(null); // Met à jour avec `null` si non authentifié
-        return of(null);
+        this.userSubject.next(null);
+        this.isAuthenticated.next(false);
+        return of(null); // Retourne un Observable de null pour que le pipe continue sans erreur pour le subscribe interne
       })
-    ).subscribe();
+    ).subscribe({
+      next: (user) => {
+        console.log("✅ [AuthService] Utilisateur récupéré avec succès (abonnement interne) :", user);
+        // Ici, vous pourriez déclencher une action ou une redirection si nécessaire,
+        // mais le CallbackComponent est généralement responsable de la redirection finale.
+      },
+      error: (err) => {
+        console.error("❌ [AuthService] Erreur critique dans l'abonnement interne de getUserInfo:", err);
+      },
+      complete: () => {
+        console.log("ℹ️ [AuthService] getUserInfo terminé (abonnement interne).");
+      }
+    });
   }
 
   //auth.service.ts
   logout(): void {
    this.http.post(`${this.H_API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
       this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
-      this.authenticatedSuject.next(false);
+      this.isAuthenticated.next(false);
       setTimeout(() => {
         this.router.navigate(['/signin']); // Redirection propre
       }, 100);
@@ -64,11 +97,8 @@ export class AuthService {
     });
   }
 
-
-
-
  public emitisAutSubject(): Observable<boolean> {
-   return this.authenticatedSuject$;
+   return this.isAuthenticated$;
   }
   public emitUserSubject(): Observable<any> {
     return this.user$;
@@ -86,7 +116,7 @@ export class AuthService {
   }
 
   public loging() {
-    if (!this.isAuthenticated || this.user == null) {
+    if (!this.isAuthenticated) {
       console.log("Utilisateur non authentifié dans headerr.toggleShowLogging(), redirection vers /signin  ");
        this.router.navigate(['/signin']);
        // this.authenticatedSuject.next(false);
@@ -97,16 +127,84 @@ export class AuthService {
     console.log("Utilisateur déconnecté dasn headerr.toggleShowLogging() ! ");
   }
 
+  loginForm(email: string, password: string): void {
+    this.http.post<User>(`${this.H_API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
+      next: response => {
+        this.userSubject.next(response);
+        this.isAuthenticated.next(true);
+        console.log("Login success", response);
+        //console.log("user ", response);
+        //this.router.navigate(['/userinfo']);
+      },
+      error: err => {
+        if(err.status === 401){
+        }
+        console.error("Login failed", err);
+      }
+    });
+  }
+
+
+  registerForm(email: string, password: string): Observable<any> {
+
+    return this.http.post(`${this.H_API_URL}/auth/registration`, { email, password}, { withCredentials: true });
+
+  }
+
+  registrationResponse: RegistrationResponse = {
+    success: false,
+    message:"",
+    fullName:"",
+  }
+
+  private registrationResponseObs= new BehaviorSubject<RegistrationResponse>(this.registrationResponse);
+   private registrationResponse$ = this.registrationResponseObs.asObservable();
+
+  postRegistrationForm(formregister: FormRegister ) {
+     this.http.post<RegistrationResponse>(`${this.H_API_URL}/auth/register`,formregister, { withCredentials: true }).subscribe(
+      {
+        next: (form) => {
+          //this.emailAlreadyUsed = false;
+          this.registrationResponse=form;
+           this.registrationResponseObs.next(form);
+
+           this.router.navigate(['/successregestration']);
+
+          console.log("form registration ", form);
+        },
+        error: error => {
+          if (error.status === 409 ||  (typeof error.error === 'string' && error.error.includes('Email is already taken'))) {
+            this.validationErrors = { email: error.error };
+           // this.validationErrors = error
+            // console.log(error);
+            this.validationErrorsSubject.next(this.validationErrors);
+             console.log("test ", this.validationErrors['email'] );
+            //this.emailAlreadyUsed = true;
+          }
+        }
+      });
+    //console.log('Form submitted:', this.formLogin);;
+  }
+
+getvalidationErrorsObs():Observable<any> {
+    return this.validationErrorsObs;
+}
+
+  getRegistrationResponse(): Observable<RegistrationResponse> {
+    return this.registrationResponse$;
+  }
+
 
   public fetchAuth0(){
     console.log(" this.isAuthenticated nlogin  ", this.isAuthenticated);
     window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
     console.log("Utilisateur connecté ! ");
+   // this.getUserInfo();
   }
 
 
   public upDateisAUthenticated( isAuth: boolean): void {
-    this.authenticatedSuject.next(isAuth);
+    this.isAuthenticated.next(isAuth);
   }
 
 
@@ -120,18 +218,16 @@ export class AuthService {
     return tests;
   }
 
-
-
   public toggleIsAuthenticated():void{
-    this.isAuthenticated = !this.isAuthenticated;
-    this.authenticatedSuject.next(this.isAuthenticated);
+     //this.isAuthenticated = !this.isAuthenticated;
+    this.isAuthenticated.next(!this.isAuthenticated.value);
   }
 
   logoutHybridApi(): void {
     this.http.post(`${this.API_URL}/hybrid-api/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
       this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
       setTimeout(() => {
-        this.authenticatedSuject.next(true);
+        this.isAuthenticated.next(true);
         window.location.href = '/login'; // Redirige vers la page de login
 
       }, 100);
@@ -141,35 +237,67 @@ export class AuthService {
   }
 
 
-  //"/get-authenticated-user-auth0"
 
-  // getLoginForm( formLogin: FormLogin,  ): Observable<FormLogin> {
-  //   return this.http.post<FormLogin>(`${this.H_API_URL}/auth/get-authenticated-user-login`,formLogin);
-  // }
 
-  getRegistrationForm( formLogin: FormLogin ): Observable<FormLogin> {
-    return this.http.post<FormLogin>(`${this.H_API_URL}/auth/get-authenticated-user-login`,formLogin);
+
+  setPassword(email: string, password: string): Observable<void> {
+    return this.http.post<void>(`${this.H_API_URL}/auth/set-password`, {
+      email,
+      password
+    });
   }
 
-  getLoginForm(formLogin: FormLogin): Observable<FormLogin> {
-    return this.http.post<FormLogin>(`${this.H_API_URL}/auth/get-authenticated-user-login`, formLogin).pipe(
-      catchError((error) => {
-        console.error('Erreur lors de l\'authentification : ', error);  // Log l'erreur complète dans la console
-        if (error.status === 401) {
-          console.error('Identifiants incorrects', error);
-          return throwError('Identifiants incorrects');
-        } else if (error.status === 0) {
-          console.error('Erreur réseau ou CORS', error);
-          return throwError('Erreur réseau ou CORS');
-        } else if (error.status === 500) {
-          console.error('Erreur interne du serveur', error);
-          return throwError('Erreur interne du serveur');
-        } else {
-          console.error('Erreur inconnue', error);
-          return throwError('Erreur inconnue');
-        }
-      })
-    );
+
+  //
+  // private tokenKey = 'auth_token';
+  //
+  // public setToken(token: string): void {
+  //   localStorage.setItem(this.tokenKey, token);
+  // }
+  //
+  // public getToken(): string | null {
+  //   return localStorage.getItem(this.tokenKey);
+  // }
+  //
+  // public clearToken(): void {
+  //   localStorage.removeItem(this.tokenKey);
+  // }
+  // // Méthode pour supprimer le token (lors de la déconnexion)
+  // removeToken(): void {
+  //   localStorage.removeItem('jwt_token');
+  //   this.userSubject.next(null);
+  //   this.isAuthenticated.next(false);
+  // }
+
+  private tokenKey = 'auth_token';
+
+  public setToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  public getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  public clearToken(): void {
+    localStorage.removeItem(this.tokenKey);
+  }
+
+// méthode de déconnexion correcte
+  removeToken(): void {
+    localStorage.removeItem(this.tokenKey);
+    this.userSubject.next(null);
+    this.isAuthenticated.next(false);
+  }
+
+  initAuth(): void {
+    const token = this.getToken();
+    if (token) {
+      // Tu peux ajouter une vérification ici : expiration, JWT valide, etc.
+      this.isAuthenticated.next(true);
+    } else {
+      this.isAuthenticated.next(false);
+    }
   }
 
 }

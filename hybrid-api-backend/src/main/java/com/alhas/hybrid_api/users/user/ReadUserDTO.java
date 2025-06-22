@@ -13,6 +13,7 @@ public record ReadUserDTO(
          boolean isAuthenticated,
          String userType,
          String password,
+         boolean passwordSet,
          Set<String> authorities
 
 ) {}

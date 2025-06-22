@@ -1,0 +1,21 @@
+<p>succses-registration works!</p>
+
+<!--<div style="background-color: chartreuse; height: 250px;width: 300px;margin-left: 5px " >-->
+
+<!--  <h2>{{ registrationResponse.success }} </h2>-->
+<!--  <h3>{{ registrationResponse.fullName }}</h3>-->
+<!--  <h3>{{ registrationResponse.message }}</h3>-->
+<!--  <br>-->
+<!--</div>-->
+
+<div *ngIf="registrationResponse.success" class="success-container">
+  <div class="success-icon">✅</div>
+  <div class="success-message">{{ registrationResponse.message }}</div>
+  <div class="success-fullname">Bienvenue {{ registrationResponse.fullName }} !</div>
+  <a routerLink="/signin" class="return-link">Aller à la connexion</a>
+</div>
+
+<div *ngIf="!registrationResponse.success" class="success-container">
+  <div class="success-message" style="color: red;">Erreur : {{ registrationResponse.message }}</div>
+  <a routerLink="/signin" class="return-link" style="background-color: #dc3545;">Réessayer</a>
+</div>

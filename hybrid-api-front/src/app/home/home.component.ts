@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {NgClass, NgStyle} from "@angular/common";
-import {HederAaComponent} from "../heder/heder.component";
 import {LoginComponent} from "../login/login.component";
 import {AuthService} from "../users/authService/auth.service";
 import {Subscription} from "rxjs";
@@ -11,7 +10,6 @@ import {Subscription} from "rxjs";
   imports: [
     NgClass,
     NgStyle,
-    HederAaComponent,
     LoginComponent,
   ],
   templateUrl: './home.component.html',

@@ -1,40 +1,63 @@
 package com.alhas.hybrid_api.infrastructure.config;
 
+import com.alhas.hybrid_api.users.user.UserRepository;
+import com.alhas.hybrid_api.users.user.authRessource.CustomUserDetailsService;
+import com.alhas.hybrid_api.users.user.authRessource.JwtAuthenticationFilter;
+import com.alhas.hybrid_api.users.user.authRessource.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
-import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.HashSet;
-
-import java.util.Set;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
+
+    private final UserRepository userRepository;
+    private final CustomUserDetailsService userDetailsService;
+    public SecurityConfig(UserRepository userRepository, CustomUserDetailsService userDetailsService) {
+
+
+        this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
+
+    }
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+
+
         http
                 .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
                 .authorizeHttpRequests(auth -> auth
-                        // Autoriser OPTIONS
-                                .requestMatchers("/api/hybrid-api/auth/get-authenticated-user-auth0").authenticated()
-                                .requestMatchers("/api/hybrid-api/auth/get-authenticated-user-login").authenticated()
-                                .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/hybrid-api/auth/login").permitAll()
+                        .requestMatchers("/api/hybrid-api/auth/register").permitAll()
+                        .requestMatchers("/error").permitAll() // Permettre l'accès aux pages d'erreur
+                        .requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
+
                         .anyRequest()
                         .authenticated() // Toute autre requête nécessite une authentification
-              )
-                // Configuration de l'authentification par formulaire
-                .oauth2Login(oauth2 -> oauth2
-                      // .loginPage("/oauth2/authorization/auth0") // Redirige vers Auth0 pour le login
-                        .defaultSuccessUrl("http://localhost:4200/signin", true) // Après login, aller sur Angular
                 )
+                // Gestion de la session
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .authenticationProvider(authenticationProvider(userDetailsService, passwordEncoder()))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 //SecurityConfig.java
                 .logout(logout -> logout
@@ -43,7 +66,7 @@ public class SecurityConfig {
                             request.logout();// Invalide la session
                             request.getSession().invalidate();
                             response.setStatus(HttpServletResponse.SC_OK); // Répond 200 (OK)
-                           //response.sendRedirect(logoutUrl); // Redirige vers Auth0 logout
+                            //response.sendRedirect(logoutUrl); // Redirige vers Auth0 logout
                         })
                 );
 
@@ -51,20 +74,33 @@ public class SecurityConfig {
     }
 
 
-public GrantedAuthoritiesMapper grantedAuthoritiesMapper() {
-        return authorities -> {
-            Set< GrantedAuthority> grantedAuthorities= new HashSet<>();
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 
-            authorities.forEach(grantedAuthority ->{
-                    if(grantedAuthority instanceof OidcUserAuthority oidcUserAuthority)
-                    grantedAuthorities.addAll(SecurityUtils.extractAuthorityFromClaims(oidcUserAuthority.getUserInfo().getClaims()));
-            }) ;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-            return grantedAuthorities;
-        };
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        return new JwtAuthenticationFilter(jwtService, userDetailsService);
+    }
+
+
+
+
+
+
 }
-
-
-}
-
-

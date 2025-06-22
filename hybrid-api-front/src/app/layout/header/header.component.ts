@@ -23,8 +23,6 @@ import {DataRowOutlet} from "@angular/cdk/table";
     RouterLink,
     NgIf,
     NgStyle,
-    Button,
-    DataRowOutlet,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'

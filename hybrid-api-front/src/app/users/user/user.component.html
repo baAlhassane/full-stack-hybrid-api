@@ -1,11 +1,11 @@
 <p>user works!</p>
 <h1> Bienvenue dans votre espace utilisateur. </h1>
-<h2> Si  vousn avez un statut Jobber ou Provider Villez cliquer sur ces bouton pour voir plus d'information sur votre profil. </h2>
+<h2> Si  vousnee avez un statut Jobber ou Provider ou User  Veillez cliquer sur ces bouton pour voir plus d'information sur votre profil. </h2>
 <div style="background-color: chartreuse; height: 250px;width: 300px; " *ngIf="isAuthenticated" >
   <img [src]="user?.imageUrl" alt="Photo de profil" width="40"> <br>
-    <h2> <span> FirstName : </span>   {{ user?.firstname }} {{ user?.lastname }}</h2>
-  <h3> <span> LastName : </span> {{ user?.lastname }}</h3>
+    <h2> <span> FirstName : </span>   {{ user?.firstname }} </h2>
+  <h2> <span> LastName : </span> {{ user?.lastname }}</h2>
   <h3> <span> Email    :  </span> {{ user?.email }}</h3>
-  <h3> <span> UserType :  </span> {{ user?.userType }}</h3>
-  <h3> <span> Role     :  </span>  {{ user?.authorities }}</h3>
+  <h3> <span> Type User :  </span> {{ user?.type}}</h3>
+  <h3> <span> Role     :   </span>  {{ user?.userRole }}</h3>
 </div>

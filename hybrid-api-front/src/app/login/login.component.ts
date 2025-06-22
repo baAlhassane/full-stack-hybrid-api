@@ -21,6 +21,7 @@ import {FormsModule, NgForm} from "@angular/forms";
 import {ChipsModule} from "primeng/chips";
 import {FormLoginComponent} from "./form-login/form-login.component";
 import {RegistrationComponent} from "./registration/registration.component";
+import {UserInfoComponent} from "./user-info/user-info.component";
 
 @Component({
   selector: 'app-login',
@@ -31,7 +32,7 @@ import {RegistrationComponent} from "./registration/registration.component";
     FormsModule,
     ChipsModule,
     FormLoginComponent,
-    RegistrationComponent
+    RegistrationComponent, UserInfoComponent
 
   ],
   templateUrl: './login.component.html',
@@ -41,7 +42,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   authService=inject(AuthService);
    isAuthenticated=signal(false) ;
-  //isAuthenticated:boolean=false;
   private subscription: Subscription= new Subscription();
   user: User | undefined;
 
@@ -54,20 +54,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm: NgForm | undefined;
 
   ngOnInit(): void {
-     this.authService.getUserInfo();
-    this.authService.emitUserSubject().subscribe({
-      next: (user)=>{
-        this.user = user;
-      console.log("user in login ", user);
-      }
-
-      }
+    console.log("🔥 LoginComponent ngOnInit lancé !");
+    this.authService.emitisAutSubject().subscribe(
+      {next: istAuth => {this.isAuthenticated.set(istAuth)}}
     )
 
-    this.authService.emitisAutSubject().subscribe({
-    //  next: (value) => {this.isAuthenticated=value}
-      next: (value) => {this.isAuthenticated.set(value)}
-    });
+
+
   }
 
 
@@ -89,15 +82,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   //dans login.html
 
   login() {
-    console.log(" this.isAuthenticated login in AuthService  ", this.isAuthenticated);
-    this.authService.fetchAuth0();
+    // console.log(" this.isAuthenticated login in AuthService  ", this.isAuthenticated());
+    // this.authService.fetchAuth0();
     // window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
+
+
   }
+
 
 
   logout(): void {
     //this.isAuthenticated = false;
-    this.authService.loging();
+    // this.authService.emitisAutSubject().subscribe(
+    //   {next: (value) => {this.isAuthenticated.set(false)}}
+    // )
+    // this.authService.toggleIsAuthenticated();
 
     console.log("Utilisateur déconnecté ! ");
   }

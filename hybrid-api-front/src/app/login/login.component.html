@@ -1,26 +1,20 @@
 <p>login works!</p>
  <div class="flex justify-content-start">
-<div
-  *ngIf="!isAuthenticated()"
-  style="background-color: chartreuse; height: 200px;width: 300px; padding-left:10px  ;margin-right: 20px;"   >
-  <h2> Se connecter avec Auth0</h2>
-  <button pButton  (click)="login()">Connexion </button>
-</div>
+<!--<div-->
+<!--  *ngIf="!isAuthenticated()"-->
+<!--  style="background-color: chartreuse; height: 200px;width: 300px; padding-left:10px  ;margin-right: 20px;"   >-->
+<!--  <h2> Se connecter avec Auth0</h2>-->
+<!--  <button pButton  (click)="login()">Connexion </button>-->
+<!--</div>-->
 <br>
 <!--<div style="background-color: chartreuse; height: 250px;width: 300px; " [hidden]="!isAuthenticated" >-->
 
-<div style="background-color: chartreuse; height: 250px;width: 300px;margin-left: 5px " *ngIf="isAuthenticated()" >
-  <img [src]="user?.imageUrl" alt="Photo de profil" width="40"> <br>
-  <h2>{{ user?.firstname }} {{ user?.lastname }}</h2>
-  <h3>{{ user?.email }}</h3>
-  <button (click)="
-  logout()">Déconnexion</button>
-  <br>
-</div>
+
+
 
    <app-form-login [isAuthenticated]="isAuthenticated()"></app-form-login>
    <app-registration [isAuthenticated]="isAuthenticated()"></app-registration>
-
+   <app-user-info></app-user-info>
 
  </div>
 

@@ -26,8 +26,8 @@ export class FormLoginComponent {
   password:WritableSignal<string>=signal<string>("");
 
    formLogin: FormLogin={
-    firstname:"",
-    lastname:"",
+    //firstname:"",
+    //lastname:"",
     password:"",
     email:"",
   }
@@ -36,21 +36,28 @@ export class FormLoginComponent {
   //@Input()
   isAuthenticated=input.required<boolean>();
   authService:  AuthService=inject(AuthService);
+  isSubmitting = false;
+  isAuth= false;
+  user: User | undefined;
+
+  onSubmitForm() {
+    if (this.isSubmitting) return; // protection contre double clic
+    this.isSubmitting = true;
+
+    const emailValue = this.email();
+    const passwordValue = this.password();
+
+    this.authService.loginForm(emailValue, passwordValue);
+    this.authService.emitUserSubject().subscribe({
+      next: user => {
+        this.user=user;
+        console.log("this.user ::: ",this.user);
+      }
+    })
 
 
-  onSubmitForm(form:NgForm) {
-  this.formLogin={
-  firstname:form.value.firstname,
-  lastname:form.value.lastname,
-  password:form.value.password,
-  email:form.value.email,
-}
+    this.isSubmitting = false;
+      }
 
-this.authService.getLoginForm(this.formLogin).subscribe(
-  {
-    next:value =>this.formLogin=value,
-    error:error => { console.log(error); },}
-)
 
-  }
 }

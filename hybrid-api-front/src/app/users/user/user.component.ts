@@ -1,15 +1,14 @@
 import {Component, inject} from '@angular/core';
-import {HederAaComponent} from "../../heder/heder.component";
 import {LoginComponent} from "../../login/login.component";
 import {NgIf} from "@angular/common";
 import {AuthService} from "../authService/auth.service";
 import {Subscription} from "rxjs";
+import {User} from "../models/users";
 
 @Component({
   selector: 'app-user',
   standalone: true,
     imports: [
-        HederAaComponent,
         LoginComponent,
       NgIf
     ],
@@ -21,10 +20,10 @@ export class UserComponent {
   authService=inject(AuthService);
   isAuthenticated: boolean=false;
   private subscription: Subscription= new Subscription();
-  user: any;
+  user: User | undefined;
 
   ngOnInit(): void {
-    this.authService.getUserInfo();
+
     this.authService.emitUserSubject().subscribe({
         next: (user)=>{
           this.user = user;
@@ -35,7 +34,7 @@ export class UserComponent {
     )
 
     this.authService.emitisAutSubject().subscribe({
-      next: (value) => {this.isAuthenticated = value;}
+      next: (value: boolean) => {this.isAuthenticated = value;}
     });
   }
 

@@ -14,7 +14,7 @@ import {AuthService} from "./users/authService/auth.service";
   selector: 'app-root',
   standalone: true,
   imports: [HeaderComponent, FooterComponent,
-    ButtonModule, HomeComponent, LoginComponent, RouterOutlet
+    ButtonModule, HomeComponent, RouterOutlet
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   authService=inject(AuthService);
   ngOnInit(): void {
     // this.authService.getUserInfo();
+    this.authService.initAuth();
   }
   title = 'my-projet';
 

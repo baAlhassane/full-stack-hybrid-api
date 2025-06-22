@@ -6,8 +6,9 @@ import {JobberComponent} from "./users/jobber/jobber.component";
 import {ProviderComponent} from "./users/provider/provider.component";
 import {SigInComponent} from "./layout/connexion/sig-in/sig-in.component";
 import {SignoutComponent} from "./layout/connexion/signout/signout.component";
-
 import {authGuard} from "./users/authService/authGuard";
+import { UserInfoComponent } from './login/user-info/user-info.component';
+import {SuccsesRegistrationComponent} from "./login/succses-registration/succses-registration.component";
 
 export const routes: Routes = [
     {
@@ -41,8 +42,13 @@ export const routes: Routes = [
   },
   {
     path:"login", component: LoginComponent
-  }
-
+  },
+  {
+    path:"userinfo", component: UserInfoComponent
+  },
+  {
+    path:"successregestration", component: SuccsesRegistrationComponent
+  },
 ];
 
 

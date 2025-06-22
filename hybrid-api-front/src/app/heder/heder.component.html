@@ -1,9 +1,0 @@
-<p>heder works!</p>
-
-<div *ngIf="user" style="background-color: chartreuse; height: 250px;width: 300px; " >
-  <img [src]="user.imageUrl" alt="Photo de profil" width="40"> <br>
-  <h2>{{ user.firstname }}</h2>
-  <h3>({{ user.email }})</h3>
-  <button (click)="logout()">Déconnexion</button>
-  <br>
-</div>

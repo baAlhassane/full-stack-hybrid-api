@@ -23,39 +23,13 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
-  security: #dev-lbu4c820m2nza8vh.us.auth0.com
-    oauth2:
-      client:
-        registration:
-          auth0:
-            client-id: ${AUTH0_CLIENT_ID}
-            client-secret: ${AUTH0_CLIENT_SECRET}
-            scope:
-              - openid
-              - profile
-              - email
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/auth0" #  http://localhost:8080/login/oauth2/code/auth0 #
-            provider: auth0
-        provider:
-          auth0:
-              issuer-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/
-              authorization-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/authorize
-              token-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/oauth/token
-              user-info-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/userinfo
-              jwk-set-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/.well-known/jwks.json
-              user-name-attribute: sub
-auth0:
-  oauth2: 
-    issuer: https://dev-lbu4c820m2nza8vh.us.auth0.com/
-    client-id: ${AUTH0_CLIENT_ID}
-    client-secret: ${AUTH0_CLIENT_SECRET}
-    redirect-uri: "{baseUrl}/login/oauth2/code/auth0" #http://localhost:8080/login/oauth2/code/auth0
-  #    redirect-uri: "{baseUrl}/login/oauth2/code/auth0"
-  #rol_bMjiQLmAN3LUSbqi
-application:
-  auth0:
-    role-landlord-id: rol_cCOaub7vwRyW2Brg
-
+#      resourceserver:
+#        jwt:
+#          issuer-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/
+##          audiences:
+##            - https://alhas.com/api
+#
+jwt:
+  secret: "WoslKZzExlBMQ5IdfaG2Gye5bIyEI0X17X0+6hyDAf7rWk2BvBbp9RPBrNZronFU/7Lxbk2CdNalrWm55Dk4Rw=="
 
 

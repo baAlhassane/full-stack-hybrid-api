@@ -1,25 +1,15 @@
+<div *ngIf="!isAuthenticated()">
 
 
 <form
-  *ngIf="!isAuthenticated()"
-  #loginForm="ngForm" (ngSubmit)="onSubmitForm(loginForm) "
+ (ngSubmit)="onSubmitForm() "
       class="flex flex-column justify-content-around align-items-center"
       style="background-color: chartreuse;height: 200px;width: 300px "
 >
-  <div class="flex justify-content-center sm:align-items-center" >
-    <label style="margin-right: 10px"> Name</label>
-    <input type="text" name="name" id="name1"
-           placeholder="firsname" pInputText
-           #firstnameInput="ngModel" requered
-           [ngModel]="firstname()"
-           (ngModelChange)="firstname.set($event)"
-    >
-  </div>
-
 
   <div  class="flex justify-content-center align-items-center" #emailInput pInputText required>
     <label for="email1" style="margin-right: 10px"> Email</label>
-    <input type="text" name="email" id="email1" placeholder="Email"
+    <input type="text" name="email" id="email1" placeholder="Email" required
            autocomplete="username"
            [ngModel]="email()"
            (ngModelChange)="email.set($event)"
@@ -27,8 +17,8 @@
   </div>
 
   <div class="flex justify-content-between align-items-center ">
-    <label for="password1" style="margin-right: 10px" > password</label>
-    <input type="password" name="password1" id="password1"
+    <label for="password" style="margin-right: 10px" > password</label>
+    <input type="password" name="password" id="password1"
            placeholder="lastname" #lastnameInput pInputText required
            autocomplete="current-password"
            class="p-inputtext p-component p-element ng-untouched ng-pristine ng-invalid"
@@ -37,12 +27,16 @@
     >
   </div>
 
-
-  <button type="submit" [disabled]="''">Connexion</button>
+  <button type="submit" [disabled]="email().length === 0 || password().length === 0">Connexion</button>
 </form>
 
+<div *ngIf="isAuth" style="color: red; font-size: 0.9rem;">
+  Email ou mot de pass incorrect . Veillez reessayer !
+</div>
+</div>
+
+<!--<h1> {{ firstname()}} </h1>-->
+<!--<h1> {{ password()}} </h1>-->
+<!--<h1> {{ email()}} </h1>-->
 
 
-<h1> {{ firstname()}} </h1>
-<h1> {{ password()}} </h1>
-<h1> {{ email()}} </h1>

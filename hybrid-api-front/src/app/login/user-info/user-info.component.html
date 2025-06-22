@@ -1,0 +1,10 @@
+<p>user-info works!</p>
+
+<div style="background-color: chartreuse; height: 250px;width: 300px;margin-left: 5px " *ngIf="isAuthenticated()" >
+  <img [src]="user?.imageUrl" alt="Photo de profil" width="40"> <br>
+  <h2>{{ user?.firstname }} {{ user?.lastname }}</h2>
+  <h3>{{ user?.email }}</h3>
+  <button (click)="logout()"
+  >Déconnexion</button>
+  <br>
+</div>
