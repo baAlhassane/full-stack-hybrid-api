@@ -1,0 +1,60 @@
+---
+- name: Construire les applications Angular et Spring Boot en local
+  #hosts: local             # Cible le groupe 'local' de votre inventaire
+  hosts: win_pc # Ou 'windows_hosts' si vous utilisez un groupe
+  #connection: local
+  connection: winrm # Spécifiez la connexion WinRM
+  gather_facts: yes        # Pas besoin de collecter les faits pour ces tâches simples de build
+  become: no               # Pas besoin de privilèges root/sudo pour ces builds
+
+  # Définition des chemins de vos projets sur le système de fichiers Windows,
+  # accessibles via /mnt/c/ depuis WSL.
+  vars:
+    angular_project_path: C:\Users\alhas\Documents\web\full-stack\full-stack-hybrid-api\hybrid-api-front #"/mnt/c/Users/alhas/Documents/web/full-stack/full-stack-hybrid-api/hybrid-api-front" #"/mnt/c/Users/alhas/Documents/web/full-stack/full-stack-hybrid-api/hybrid-api-front"
+    springboot_project_path: "/mnt/c/Users/alhas/Documents/web/full-stack/full-stack-hybrid-api/hybrid-api-backend"
+
+  tasks:
+    - name: Vérifier l'installation de Node.js (facultatif mais bonne pratique)
+      ansible.builtin.command: node -v
+      register: node_version_check
+      changed_when: false
+      failed_when: node_version_check.rc != 0 # La condition sera vérifiée si la commande réussit
+
+    - name: Vérifier l'installation de Maven (facultatif mais bonne pratique)
+      ansible.builtin.command: mvn -v
+      register: mvn_version_check
+      changed_when: false
+      failed_when: mvn_version_check.rc != 0
+
+    #- name: Construire l'application Angular (ng build --configuration production)
+     # ansible.builtin.command: ng build --configuration production
+     # args:
+     #  chdir: "{{ angular_project_path }}" # Exécute la commande dans le répertoire du projet Angular
+     # register: angular_build_result
+
+    - name: Construire l'application Angular sous Windows
+      ansible.windows.win_command: ng build --configuration production
+      args:
+       chdir: "{{ angular_project_path }}" 
+      when: ansible_system == "Win32NT"
+      register: angular_build_result
+
+
+    - name: Afficher le résultat du build Angular (en cas d'échec ou pour info)
+      ansible.builtin.debug:
+        msg: "Build Angular terminé. Sortie: {{ angular_build_result.stdout | default('') }} Erreurs: {{ angular_build_result.stderr | default('') }}"
+      # Affiche le message de débogage si la tâche a échoué (rc != 0) ou si vous voulez toujours voir la sortie
+      when:
+       - angular_build_result is defined
+       - angular_build_result.rc != 0 # Afficher seulement si la commande a échoué
+
+    - name: Construire l'application Spring Boot (mvn clean package)
+      ansible.builtin.command: mvn clean package
+      args:
+        chdir: "{{ springboot_project_path }}" # Exécute la commande dans le répertoire du projet Spring Boot
+      register: springboot_build_result
+
+    - name: Afficher le résultat du build Spring Boot (en cas d'échec ou pour info)
+      ansible.builtin.debug:
+        msg: "Build Spring Boot terminé. Sortie: {{ springboot_build_result.stdout | default('') }} Erreurs: {{ springboot_build_result.stderr | default('') }}"
+      when: springboot_build_result.rc != 0 # Afficher seulement si la commande a échoué

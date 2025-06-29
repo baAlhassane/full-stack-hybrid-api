@@ -5,75 +5,71 @@ import { catchError, tap } from 'rxjs/operators';
 import {Router} from "@angular/router";
 import {FormLogin, FormRegister, RegistrationResponse, User} from "../models/users";
 
+// Importez votre objet environment
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private userSubject = new BehaviorSubject<any | null>(null);
- public user$ = this.userSubject.asObservable().pipe(
-    filter(user => user !== null) // Ne garde que les valeurs valides
+  private userSubject = new BehaviorSubject<User | null>(null);
+  public user$ = this.userSubject.asObservable().pipe(
+    filter(user => user !== null)
   );
 
-  private isAuthenticated=new BehaviorSubject<boolean>(false) ;
-  isAuthenticated$=this.isAuthenticated.asObservable();
+  private isAuthenticated = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this.isAuthenticated.asObservable();
 
+  // Supprimez ces lignes ou commentez-les pour éviter la confusion
+  // API_URL = '/api'; // Inutile si vous utilisez environment.API_URL
+  // H_API_URL = "http://localhost:8080/api/hybrid-api" // <-- SUPPRIMEZ OU COMMENTEZ CETTE LIGNE
+  user: any;
 
-  API_URL = '/api';
-  H_API_URL = "/api/hybrid-api";
-  user:any;
+  private router = inject(Router);
 
-
-
-  private router=inject(Router);
-
-
-  validationErrors: { [key: string]: string } = {};
-  private validationErrorsSubject=new BehaviorSubject<any>(this.validationErrors) ;
-  validationErrorsObs=this.validationErrorsSubject.asObservable();
+  private validationErrors: { [key: string]: string } = {};
+  private validationErrorsSubject = new BehaviorSubject<any>(this.validationErrors);
+  validationErrorsObs = this.validationErrorsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-// MODIFIÉ : getUserInfo() ne retourne PLUS un Observable.
-  // L'abonnement est géré en interne.
-  getUserInfo(): void { // Le type de retour est 'void'
+  getUserInfo(): void {
     const token = this.getToken();
     console.log("getUserInfo() called.");
     if (!token) {
       console.warn("Token is null in getUserInfo(). Cannot fetch user info.");
       this.userSubject.next(null);
-     // this.authenticatedSuject.next(false);
-      return; // Retourne simplement, car il n'y a pas d'Observable à retourner
+      return;
     }
     console.log("tocken ", token);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
 
-    this.http.get<User>(`${this.H_API_URL}/auth/get-authenticated-user-auth0`, { headers: headers }).pipe(
+    // Utilisez environment.API_URL ici
+    this.http.get<User>(`${environment.API_URL}/auth/get-authenticated-user-auth0`, { headers: headers }).pipe(
       tap(userData => {
         this.userSubject.next(userData);
         this.isAuthenticated.next(true);
         console.log("🔹--------Start ------------------------");
         console.log(" userData in getUserInfo() : ", userData);
-        console.log("🔹-------- End  ------------------------");
+        console.log("🔹-------- End ------------------------");
       }),
       catchError((error: HttpErrorResponse) => {
         console.error("❌ [AuthService] Erreur lors de la récupération de l'utilisateur :", error);
         if (error.status === 401 || error.status === 403) {
           console.warn("Unauthorized or Forbidden access. Clearing token.");
-          this.removeToken(); // Supprime le token invalide
-          this.router.navigate(['/login']); // Redirige vers la page de login
+          this.removeToken();
+          this.router.navigate(['/login']);
         }
         this.userSubject.next(null);
         this.isAuthenticated.next(false);
-        return of(null); // Retourne un Observable de null pour que le pipe continue sans erreur pour le subscribe interne
+        return of(null);
       })
     ).subscribe({
       next: (user) => {
         console.log("✅ [AuthService] Utilisateur récupéré avec succès (abonnement interne) :", user);
-        // Ici, vous pourriez déclencher une action ou une redirection si nécessaire,
-        // mais le CallbackComponent est généralement responsable de la redirection finale.
       },
       error: (err) => {
         console.error("❌ [AuthService] Erreur critique dans l'abonnement interne de getUserInfo:", err);
@@ -84,42 +80,44 @@ export class AuthService {
     });
   }
 
-  //auth.service.ts
   logout(): void {
-   this.http.post(`${this.H_API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
-      this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
+    // Utilisez environment.API_URL ici
+    this.http.post(`${environment.API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
+      this.userSubject.next(null);
       this.isAuthenticated.next(false);
+      this.validationErrorsSubject.next({});
       setTimeout(() => {
-        this.router.navigate(['/signin']); // Redirection propre
+        this.router.navigate(['/signin']);
       }, 100);
     }, error => {
       console.error('Erreur de déconnexion', error);
     });
   }
 
- public emitisAutSubject(): Observable<boolean> {
-   return this.isAuthenticated$;
+  public emitisAutSubject(): Observable<boolean> {
+    return this.isAuthenticated$;
   }
-  public emitUserSubject(): Observable<any> {
+  public emitUserSubject(): Observable<User | null> {
     return this.user$;
   }
 
   public hasAnyAuthority(authorities:string[] | string ):boolean{
-    if(!this.isAuthenticated){
+    // Fix: Utilisez .value pour accéder à la valeur d'un BehaviorSubject
+    if(!this.isAuthenticated.value){
       return false;
     }
     if(!Array.isArray(authorities)){
       authorities=[authorities];
-
     }
-    return this.user.tests.some((authority:string)=>authorities.includes(authority));
+    // Assurez-vous que this.user n'est pas null et qu'il a une propriété 'tests'
+    return this.user && this.user.tests && this.user.tests.some((authority:string)=>authorities.includes(authority));
   }
 
   public loging() {
-    if (!this.isAuthenticated) {
-      console.log("Utilisateur non authentifié dans headerr.toggleShowLogging(), redirection vers /signin  ");
-       this.router.navigate(['/signin']);
-       // this.authenticatedSuject.next(false);
+    // Fix: Utilisez .value pour accéder à la valeur d'un BehaviorSubject
+    if (!this.isAuthenticated.value) {
+      console.log("Utilisateur non authentifié dans headerr.toggleShowLogging(), redirection vers /signin ");
+        this.router.navigate(['/signin']);
       return;
     }
     console.log("Utilisateur authentifié headerr.toggleShowLogging(), et va etre deconnecté la ligne suiviante ");
@@ -128,27 +126,26 @@ export class AuthService {
   }
 
   loginForm(email: string, password: string): void {
-    this.http.post<User>(`${this.H_API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
+    // Utilisez environment.API_URL ici
+    this.http.post<User>(`${environment.API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
       next: response => {
         this.userSubject.next(response);
         this.isAuthenticated.next(true);
         console.log("Login success", response);
-        //console.log("user ", response);
-        //this.router.navigate(['/userinfo']);
       },
-      error: err => {
-        if(err.status === 401){
+      error: error => {
+        if(error.status === 401 || (typeof error.error === 'string' && error.error.includes('Identifiants invalides (email ou mot de passe incorrect).' ))){
+          this.validationErrors = { email: error.error };
+          this.validationErrorsSubject.next(this.validationErrors);
         }
-        console.error("Login failed", err);
+        console.error("Login failed", error);
       }
     });
   }
 
-
   registerForm(email: string, password: string): Observable<any> {
-
-    return this.http.post(`${this.H_API_URL}/auth/registration`, { email, password}, { withCredentials: true });
-
+    // Utilisez environment.API_URL ici
+    return this.http.post(`${environment.API_URL}/auth/registration`, { email, password}, { withCredentials: true });
   }
 
   registrationResponse: RegistrationResponse = {
@@ -157,117 +154,83 @@ export class AuthService {
     fullName:"",
   }
 
-  private registrationResponseObs= new BehaviorSubject<RegistrationResponse>(this.registrationResponse);
-   private registrationResponse$ = this.registrationResponseObs.asObservable();
+  private registrationResponseObs = new BehaviorSubject<RegistrationResponse>(this.registrationResponse);
+  private registrationResponse$ = this.registrationResponseObs.asObservable();
 
   postRegistrationForm(formregister: FormRegister ) {
-     this.http.post<RegistrationResponse>(`${this.H_API_URL}/auth/register`,formregister, { withCredentials: true }).subscribe(
+    // Utilisez environment.API_URL ici
+    this.http.post<RegistrationResponse>(`${environment.API_URL}/auth/register`,formregister, { withCredentials: true }).subscribe(
       {
         next: (form) => {
-          //this.emailAlreadyUsed = false;
-          this.registrationResponse=form;
-           this.registrationResponseObs.next(form);
-
-           this.router.navigate(['/successregestration']);
-
+          this.registrationResponse = form;
+          this.registrationResponseObs.next(form);
+          this.router.navigate(['/successregestration']);
           console.log("form registration ", form);
         },
         error: error => {
-          if (error.status === 409 ||  (typeof error.error === 'string' && error.error.includes('Email is already taken'))) {
+          if (error.status === 409 || (typeof error.error === 'string' && error.error.includes('Email is already taken'))) {
             this.validationErrors = { email: error.error };
-           // this.validationErrors = error
-            // console.log(error);
             this.validationErrorsSubject.next(this.validationErrors);
-             console.log("test ", this.validationErrors['email'] );
-            //this.emailAlreadyUsed = true;
+            console.log("test ", this.validationErrors['email'] );
           }
         }
       });
-    //console.log('Form submitted:', this.formLogin);;
   }
 
-getvalidationErrorsObs():Observable<any> {
+  getvalidationErrorsObs():Observable<any> {
     return this.validationErrorsObs;
-}
+  }
 
   getRegistrationResponse(): Observable<RegistrationResponse> {
     return this.registrationResponse$;
   }
 
-
   public fetchAuth0(){
-    console.log(" this.isAuthenticated nlogin  ", this.isAuthenticated);
+    console.log(" this.isAuthenticated nlogin ", this.isAuthenticated);
+    // Pour Auth0, l'URL de redirection doit être l'URL où votre backend expose Auth0.
+    // Cette URL est typiquement une URL du backend et non via API_URL car c'est une redirection directe du navigateur.
+    // Gardez-la telle quelle si elle fonctionne (http://localhost:8080/oauth2/authorization/auth0)
     window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
     console.log("Utilisateur connecté ! ");
-   // this.getUserInfo();
   }
-
 
   public upDateisAUthenticated( isAuth: boolean): void {
     this.isAuthenticated.next(isAuth);
   }
 
-
-  public convertArrayString(tests:string [] | string): string[]  {
+  public convertArrayString(tests:string [] | string): string[] {
     console.log("test string",tests)
     if(!Array.isArray(tests)){
-     tests = tests ? [tests]:[];
-
+      tests = tests ? [tests]:[];
     }
-
     return tests;
   }
 
   public toggleIsAuthenticated():void{
-     //this.isAuthenticated = !this.isAuthenticated;
     this.isAuthenticated.next(!this.isAuthenticated.value);
   }
 
+  // Cette méthode semble être un doublon de 'logout()', à revoir
   logoutHybridApi(): void {
-    this.http.post(`${this.API_URL}/hybrid-api/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
-      this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
+    // Utilisez environment.API_URL ici aussi
+    this.http.post(`${environment.API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
+      this.userSubject.next(null);
       setTimeout(() => {
-        this.isAuthenticated.next(true);
-        window.location.href = '/login'; // Redirige vers la page de login
-
+        this.isAuthenticated.next(true); // Est-ce que ce devrait être false après déconnexion ?
+        window.location.href = '/login';
       }, 100);
     }, error => {
       console.error('Erreur de déconnexion', error);
     });
   }
 
-
-
-
-
   setPassword(email: string, password: string): Observable<void> {
-    return this.http.post<void>(`${this.H_API_URL}/auth/set-password`, {
+    // Utilisez environment.API_URL ici
+    return this.http.post<void>(`${environment.API_URL}/auth/set-password`, {
       email,
       password
     });
   }
-
-
-  //
-  // private tokenKey = 'auth_token';
-  //
-  // public setToken(token: string): void {
-  //   localStorage.setItem(this.tokenKey, token);
-  // }
-  //
-  // public getToken(): string | null {
-  //   return localStorage.getItem(this.tokenKey);
-  // }
-  //
-  // public clearToken(): void {
-  //   localStorage.removeItem(this.tokenKey);
-  // }
-  // // Méthode pour supprimer le token (lors de la déconnexion)
-  // removeToken(): void {
-  //   localStorage.removeItem('jwt_token');
-  //   this.userSubject.next(null);
-  //   this.isAuthenticated.next(false);
-  // }
 
   private tokenKey = 'auth_token';
 
@@ -283,7 +246,6 @@ getvalidationErrorsObs():Observable<any> {
     localStorage.removeItem(this.tokenKey);
   }
 
-// méthode de déconnexion correcte
   removeToken(): void {
     localStorage.removeItem(this.tokenKey);
     this.userSubject.next(null);
@@ -293,11 +255,9 @@ getvalidationErrorsObs():Observable<any> {
   initAuth(): void {
     const token = this.getToken();
     if (token) {
-      // Tu peux ajouter une vérification ici : expiration, JWT valide, etc.
       this.isAuthenticated.next(true);
     } else {
       this.isAuthenticated.next(false);
     }
   }
-
 }

@@ -1,1 +1,27 @@
 <p>provider works!</p>
+<!--<div style="background-color: chartreuse; height: 250px;width: 300px;-->
+<!--" *ngIf="isAuthenticated && user!=null && user.userRole === 'PROVIDER'" >-->
+
+<!--  <img [src]="user.imageUrl" alt="Photo de profil" width="40"> <br>-->
+<!--  <h2> <span> FirstName : </span>   {{ user.firstname }} </h2>-->
+<!--  <h2> <span> LastName : </span> {{ user.lastname }}</h2>-->
+<!--  <h3> <span> Email    :  </span> {{ user.email }}</h3>-->
+<!--  <h3> <span> Type User :  </span> {{ user.type}}</h3>-->
+<!--  <h3> <span> Role     :   </span>  {{ user.userRole }}</h3>-->
+<!--  -->
+<!--</div>-->
+
+@if(isAuthenticated && user!=null && user.userRole === 'PROVIDER'){
+  <div style="background-color: #FFCC80; height: 250px;width: 300px; " *ngIf="isAuthenticated" >
+    <img [src]="user.imageUrl" alt="Photo de profil" width="40"> <br>
+    <h2> <span> FirstName : </span>   {{ user.firstname }} </h2>
+    <h2> <span> LastName : </span> {{ user.lastname }}</h2>
+    <h3> <span> Email    :  </span> {{ user.email }}</h3>
+    <h3> <span> Type User :  </span> {{ user.type}}</h3>
+    <h3> <span> Role     :   </span>  {{ user.userRole }}</h3>
+  </div>
+}
+@else {
+
+  <h1> Vous n'avez pas le droit d'acceder à cette page ! Car Vous n'êtes pas Jobber</h1>
+}

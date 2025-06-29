@@ -20,7 +20,7 @@ export class UserComponent {
   authService=inject(AuthService);
   isAuthenticated: boolean=false;
   private subscription: Subscription= new Subscription();
-  user: User | undefined;
+  user: User | undefined | null=null;
 
   ngOnInit(): void {
 

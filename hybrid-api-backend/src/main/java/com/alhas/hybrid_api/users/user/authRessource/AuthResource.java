@@ -49,7 +49,10 @@ public class AuthResource {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
     }
-
+@GetMapping("/")
+    public String welcome() {
+        return "Bienvenue sur l'API hybride ! Le backend fonctionne. Accédez aux endpoints comme /api/hybrid-api/auth/login";
+    }
 
 @PostMapping("/login")
 public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest,  HttpServletRequest httpRequest) {

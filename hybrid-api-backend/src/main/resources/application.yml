@@ -1,3 +1,4 @@
+debug: true # Ajoutez cette ligne ici
 logging:
   level:
     org:
@@ -32,4 +33,9 @@ spring:
 jwt:
   secret: "WoslKZzExlBMQ5IdfaG2Gye5bIyEI0X17X0+6hyDAf7rWk2BvBbp9RPBrNZronFU/7Lxbk2CdNalrWm55Dk4Rw=="
 
-
+# application.yml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

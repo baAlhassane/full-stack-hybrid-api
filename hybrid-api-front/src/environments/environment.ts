@@ -1,5 +1,5 @@
+// src/environments/environment.ts
 export const environment = {
-
-  // API_URL : "//localhost:4200/api"
-  API_URL : "//localhost:4200/api/hybrid-api",
+  production: false,
+  API_URL : "http://localhost:4200/api/hybrid-api", // Pour le développement avec ng serve et le proxy
 };

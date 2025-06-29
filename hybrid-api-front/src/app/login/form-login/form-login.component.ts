@@ -38,7 +38,8 @@ export class FormLoginComponent {
   authService:  AuthService=inject(AuthService);
   isSubmitting = false;
   isAuth= false;
-  user: User | undefined;
+  user: User | undefined | null = null;
+  validationErrors: { [key: string]: string } = {};
 
   onSubmitForm() {
     if (this.isSubmitting) return; // protection contre double clic
@@ -54,6 +55,11 @@ export class FormLoginComponent {
         console.log("this.user ::: ",this.user);
       }
     })
+    this.authService.getvalidationErrorsObs().subscribe(
+      {
+        next: errors => { this.validationErrors = errors; },
+      }
+    )
 
 
     this.isSubmitting = false;

@@ -1,5 +1,4 @@
 package com.alhas.hybrid_api.infrastructure.config;
-
 import com.alhas.hybrid_api.users.user.UserRepository;
 import com.alhas.hybrid_api.users.user.authRessource.CustomUserDetailsService;
 import com.alhas.hybrid_api.users.user.authRessource.JwtAuthenticationFilter;
@@ -22,6 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+// AJOUTEZ CES TROIS LIGNES :
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays; // Ajout également pour Arrays.asList
 @Configuration
 public class SecurityConfig {
 
@@ -42,11 +46,16 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
+                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Utilisez la source de configuration CORS que nous allons définir
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/hybrid-api/auth/login").permitAll()
                         .requestMatchers("/api/hybrid-api/auth/register").permitAll()
                         .requestMatchers("/error").permitAll() // Permettre l'accès aux pages d'erreur
-                        .requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
+                        .requestMatchers("/").permitAll()
+                // Si vous avez un endpoint public de connexion/inscription
+                .requestMatchers("/api/hybrid-api/auth/**").permitAll() // Autorise l'accès à tout ce qui est sous /api/hybrid-api/auth/
+                       .requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
+                         .requestMatchers("/actuator/health").permitAll() // Autorise l'accès à /actuator/health
 
                         .anyRequest()
                         .authenticated() // Toute autre requête nécessite une authentification
@@ -61,16 +70,36 @@ public class SecurityConfig {
 
                 //SecurityConfig.java
                 .logout(logout -> logout
+                // Note: request.logout() est souvent utilisé avec des sessions Spring Security
+                    // et peut ne pas être nécessaire ou suffisant pour un logout JWT stateless.
+                    // Pour un JWT, la déconnexion se gère principalement côté client
+                    // en supprimant le token et potentiellement en invalidant le token côté serveur si vous avez une liste noire.
+                    // request.getSession().invalidate(); est pertinent si vous gérez des sessions,
+                    // mais vous avez `SessionCreationPolicy.STATELESS`.
+                    // Gardez juste response.setStatus(HttpServletResponse.SC_OK); pour confirmer la déconnexion réussie.
                         .logoutUrl("/api/hybrid-api/auth/logout-hybrid-api")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            request.logout();// Invalide la session
-                            request.getSession().invalidate();
+                            // request.logout();// Invalide la session
+                            // request.getSession().invalidate();
                             response.setStatus(HttpServletResponse.SC_OK); // Répond 200 (OK)
                             //response.sendRedirect(logoutUrl); // Redirige vers Auth0 logout
                         })
                 );
 
         return http.build();
+    }
+
+ @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Autorise l'origine de votre frontend Angular
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Méthodes HTTP autorisées
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Autorise tous les en-têtes (y compris Content-Type, Authorization, etc.)
+        configuration.setAllowCredentials(true); // Très important pour les requêtes avec cookies/tokens (comme votre cas avec `withCredentials: true`)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Applique cette config CORS à toutes les routes de votre backend
+        return source;
     }
 
 
