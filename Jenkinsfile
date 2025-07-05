@@ -32,7 +32,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Assurez-vous que l'ID du credential GitHub est correct
-                git branch: 'main', credentialsId: 'github-pat-for-ci', url: 'https://github.com/votre-utilisateur/votre-depot.git'
+                git branch: 'second-deployment-with-ansible_and_jenskin', credentialsId: 'github-pat-for-ci', url: 'https://github.com/baAlhassane/full-stack-hybrid-api'
             }
         }
 
