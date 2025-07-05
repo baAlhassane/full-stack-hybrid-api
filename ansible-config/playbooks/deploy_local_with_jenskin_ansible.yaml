@@ -1,0 +1,78 @@
+# deploy_local_with_jenskin_ansible.yaml
+---
+- name: Déployer et lancer les applications Angular et Spring Boot sur WSL Linux
+  hosts: localhost # Cible la machine locale (votre WSL Ubuntu)
+  connection: local # Utilise la connexion locale, pas de SSH ou WinRM
+  gather_facts: true # Permet de récupérer des variables comme ansible_env.HOME
+
+  vars:
+    # Le chemin de base pour le déploiement sur la machine cible (votre WSL)
+    linux_base_deploy_path: "{{ ansible_env.HOME }}/document/web/full-stack/hybrid-api-deployment"
+
+    # Chemins SOURCE ABSOLUS des fichiers buildés sur le contrôleur Ansible (votre WSL)
+    # Jenkins va COPIER les artefacts directement dans ces chemins avant d'exécuter ce playbook
+    angular_dist_src_path: "{{ linux_base_deploy_path }}/hybrid-api-front/dist/my-projet/browser"
+    spring_boot_jar_src_path: "{{ linux_base_deploy_path }}/hybrid-api-backend/target/hybrid-api-0.0.1-SNAPSHOT.jar"
+
+    # Noms des fichiers/dossiers une fois COPIÉS sur la destination du déploiement
+    backend_jar_final_name: "hybrid-api-0.0.1-SNAPSHOT.jar"
+    frontend_dist_final_name: "my-projet/browser" # Ceci est le dossier final qui contiendra index.html
+
+  tasks:
+    - name: Créer le répertoire pour les fichiers du backend
+      ansible.builtin.file:
+        path: "{{ linux_base_deploy_path }}/hybrid-api-backend/target"
+        state: directory
+        mode: '0755'
+
+    - name: Créer le répertoire pour les fichiers du frontend
+      ansible.builtin.file:
+        path: "{{ linux_base_deploy_path }}/hybrid-api-front/dist/{{ frontend_dist_final_name }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copier l'application Spring Boot JAR
+      ansible.builtin.copy:
+        src: "{{ spring_boot_jar_src_path }}"
+        dest: "{{ linux_base_deploy_path }}/hybrid-api-backend/target/{{ backend_jar_final_name }}"
+        remote_src: no # Indique que la source est locale à la machine Ansible (WSL)
+        mode: '0644'
+
+    - name: Copier les fichiers buildés d'Angular
+      ansible.builtin.copy:
+        src: "{{ angular_dist_src_path }}/" # Le slash final est important pour copier le CONTENU du dossier
+        dest: "{{ linux_base_deploy_path }}/hybrid-api-front/dist/{{ frontend_dist_final_name }}/"
+        remote_src: no
+        mode: '0644'
+
+    - name: Copier les scripts de démarrage
+      ansible.builtin.copy:
+        src: "{{ linux_base_deploy_path }}/ansible-config/files/{{ item }}" # Chemin absolu vers les scripts
+        dest: "{{ linux_base_deploy_path }}/{{ item }}" # Destination dans le dossier de déploiement racine
+        mode: '0755' # Rendre exécutable
+      loop:
+        - start_backend.sh
+        - start_frontend.sh
+
+    - name: Démarrer l'application Spring Boot backend
+      ansible.builtin.shell: "{{ linux_base_deploy_path }}/start_backend.sh"
+      async: 1 # Lance la commande en arrière-plan
+      poll: 0  # Ne pas attendre la fin de la commande
+
+    - name: Démarrer l'application Angular frontend
+      ansible.builtin.shell: "{{ linux_base_deploy_path }}/start_frontend.sh"
+      async: 1
+      poll: 0
+
+    - name: Attendre que le backend soit disponible (port 8080)
+      ansible.builtin.wait_for:
+        port: 8080
+        host: 127.0.0.1
+        timeout: 60 # Attendre jusqu'à 60 secondes
+      delegate_to: localhost # Exécuter cette tâche localement
+
+    - name: Vérifier l'accessibilité du backend
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:8080/actuator/health" # Cible l'endpoint de santé d'Actuator
+        status_code: 200 # Attend un statut 200 OK
+      delegate_to: localhost
