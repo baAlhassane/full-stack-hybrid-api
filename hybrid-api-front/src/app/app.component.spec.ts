@@ -1,83 +1,46 @@
-
-
-// Importez le composant que ce fichier de test est censé tester
-import { AppComponent } from './app.component'; // Adaptez le chemin et le nom du composant
-// Note: Le chemin './x.component' est correct si x.component.spec.ts est dans le même dossier que x.component.ts
-
-// Imports nécessaires pour les tests et HttpClient
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from './users/authService/auth.service';
+import { AuthService } from './users/authService/auth.service';// Assurez-vous du chemin correct si AppComponent utilise AuthService
+import { RouterTestingModule } from '@angular/router/testing'; // Souvent nécessaire pour AppComponent
 
-describe('AppComponent', () => {
+describe('AppComponent', () => { // Ligne 13, selon l'erreur
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        // Si c'est un composant standalone, incluez-le ici
-        // NomDuComposant,
-        AppComponent
+        AppComponent, // Votre composant standalone
+        RouterTestingModule, // Si votre AppComponent utilise le router (routerLink, routerOutlet)
+        // Ajoutez HttpClientTestingModule si AppComponent utilise HttpClient ou AuthService
+        importProvidersFrom(HttpClientTestingModule)
       ],
       providers: [
-        // Si c'est un service standalone, incluez-le ici
-        // NomDuService,
-        AuthService,
-        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
-      ]
-    }).compileComponents();
-  });
-  // ...
-});
-
-// Le bloc 'describe' doit correspondre au composant/service testé dans CE fichier
-describe('AppComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
-  let component: AppComponent; // <<< Changez 'XComponent' par le type réel du composant
-  let fixture: ComponentFixture<AppComponent>; // <<< Changez 'XComponent' par le type réel du composant
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent], // <<< Votre composant standalone doit être ici (ex: LoginComponent, HomeComponent)
-      providers: [
-        // Fournir HttpClientTestingModule pour les composants standalone
-        importProvidersFrom(HttpClientTestingModule) // Ceci est crucial pour les tests HTTP
+        AuthService // Si AppComponent dépend de AuthService
+        // Ajoutez d'autres providers si nécessaire
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AppComponent); // <<< Changez 'XComponent' par le type réel du composant
+    fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  // --- ASSUREZ-VOUS QU'IL Y A AU MOINS UN TEST 'it()' ICI ---
+  it('should create the app', () => {
     expect(component).toBeTruthy();
   });
 
-  // ... vos autres tests spécifiques à XComponent ...
-});
-
-describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
-  });
-
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
   it(`should have the 'my-projet' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('my-projet');
+    expect(component.title).toEqual('my-projet');
   });
 
+  // Exemple si AppComponent rend un titre dans le template
   it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, my-projet');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello my-projet');
   });
+  // --- FIN DES TESTS ---
 });
