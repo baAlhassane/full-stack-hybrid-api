@@ -84,15 +84,16 @@ pipeline {
 // Jenkinsfile
 // ... (autres stages) ...
 
+// ...
 stage('Copy Artifacts to WSL for Ansible') {
     steps {
-        script { // Le 'withEnv([])' n'est pas strictement nécessaire ici s'il est vide, on peut le simplifier.
+        script {
             withCredentials([
                 // Votre clé SSH privée pour l'authentification
                 sshUserPrivateKey(credentialsId: 'ssh-wsl-ansible', keyFileVariable: 'ANSIBLE_SSH_KEY_PATH'),
                 // Expose le contenu du "Secret file" 'wsl-known-hosts' comme un chemin de fichier temporaire
                 // et le stocke dans la variable d'environnement 'KNOWN_HOSTS_FILE_PATH'.
-                file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH') // <-- AJOUTEZ CETTE LIGNE
+                file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH') // <-- Assurez-vous que cette ligne est là
             ]) {
                 echo "Création des répertoires cibles sur WSL pour les artefacts..."
                 sshCommand remote: [
@@ -100,7 +101,7 @@ stage('Copy Artifacts to WSL for Ansible') {
                     host: '172.31.92.36',
                     user: 'alhassaneba', // Assurez-vous que c'est bien 'user' et non 'username'
                     port: 22,
-                    knownHosts: KNOWN_HOSTS_FILE_PATH // <-- UTILISEZ LA VARIABLE D'ENVIRONNEMENT ICI
+                    knownHosts: KNOWN_HOSTS_FILE_PATH // <-- Assurez-vous que c'est cette variable
                 ], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts"
 
                 // Si vous utilisez sshPublisher pour le transfert réel des fichiers,
@@ -128,6 +129,7 @@ stage('Copy Artifacts to WSL for Ansible') {
         }
     }
 }
+// ...
 
 // ... (autres stages) ...
 // ... (autres stages) ...
