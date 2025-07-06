@@ -80,43 +80,20 @@ pipeline {
             }
         }
 stage('Copy Artifacts to WSL for Ansible') {
-    // Les outils peuvent être définis directement sous le stage, avant 'steps'
-    tools {
-        // Assurez-vous que vos outils sont correctement définis ici
-        // Exemple :
-        // maven 'Maven 3.8.6'
-        // jdk 'JDK 17'
-        // nodejs 'Node.js 18.17.1'
-    }
-    steps { // <-- AJOUTEZ CE BLOC 'steps'
+    // Supprimez complètement le bloc 'tools { }' s'il est vide
+    // tools {
+    // }
+    steps {
         withEnv([]) {
             script {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-wsl-ansible', keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
                     echo "Création des répertoires cibles sur WSL pour les artefacts..."
-                    sshCommand remote: [name: 'wsl-target', host: 'your_wsl_ip_or_hostname', username: 'your_wsl_user', port: 22], command: "mkdir -p /path/to/target/directory"
-                    // Si vous utilisez sshPublisher, il doit aussi être dans ce bloc script
-                    // sshPublisher(publishers: [
-                    //     sshPublisherDesc(
-                    //         configName: 'wsl-target',
-                    //         transfers: [
-                    //             sshTransfer(
-                    //                 sourceFiles: 'hybrid-api-front/dist/**/*',
-                    //                 removePrefix: 'hybrid-api-front/dist',
-                    //                 remoteDirectory: '/path/to/target/directory/frontend'
-                    //             ),
-                    //             sshTransfer(
-                    //                 sourceFiles: 'hybrid-api-back/target/*.jar',
-                    //                 removePrefix: 'hybrid-api-back/target',
-                    //                 remoteDirectory: '/path/to/target/directory/backend'
-                    //             )
-                    //         ],
-                    //         execCommand: ''
-                    //     )
-                    // ])
+                    sshCommand remote: [name: 'wsl-target', host: '172.31.92.36', username: 'alhassaneba', port: 22], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts"
+                    // ... et potentiellement d'autres sshCommand ou sshPublisher
                 }
             }
         }
-    } // <-- FERMEZ LE BLOC 'steps'
+    }
 }
 
         // stage('Copy Artifacts to WSL for Ansible') {
