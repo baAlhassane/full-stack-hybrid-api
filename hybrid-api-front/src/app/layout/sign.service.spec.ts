@@ -1,48 +1,23 @@
-
-import { SignService } from './sign.service';
-
-
-// Importez le service que ce fichier de test est censé tester
-
-
-// Imports nécessaires pour les tests et HttpClient
+// sign.service.spec.ts
 import { TestBed } from '@angular/core/testing';
+import { SignService } from './sign.service'; // Assurez-vous du chemin correct
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from '../users/authService/auth.service';
-import { AUTO_STYLE } from '@angular/animations';
+import { AuthService } from '../users/authService/auth.service'; // Si SignService dépend de AuthService
 
 describe('SignService', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        // Si c'est un composant standalone, incluez-le ici
-        // NomDuComposant,
-      ],
-      providers: [
-        // Si c'est un service standalone, incluez-le ici
-        // NomDuService,
-        AuthService,
-        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
-      ]
-    }).compileComponents();
-  });
-  // ...
-});
-
-// Le bloc 'describe' doit correspondre au service testé dans CE fichier
-describe('XService', () => { // <<< Changez 'XService' par le nom réel du service (ex: 'AuthService', 'SignService')
-  let service:  SignService; // <<< Changez 'XService' par le type réel du service
+  let service: SignService;
   let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-         SignService, // <<< Votre service standalone doit être ici (ex: AuthService, SignService)
-        importProvidersFrom(HttpClientTestingModule) // Ceci est crucial pour les tests HTTP
+        SignService, // <-- AJOUTEZ LE SERVICE LUI-MÊME ICI DANS LES PROVIDERS
+        AuthService, // Si SignService dépend de AuthService
+        importProvidersFrom(HttpClientTestingModule) // Pour HttpClient
       ]
     });
-    service = TestBed.inject( SignService);
+    service = TestBed.inject(SignService);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 
@@ -50,21 +25,9 @@ describe('XService', () => { // <<< Changez 'XService' par le nom réel du servi
     httpTestingController.verify();
   });
 
+  // --- AJOUTEZ AU MOINS UN TEST 'it()' ICI ---
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
-  // ... vos autres tests spécifiques à XService ...
-});
-describe('SignService', () => {
-  let service: SignService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SignService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  // --- FIN DES TESTS ---
 });
