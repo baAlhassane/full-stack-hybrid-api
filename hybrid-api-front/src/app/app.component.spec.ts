@@ -3,9 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from './users/authService/auth.service'; // Assurez-vous du chemin correct
+import { AuthService } from './auth/auth.service'; // Assurez-vous du chemin correct
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router'; // Si utilisé
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs'; // <-- NOUVEL IMPORT : Importez Subject directement de 'rxjs'
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -17,22 +18,20 @@ describe('AppComponent', () => {
         get: (key: string) => 'someValue'
       }
     },
-    params: new (require('rxjs').Subject)(),
-    queryParams: new (require('rxjs').Subject)(),
+    // --- CORRECTION ICI ---
+    params: new Subject(), // <-- Utilisez 'Subject' directement
+    queryParams: new Subject(), // <-- Utilisez 'Subject' directement
+    // --- FIN CORRECTION ---
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      // Si AppComponent est standalone, il ne va PAS dans 'imports'
-      // imports: [AppComponent], // <-- RETIREZ OU COMMENTEZ CECI
-
-      // Au lieu de cela, ses dépendances sont fournies dans 'providers'
       providers: [
-        AppComponent, // <-- AJOUTEZ LE COMPOSANT LUI-MÊME ICI DANS LES PROVIDERS
-        AuthService, // Si AppComponent dépend de AuthService
-        importProvidersFrom(HttpClientTestingModule), // Pour HttpClient
-        importProvidersFrom(RouterTestingModule), // Pour le routage
-        { provide: ActivatedRoute, useValue: mockActivatedRoute } // Si ActivatedRoute est utilisé
+        AppComponent,
+        AuthService,
+        importProvidersFrom(HttpClientTestingModule),
+        importProvidersFrom(RouterTestingModule),
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     }).compileComponents();
 
@@ -41,7 +40,6 @@ describe('AppComponent', () => {
     fixture.detectChanges();
   });
 
-  // Assurez-vous qu'il y a des tests 'it()' ici
   it('should create the app', () => {
     expect(component).toBeTruthy();
   });
