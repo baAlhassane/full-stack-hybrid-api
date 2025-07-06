@@ -36,9 +36,9 @@ describe('SuccsesRegistrationComponent', () => { // Ligne 14, selon l'erreur
     component = fixture.componentInstance;
 
     // Si 'isAuthenticated' est un InputSignal et qu'il est requis
-    if (component.isAuthenticated) {
-        fixture.componentRef.setInput('isAuthenticated', false); // Ou la valeur par défaut appropriée
-    }
+    // if (component.isAuthenticated) {
+    //     fixture.componentRef.setInput('isAuthenticated', false); // Ou la valeur par défaut appropriée
+    // }
 
     fixture.detectChanges();
   });
