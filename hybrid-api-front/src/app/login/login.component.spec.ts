@@ -1,78 +1,43 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-// import { LoginComponent } from './login.component';
-
-// Importez HttpClientTestingModule
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+// login.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoginComponent } from './login.component'; // Ou le composant/service que vous testez
-import { AuthService } from '../users/authService/auth.service';
+import { LoginComponent } from './login.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
+import { AuthService } from '../users/authService/auth.service';
 
 describe('LoginComponent', () => {
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        // Si c'est un composant standalone, incluez-le ici
-        // NomDuComposant,
-         LoginComponent
-      ],
       providers: [
-        // Si c'est un service standalone, incluez-le ici
-        // NomDuService,
+        LoginComponent, // Le composant standalone doit être ici
         AuthService,
-        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+        importProvidersFrom(HttpClientTestingModule)
       ]
     }).compileComponents();
-  });
-  // ...
-});
-
-
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [LoginComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(LoginComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
-
-
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        LoginComponent, // Si c'est un composant standalone
-        HttpClientTestingModule // <-- AJOUTEZ CECI
-      ],
-      // Si vous avez des providers pour AuthService ou d'autres services, assurez-vous qu'ils sont là
-      // providers: [AuthService]
-    })
-    .compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+
+    // Si 'isAuthenticated' est un InputSignal et qu'il est requis
+    if (component.isAuthenticated()) {
+        fixture.componentRef.setInput('isAuthenticated', false);
+    }
+
+    fixture.detectChanges(); // Déclenche la détection de changements
   });
 
+  // --- ASSUREZ-VOUS QUE CE TEST 'it()' EST PRÉSENT ET NON COMMENTÉ ---
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // ... vos autres tests ...
+  // Ajoutez d'autres tests pertinents pour LoginComponent si vous en avez
+  // Par exemple, si vous avez un formulaire de connexion :
+  // it('should have a login form', () => {
+  //   const compiled = fixture.nativeElement;
+  //   expect(compiled.querySelector('form')).toBeTruthy();
+  // });
 });
