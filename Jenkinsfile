@@ -81,38 +81,73 @@ pipeline {
         }
 
         stage('Copy Artifacts to WSL for Ansible') {
-            steps {
-                script {
-                    // Utiliser withCredentials pour injecter la clé SSH de manière sécurisée
-                    withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
-
-                        // Créer les répertoires cibles sur WSL si non existants
-                        echo "Création des répertoires cibles sur WSL pour les artefacts..."
-                        sshCommand remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID], command: """
-                            mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target"
-                            mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
-                        """
-
-                        // Copier le JAR Spring Boot vers le chemin source attendu par Ansible sur WSL
-                        echo "Copie du JAR Spring Boot vers WSL: ${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}"
-                        sshPut remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID],
-                                from: JENKINS_SPRING_BOOT_JAR_PATH, to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}"
-
-                        // Compresser les fichiers Angular localement, puis les copier et les décompresser sur WSL
-                        echo "Compression et copie des fichiers Angular vers WSL..."
-                        sh "zip -r angular_dist.zip ${JENKINS_ANGULAR_DIST_PATH}"
-                        sshPut remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID],
-                                from: 'angular_dist.zip', to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}/angular_dist.zip"
-                        sshCommand remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID], command: """
-                            cd "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
-                            unzip -o angular_dist.zip -d ./
-                            rm angular_dist.zip
-                        """
-                        sh 'rm angular_dist.zip' // Nettoyer le fichier zip localement dans Jenkins workspace
-                    }
-                }
+    tools {
+        // ... vos outils ...
+    }
+    withEnv([]) {
+        script {
+            withCredentials([sshUserPrivateKey(credentialsId: 'ssh-wsl-ansible', keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
+                echo "Création des répertoires cibles sur WSL pour les artefacts..."
+                // --- CORRECTION ICI : AJOUT DE 'name' ---
+                sshCommand remote: [name: 'wsl-target', host: '172.31.92.36', username: 'alhassaneba', port: 22], command: "mkdir -p ~/document/web/full-stack/hybrid-api-deployment/jenkins-artefacts"
+                // Assurez-vous d'appliquer le même 'name: 'wsl-target'' à toutes les autres utilisations de 'remote:' dans cette étape si elles existent.
+                // Par exemple, si vous utilisez sshPublisher pour copier les fichiers :
+                // sshPublisher(publishers: [
+                //     sshPublisherDesc(
+                //         configName: 'wsl-target', // Utilisez le même nom ici
+                //         transfers: [
+                //             sshTransfer(
+                //                 sourceFiles: 'hybrid-api-front/dist/**/*',
+                //                 removePrefix: 'hybrid-api-front/dist',
+                //                 remoteDirectory: '/path/to/target/directory/frontend'
+                //             ),
+                //             sshTransfer(
+                //                 sourceFiles: 'hybrid-api-back/target/*.jar',
+                //                 removePrefix: 'hybrid-api-back/target',
+                //                 remoteDirectory: '/path/to/target/directory/backend'
+                //             )
+                //         ],
+                //         execCommand: '' // Ou les commandes post-transfert
+                //     )
+                // ])
             }
         }
+    }
+}
+
+        // stage('Copy Artifacts to WSL for Ansible') {
+        //     steps {
+        //         script {
+        //             // Utiliser withCredentials pour injecter la clé SSH de manière sécurisée
+        //             withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
+
+        //                 // Créer les répertoires cibles sur WSL si non existants
+        //                 echo "Création des répertoires cibles sur WSL pour les artefacts..."
+        //                 sshCommand remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID], command: """
+        //                     mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target"
+        //                     mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
+        //                 """
+
+        //                 // Copier le JAR Spring Boot vers le chemin source attendu par Ansible sur WSL
+        //                 echo "Copie du JAR Spring Boot vers WSL: ${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}"
+        //                 sshPut remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID],
+        //                         from: JENKINS_SPRING_BOOT_JAR_PATH, to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}"
+
+        //                 // Compresser les fichiers Angular localement, puis les copier et les décompresser sur WSL
+        //                 echo "Compression et copie des fichiers Angular vers WSL..."
+        //                 sh "zip -r angular_dist.zip ${JENKINS_ANGULAR_DIST_PATH}"
+        //                 sshPut remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID],
+        //                         from: 'angular_dist.zip', to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}/angular_dist.zip"
+        //                 sshCommand remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID], command: """
+        //                     cd "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
+        //                     unzip -o angular_dist.zip -d ./
+        //                     rm angular_dist.zip
+        //                 """
+        //                 sh 'rm angular_dist.zip' // Nettoyer le fichier zip localement dans Jenkins workspace
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Run Ansible Deployment') {
             steps {
