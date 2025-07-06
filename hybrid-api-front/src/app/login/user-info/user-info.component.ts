@@ -7,7 +7,7 @@ import { LoginComponent } from '../login.component';
   selector: 'app-user-info',
   standalone: true,
   imports: [
-    NgIf, LoginComponent
+    NgIf
   ],
   templateUrl: './user-info.component.html',
   styleUrl: './user-info.component.css'
