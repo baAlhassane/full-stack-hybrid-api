@@ -10,6 +10,25 @@ import { SigInComponent } from './sig-in.component'; // Adaptez le chemin et le 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
+import { AuthService } from '../../../users/authService/auth.service';
+
+describe('SigInComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        // Si c'est un composant standalone, incluez-le ici
+        // NomDuComposant,
+      ],
+      providers: [
+        // Si c'est un service standalone, incluez-le ici
+        // NomDuService,
+        AuthService,
+        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+      ]
+    }).compileComponents();
+  });
+  // ...
+});
 
 // Le bloc 'describe' doit correspondre au composant/service testé dans CE fichier
 describe('SigInComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')

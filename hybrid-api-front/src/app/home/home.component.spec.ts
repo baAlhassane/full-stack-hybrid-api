@@ -11,6 +11,29 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
 
+
+// Imports nécessaires
+
+
+// ... (autres imports de votre composant/service testé)
+
+describe('HomeComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        // Si c'est un composant standalone, incluez-le ici
+        // NomDuComposant,
+      ],
+      providers: [
+        // Si c'est un service standalone, incluez-le ici
+        // NomDuService,
+        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+      ]
+    }).compileComponents();
+  });
+  // ...
+});
+
 // Le bloc 'describe' doit correspondre au composant/service testé dans CE fichier
 describe('HomeComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
   let component: HomeComponent; // <<< Changez 'XComponent' par le type réel du composant

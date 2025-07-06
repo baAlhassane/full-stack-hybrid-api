@@ -7,10 +7,31 @@ import { UserComponent } from './user.component'; // Adaptez le chemin et le nom
 // Imports nécessaires pour les tests et HttpClient
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+
+describe('UserCoponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        // Si c'est un composant standalone, incluez-le ici
+        // NomDuComposant,
+        UserComponent
+      ],
+      providers: [
+        // Si c'est un service standalone, incluez-le ici
+        // NomDuService,
+        AuthService,
+        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+      ]
+    }).compileComponents();
+  });
+  // ...
+});
 import { importProvidersFrom } from '@angular/core';
+import { AuthService } from '../authService/auth.service';
 
 // Le bloc 'describe' doit correspondre au composant/service testé dans CE fichier
-describe('XComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
+describe('UserComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
   let component:  UserComponent; // <<< Changez 'XComponent' par le type réel du composant
   let fixture: ComponentFixture< UserComponent>; // <<< Changez 'XComponent' par le type réel du composant
 

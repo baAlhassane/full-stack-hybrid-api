@@ -6,6 +6,29 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { JobberComponent } from './jobber.component'; // Adaptez au composant testé
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core'; // <-- NOUVEL IMPORT pour les standalone
+import { AuthService } from '../authService/auth.service';
+
+
+
+describe('AuthService', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        // Si c'est un composant standalone, incluez-le ici
+        // NomDuComposant,
+        JobberComponent
+      ],
+      providers: [
+        // Si c'est un service standalone, incluez-le ici
+        // NomDuService,
+        AuthService,
+        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+      ]
+    }).compileComponents();
+  });
+  // ...
+});
+
 
 describe('JobberComponent', () => { // Adaptez au nom de votre composant
   let component:JobberComponent;

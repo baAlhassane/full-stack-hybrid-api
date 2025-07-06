@@ -3,6 +3,24 @@
 // import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        // Si c'est un composant standalone, incluez-le ici
+        // NomDuComposant,
+      ],
+      providers: [
+        // Si c'est un service standalone, incluez-le ici
+        // NomDuService,
+        AuthService,
+        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+      ]
+    }).compileComponents();
+  });
+  // ...
+});
+
+describe('AuthService', () => {
   let service: AuthService;
 
   beforeEach(() => {
@@ -18,6 +36,7 @@ describe('AuthService', () => {
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'; // Importez aussi HttpTestingController
 import { AuthService } from './auth.service';
+import { importProvidersFrom } from '@angular/core';
 
 describe('AuthService', () => {
   let service: AuthService;

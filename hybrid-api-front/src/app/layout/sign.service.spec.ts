@@ -9,6 +9,26 @@ import { SignService } from './sign.service';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
+import { AuthService } from '../users/authService/auth.service';
+import { AUTO_STYLE } from '@angular/animations';
+
+describe('SignService', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        // Si c'est un composant standalone, incluez-le ici
+        // NomDuComposant,
+      ],
+      providers: [
+        // Si c'est un service standalone, incluez-le ici
+        // NomDuService,
+        AuthService,
+        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+      ]
+    }).compileComponents();
+  });
+  // ...
+});
 
 // Le bloc 'describe' doit correspondre au service testé dans CE fichier
 describe('XService', () => { // <<< Changez 'XService' par le nom réel du service (ex: 'AuthService', 'SignService')

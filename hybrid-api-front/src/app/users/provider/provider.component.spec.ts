@@ -8,9 +8,30 @@ import { ProviderComponent} from '../provider/provider.component'; // Adaptez le
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
+import { AuthService } from '../authService/auth.service';
+
+
+describe('AuthService', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        // Si c'est un composant standalone, incluez-le ici
+        // NomDuComposant,
+        ProviderComponent
+      ],
+      providers: [
+        // Si c'est un service standalone, incluez-le ici
+        // NomDuService,
+        AuthService,
+        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
+      ]
+    }).compileComponents();
+  });
+  // ...
+});
 
 // Le bloc 'describe' doit correspondre au composant/service testé dans CE fichier
-describe('XComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
+describe('ProviderComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
   let component: ProviderComponent; // <<< Changez 'XComponent' par le type réel du composant
   let fixture: ComponentFixture<ProviderComponent>; // <<< Changez 'XComponent' par le type réel du composant
 
