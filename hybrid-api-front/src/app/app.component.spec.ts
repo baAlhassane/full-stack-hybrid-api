@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from './auth/auth.service'; // Assurez-vous du chemin correct
+import { AuthService } from './users/authService/auth.service';// Assurez-vous du chemin correct
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs'; // <-- NOUVEL IMPORT : Importez Subject directement de 'rxjs'
