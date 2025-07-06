@@ -79,22 +79,51 @@ pipeline {
                 archiveArtifacts artifacts: "${JENKINS_ANGULAR_DIST_PATH}/**", fingerprint: true
             }
         }
+// Jenkinsfile
+// ... (autres stages) ...
+
 stage('Copy Artifacts to WSL for Ansible') {
-    // Supprimez complètement le bloc 'tools { }' s'il est vide
-    // tools {
-    // }
     steps {
         withEnv([]) {
             script {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-wsl-ansible', keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
                     echo "Création des répertoires cibles sur WSL pour les artefacts..."
-                    sshCommand remote: [name: 'wsl-target', host: '172.31.92.36', user: 'alhassaneba', port: 22], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenkins-artefacts"
-                    // ... et potentiellement d'autres sshCommand ou sshPublisher
+                    sshCommand remote: [
+                        name: 'wsl-target',
+                        host: '172.31.92.36',
+                        user: 'alhassaneba', // Assurez-vous que c'est bien 'user' et non 'username'
+                        port: 22,
+                        knownHosts: credentials('wsl-known-hosts') // <-- AJOUTEZ CETTE LIGNE
+                    ], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts"
+
+                    // Si vous utilisez sshPublisher pour le transfert réel des fichiers,
+                    // assurez-vous de faire la même modification ici :
+                    // sshPublisher(publishers: [
+                    //     sshPublisherDesc(
+                    //         configName: 'wsl-target',
+                    //         transfers: [
+                    //             sshTransfer(
+                    //                 sourceFiles: 'hybrid-api-front/dist/**/*',
+                    //                 removePrefix: 'hybrid-api-front/dist',
+                    //                 remoteDirectory: '/home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts/frontend'
+                    //             ),
+                    //             sshTransfer(
+                    //                 sourceFiles: 'hybrid-api-back/target/*.jar',
+                    //                 removePrefix: 'hybrid-api-back/target',
+                    //                 remoteDirectory: '/home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts/backend'
+                    //             )
+                    //         ],
+                    //         execCommand: '',
+                    //         knownHosts: credentials('wsl-known-hosts') // <-- AJOUTEZ CETTE LIGNE AUSSI
+                    //     )
+                    // ])
                 }
             }
         }
     }
 }
+
+// ... (autres stages) ...
 
         // stage('Copy Artifacts to WSL for Ansible') {
         //     steps {
