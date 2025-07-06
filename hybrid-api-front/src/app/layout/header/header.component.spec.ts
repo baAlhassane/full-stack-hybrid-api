@@ -1,75 +1,60 @@
-
-
-// Importez le composant que ce fichier de test est censé tester
-import { HeaderComponent } from './header.component'; // Adaptez le chemin et le nom du composant
-// Note: Le chemin './x.component' est correct si x.component.spec.ts est dans le même dossier que x.component.ts
-
-// Imports nécessaires pour les tests et HttpClient
+// header.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HeaderComponent } from './header.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from '../../users/authService/auth.service';
+import { AuthService } from '../../users/authService/auth.service'; // Assurez-vous du chemin correct
+import { RouterTestingModule } from '@angular/router/testing'; // Si HeaderComponent utilise le router
+import { ActivatedRoute } from '@angular/router'; // Si HeaderComponent utilise ActivatedRoute
+import { Subject } from 'rxjs'; // Si vous utilisez Subject pour les mocks
 
-describe('HeaderComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        // Si c'est un composant standalone, incluez-le ici
-        // NomDuComposant,
-        HeaderComponent
-      ],
-      providers: [
-        // Si c'est un service standalone, incluez-le ici
-        // NomDuService,
-        AuthService,
-        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
-      ]
-    }).compileComponents();
-  });
-  // ...
-});
-
-// Le bloc 'describe' doit correspondre au composant/service testé dans CE fichier
-describe('XComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
-  let component: HeaderComponent; // <<< Changez 'XComponent' par le type réel du composant
-  let fixture: ComponentFixture<HeaderComponent>; // <<< Changez 'XComponent' par le type réel du composant
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HeaderComponent], // <<< Votre composant standalone doit être ici (ex: LoginComponent, HomeComponent)
-      providers: [
-        // Fournir HttpClientTestingModule pour les composants standalone
-        importProvidersFrom(HttpClientTestingModule) // Ceci est crucial pour les tests HTTP
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(HeaderComponent); // <<< Changez 'XComponent' par le type réel du composant
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  // ... vos autres tests spécifiques à XComponent ...
-});
-describe('HeaderComponent', () => {
+describe('HeaderComponent', () => { // Ligne 13, selon l'erreur
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
+  // Mock pour ActivatedRoute si nécessaire
+  const mockActivatedRoute = {
+    snapshot: {
+      paramMap: {
+        get: (key: string) => 'someValue'
+      }
+    },
+    params: new Subject(),
+    queryParams: new Subject(),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderComponent]
-    })
-    .compileComponents();
-    
+      providers: [
+        HeaderComponent, // Le composant standalone doit être ici
+        AuthService, // Si HeaderComponent dépend de AuthService
+        importProvidersFrom(HttpClientTestingModule), // Pour HttpClient
+        importProvidersFrom(RouterTestingModule), // Pour le routage
+        { provide: ActivatedRoute, useValue: mockActivatedRoute } // Si ActivatedRoute est utilisé
+      ]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
+
+    // Si 'isAuthenticated' est un InputSignal et qu'il est requis
+    if (component.isAuthenticated) {
+        fixture.componentRef.setInput('isAuthenticated', false); // Ou la valeur par défaut appropriée
+    }
+
     fixture.detectChanges();
   });
 
+  // --- ASSUREZ-VOUS QU'IL Y A AU MOINS UN TEST 'it()' ICI ---
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // Ajoutez d'autres tests pertinents pour HeaderComponent
+  // Par exemple, vérifier la présence d'éléments de navigation, etc.
+  // it('should display navigation links', () => {
+  //   const compiled = fixture.nativeElement as HTMLElement;
+  //   expect(compiled.querySelector('nav a')).toBeTruthy();
+  // });
+  // --- FIN DES TESTS ---
 });
