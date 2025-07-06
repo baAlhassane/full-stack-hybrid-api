@@ -52,4 +52,11 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Hello my-projet');
   });
+  it('should render title', () => {
+  const compiled = fixture.nativeElement as HTMLElement;
+  // Assurez-vous que le sélecteur CSS est correct pour trouver l'élément.
+  // Si c'est un h1 direct, 'h1' est bon. Si c'est imbriqué, ajustez le sélecteur.
+  // Par exemple, si c'est <div class="container"><h1>...</h1></div>, vous pourriez faire '.container h1'
+  expect(compiled.querySelector('h1')?.textContent).toContain('Hello my-projet');
+});
 });
