@@ -14,7 +14,7 @@ import {AuthService} from "./users/authService/auth.service";
   selector: 'app-root',
   standalone: true,
   imports: [HeaderComponent, FooterComponent,
-    ButtonModule, HomeComponent, RouterOutlet
+    ButtonModule, HomeComponent, RouterOutlet, LoginComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

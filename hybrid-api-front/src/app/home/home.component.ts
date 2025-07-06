@@ -10,7 +10,7 @@ import {Subscription} from "rxjs";
   imports: [
     NgClass,
     NgStyle,
-    LoginComponent,
+    LoginComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

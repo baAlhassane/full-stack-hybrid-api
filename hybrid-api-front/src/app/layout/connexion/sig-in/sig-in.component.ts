@@ -15,7 +15,7 @@ import {authGuard} from "../../../users/authService/authGuard";
     LoginComponent,
     FaIconComponent,
     RouterLink,
-    NgStyle
+    NgStyle, LoginComponent
   ],
   templateUrl: './sig-in.component.html',
   styleUrl: './sig-in.component.css'
