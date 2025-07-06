@@ -1,76 +1,58 @@
-
-
-
-// Importez le composant que ce fichier de test est censé tester
-import { SuccsesRegistrationComponent } from './succses-registration.component'; // Adaptez le chemin et le nom du composant
-// Note: Le chemin './x.component' est correct si x.component.spec.ts est dans le même dossier que x.component.ts
-
-// Imports nécessaires pour les tests et HttpClient
+// succses-registration.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SuccsesRegistrationComponent } from './succses-registration.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from '../../users/authService/auth.service';
+import { ActivatedRoute } from '@angular/router'; // Si SuccsesRegistrationComponent utilise ActivatedRoute
+import { Subject } from 'rxjs'; // Si vous utilisez Subject pour les mocks
+import { AuthService } from '../../users/authService/auth.service'; // Assurez-vous du chemin correct si nécessaire
 
-describe(' SuccsesRegistrationComponent ', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        // Si c'est un composant standalone, incluez-le ici
-        // NomDuComposant,
-         SuccsesRegistrationComponent 
-      ],
-      providers: [
-        // Si c'est un service standalone, incluez-le ici
-        // NomDuService,
-        AuthService,
-        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
-      ]
-    }).compileComponents();
-  });
-  // ...
-});
-
-// Le bloc 'describe' doit correspondre au composant/service testé dans CE fichier
-describe('SuccsesRegistrationComponent', () => { // <<< Changez 'XComponent' par le nom réel du composant (ex: 'LoginComponent', 'HomeComponent')
-  let component:SuccsesRegistrationComponent; // <<< Changez 'XComponent' par le type réel du composant
-  let fixture: ComponentFixture<SuccsesRegistrationComponent>; // <<< Changez 'XComponent' par le type réel du composant
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SuccsesRegistrationComponent], // <<< Votre composant standalone doit être ici (ex: LoginComponent, HomeComponent)
-      providers: [
-        // Fournir HttpClientTestingModule pour les composants standalone
-        importProvidersFrom(HttpClientTestingModule) // Ceci est crucial pour les tests HTTP
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(SuccsesRegistrationComponent); // <<< Changez 'XComponent' par le type réel du composant
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  // ... vos autres tests spécifiques à XComponent ...
-});
-describe('SuccsesRegistrationComponent', () => {
+describe('SuccsesRegistrationComponent', () => { // Ligne 14, selon l'erreur
   let component: SuccsesRegistrationComponent;
   let fixture: ComponentFixture<SuccsesRegistrationComponent>;
 
+  // Mock pour ActivatedRoute si nécessaire (très probable pour un composant de succès d'inscription)
+  const mockActivatedRoute = {
+    snapshot: {
+      paramMap: {
+        get: (key: string) => 'someValue' // Simulez un paramètre si votre composant en lit un
+      }
+    },
+    params: new Subject(),
+    queryParams: new Subject(),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SuccsesRegistrationComponent]
-    })
-    .compileComponents();
-    
+      providers: [
+        SuccsesRegistrationComponent, // Le composant standalone doit être ici
+        AuthService, // Fournir AuthService si SuccsesRegistrationComponent en dépend
+        importProvidersFrom(HttpClientTestingModule), // Pour HttpClient
+        { provide: ActivatedRoute, useValue: mockActivatedRoute } // Fournir le mock ActivatedRoute
+      ]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SuccsesRegistrationComponent);
     component = fixture.componentInstance;
+
+    // Si 'isAuthenticated' est un InputSignal et qu'il est requis
+    if (component.isAuthenticated) {
+        fixture.componentRef.setInput('isAuthenticated', false); // Ou la valeur par défaut appropriée
+    }
+
     fixture.detectChanges();
   });
 
+  // --- ASSUREZ-VOUS QU'IL Y A AU MOINS UN TEST 'it()' ICI ---
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // Ajoutez d'autres tests pertinents pour SuccsesRegistrationComponent
+  // Par exemple, vérifier le message de succès, la redirection, etc.
+  // it('should display success message', () => {
+  //   const compiled = fixture.nativeElement as HTMLElement;
+  //   expect(compiled.textContent).toContain('Inscription réussie !');
+  // });
+  // --- FIN DES TESTS ---
 });
