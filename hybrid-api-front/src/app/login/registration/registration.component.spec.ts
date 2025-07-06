@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistrationComponent } from './registration.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from '../../users/authService/auth.service';// Assurez-vous du chemin correct
+import { AuthService } from '../../users/authService/auth.service'; // Assurez-vous que ce chemin est correct
 
 describe('RegistrationComponent', () => { // Ligne 15, selon l'erreur
   let component: RegistrationComponent;
@@ -12,7 +12,7 @@ describe('RegistrationComponent', () => { // Ligne 15, selon l'erreur
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        RegistrationComponent, // Le composant standalone doit être ici
+        RegistrationComponent, // Le composant standalone lui-même
         AuthService, // Fournir AuthService si RegistrationComponent en dépend
         importProvidersFrom(HttpClientTestingModule) // Pour HttpClient
       ]
@@ -21,26 +21,18 @@ describe('RegistrationComponent', () => { // Ligne 15, selon l'erreur
     fixture = TestBed.createComponent(RegistrationComponent);
     component = fixture.componentInstance;
 
-    // Si 'isAuthenticated' est un InputSignal et qu'il est requis
-    // Vérifiez si RegistrationComponent a réellement cet InputSignal
-    // Si oui, décommentez et utilisez la ligne ci-dessous :
-    // if (component.isAuthenticated) { 
-    //     fixture.componentRef.setInput('isAuthenticated', false); 
-    // }
+    // --- RE-AJOUTEZ CETTE SECTION ---
+    // Si 'isAuthenticated' est un InputSignal requis dans RegistrationComponent, définissez sa valeur ici.
+    // D'après l'erreur NG0950, il EST requis.
+    fixture.componentRef.setInput('isAuthenticated', false); // Fournir une valeur par défaut
+    // --- FIN RE-AJOUT ---
 
-    fixture.detectChanges();
+    fixture.detectChanges(); // Déclenche la détection de changements après avoir défini l'input
   });
 
-  // --- ASSUREZ-VOUS QU'IL Y A AU MOINS UN TEST 'it()' ICI ---
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // Ajoutez d'autres tests pertinents pour RegistrationComponent
-  // Par exemple, si RegistrationComponent affiche un formulaire d'inscription :
-  // it('should display registration form', () => {
-  //   const compiled = fixture.nativeElement as HTMLElement;
-  //   expect(compiled.querySelector('form')).toBeTruthy();
-  // });
-  // --- FIN DES TESTS ---
+  // Ajoutez d'autres tests pertinents pour RegistrationComponent ici
 });
