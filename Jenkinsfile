@@ -34,23 +34,42 @@ pipeline {
                 // Assurez-vous que l'ID du credential GitHub est correct
                 git branch: 'second-deployment-with-ansible_and_jenskin', credentialsId: 'github-pat-for-ci', url: 'https://github.com/baAlhassane/full-stack-hybrid-api'
             }
-        }
-stage('Build Angular Frontend') {
+        }*
+
+        stage('Build Angular Frontend') {
     steps {
         dir('hybrid-api-front') {
             withEnv([
                 "PATH+NODE=${tool 'NodeJS'}", // S'assure que 'node' et 'npm' sont dans le PATH
-                // Obtenez le chemin de l'exécutable de Puppeteer à l'intérieur du conteneur.
-                // Cette commande Node.js sera exécutée par le shell de Jenkins.
+                // Définir CHROME_BIN via Puppeteer
                 "CHROME_BIN=${sh(script: 'node -e "console.log(require(\'puppeteer\').executablePath())"', returnStdout: true).trim()}"
             ]) {
                 sh 'npm install'
-                // IMPORTANT : Ajoutez --no-sandbox à la commande de test Angular
-                sh 'npm test -- --no-watch --browsers=ChromeHeadless --no-sandbox'
+                // Modifier la commande de test.
+                // On garde --browsers=ChromeHeadless
+                // Et on ajoute une nouvelle variable d'environnement pour passer les flags au navigateur.
+                // KARMA_CHROME_FLAGS='--no-sandbox --disable-dev-shm-usage'
+                sh 'KARMA_CHROME_FLAGS="--no-sandbox --disable-dev-shm-usage --disable-gpu" npm test -- --no-watch --browsers=ChromeHeadless'
             }
         }
     }
 }
+// stage('Build Angular Frontend') {
+//     steps {
+//         dir('hybrid-api-front') {
+//             withEnv([
+//                 "PATH+NODE=${tool 'NodeJS'}", // S'assure que 'node' et 'npm' sont dans le PATH
+//                 // Obtenez le chemin de l'exécutable de Puppeteer à l'intérieur du conteneur.
+//                 // Cette commande Node.js sera exécutée par le shell de Jenkins.
+//                 "CHROME_BIN=${sh(script: 'node -e "console.log(require(\'puppeteer\').executablePath())"', returnStdout: true).trim()}"
+//             ]) {
+//                 sh 'npm install'
+//                 // IMPORTANT : Ajoutez --no-sandbox à la commande de test Angular
+//                 sh 'npm test -- --no-watch --browsers=ChromeHeadless --no-sandbox'
+//             }
+//         }
+//     }
+// }
         // stage('Build Angular Frontend') {
         //     steps {
         //         dir('hybrid-api-front') { // Navigue dans le répertoire 'hybrid-api-front'
