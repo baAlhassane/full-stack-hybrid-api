@@ -1,65 +1,39 @@
-// import { TestBed } from '@angular/core/testing';
-
-// import { AuthService } from './auth.service';
-
-describe('AuthService', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        // Si c'est un composant standalone, incluez-le ici
-        // NomDuComposant,
-      ],
-      providers: [
-        // Si c'est un service standalone, incluez-le ici
-        // NomDuService,
-        AuthService,
-        importProvidersFrom(HttpClientTestingModule) // <-- C'EST LA CLÉ !
-      ]
-    }).compileComponents();
-  });
-  // ...
-});
-
-describe('AuthService', () => {
-  let service: AuthService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(AuthService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
-
+// auth.service.spec.ts
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'; // Importez aussi HttpTestingController
 import { AuthService } from './auth.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
 
-describe('AuthService', () => {
+describe('AuthService', () => { // Ligne 5, selon l'erreur
   let service: AuthService;
-  let httpTestingController: HttpTestingController; // Pour mocker les requêtes HTTP
+  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule // <-- AJOUTEZ CECI
-      ],
-      providers: [AuthService] // Le service que vous testez
+      providers: [
+        AuthService, // Le service standalone doit être ici
+        importProvidersFrom(HttpClientTestingModule) // Pour HttpClient
+      ]
     });
     service = TestBed.inject(AuthService);
-    httpTestingController = TestBed.inject(HttpTestingController); // Initialiser le contrôleur de mock
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
     httpTestingController.verify(); // Vérifie qu'aucune requête HTTP en attente n'est restée
   });
 
+  // --- ASSUREZ-VOUS QU'IL Y A AU MOINS UN TEST 'it()' ICI ---
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  // ... vos tests de méthodes de service qui font des requêtes HTTP ...
+  // Ajoutez d'autres tests pertinents pour AuthService, par exemple:
+  // it('should send a login request', () => {
+  //   service.login('test@example.com', 'password').subscribe();
+  //   const req = httpTestingController.expectOne('http://your-api-url/login'); // Remplacez par votre URL réelle
+  //   expect(req.request.method).toEqual('POST');
+  //   req.flush({ token: 'fake-token' });
+  // });
+  // --- FIN DES TESTS ---
 });
