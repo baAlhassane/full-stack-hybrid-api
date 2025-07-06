@@ -8,9 +8,10 @@ import { importProvidersFrom } from '@angular/core';
 import { AuthService } from '../../users/authService/auth.service'; // Assurez-vous que ce chemin est correct
 
 // Le bloc 'describe' principal pour RegistrationComponent
-describe('RegistrationComponent', () => {
+describe('UserInfoComponent', () => {
   let component: UserInfoComponent
   let fixture: ComponentFixture<UserInfoComponent>
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

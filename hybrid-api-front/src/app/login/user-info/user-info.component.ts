@@ -1,42 +1,36 @@
-// Importez le composant que ce fichier de test est censé tester
-import { RegistrationComponent } from './registration.component';
+import {Component, inject, input, OnInit, signal} from '@angular/core';
+import {NgIf} from "@angular/common";
+import {AuthService} from "../../users/authService/auth.service";
 
-// Imports nécessaires pour les tests et les dépendances
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { importProvidersFrom } from '@angular/core';
-import { AuthService } from '../../users/authService/auth.service'; // Assurez-vous que ce chemin est correct
+@Component({
+  selector: 'app-user-info',
+  standalone: true,
+  imports: [
+    NgIf
+  ],
+  templateUrl: './user-info.component.html',
+  styleUrl: './user-info.component.css'
+})
+export class UserInfoComponent implements OnInit {
+authService:AuthService=inject(AuthService);
+  user: any;
+  isAuthenticatedSig = signal<boolean>(false);
+  isAuthenticated=input.required<boolean>();
 
-// Le bloc 'describe' principal pour RegistrationComponent
-describe('RegistrationComponent', () => {
-  let component: RegistrationComponent;
-  let fixture: ComponentFixture<RegistrationComponent>;
+  validationErrors: { [key: string]: string } = {};
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        RegistrationComponent // Le composant standalone doit être ici
-      ],
-      providers: [
-        AuthService, // Fournir AuthService si RegistrationComponent en dépend
-        importProvidersFrom(HttpClientTestingModule) // Fournir HttpClientTestingModule pour les tests HTTP
-      ]
-    }).compileComponents();
+  ngOnInit(): void {
+    this.authService.emitisAutSubject().subscribe({
+      next: isAuth => {this.isAuthenticatedSig.set(isAuth)}})
+      this.authService.emitUserSubject().subscribe({
+        next: user => {this.user=user;},
+      });
 
-    fixture = TestBed.createComponent(RegistrationComponent);
-    component = fixture.componentInstance;
+  }
 
-    // --- CORRECTION POUR INPUTSIGNAL avec setInput() ---
-    // Au lieu de 'component.isAuthenticated.set(false);', utilisez fixture.componentRef.setInput()
-    fixture.componentRef.setInput('isAuthenticated', false); // <-- C'EST LA NOUVELLE LIGNE CLÉ !
-    // --- FIN CORRECTION ---
 
-    fixture.detectChanges(); // Déclenche la détection de changements après avoir défini l'input
-  });
+  logout() {
+this.authService.logout();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  // Ajoutez ici tous les autres tests spécifiques à RegistrationComponent
-});
+  }
+}

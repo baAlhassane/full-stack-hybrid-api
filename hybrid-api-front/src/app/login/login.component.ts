@@ -21,7 +21,7 @@ import {FormsModule, NgForm} from "@angular/forms";
 import {ChipsModule} from "primeng/chips";
 import {FormLoginComponent} from "./form-login/form-login.component";
 import {RegistrationComponent} from "./registration/registration.component";
-import {UserInfoComponent} from "./user-info/user-info.component";
+import { UserInfoComponent } from './user-info/user-info.component';
 
 @Component({
   selector: 'app-login',
