@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistrationComponent } from './registration.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { importProvidersFrom } from '@angular/core';
-import { AuthService } from '../../../users/authService/auth.service'; // Assurez-vous du chemin correct
+import { AuthService } from '../../users/authService/auth.service';// Assurez-vous du chemin correct
 
 describe('RegistrationComponent', () => { // Ligne 15, selon l'erreur
   let component: RegistrationComponent;
