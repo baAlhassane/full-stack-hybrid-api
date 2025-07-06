@@ -88,7 +88,7 @@ stage('Copy Artifacts to WSL for Ansible') {
             script {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-wsl-ansible', keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
                     echo "Création des répertoires cibles sur WSL pour les artefacts..."
-                    sshCommand remote: [name: 'wsl-target', host: '172.31.92.36', username: 'alhassaneba', port: 22], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts"
+                    sshCommand remote: [name: 'wsl-target', host: '172.31.92.36', user: 'alhassaneba', port: 22], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenkins-artefacts"
                     // ... et potentiellement d'autres sshCommand ou sshPublisher
                 }
             }
