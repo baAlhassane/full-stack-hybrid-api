@@ -84,51 +84,88 @@ pipeline {
 // Jenkinsfile
 // ... (autres stages) ...
 
-// ...
+
+
 stage('Copy Artifacts to WSL for Ansible') {
     steps {
         script {
             withCredentials([
-                // Votre clé SSH privée pour l'authentification
-                sshUserPrivateKey(credentialsId: 'ssh-wsl-ansible', keyFileVariable: 'ANSIBLE_SSH_KEY_PATH'),
-                // Expose le contenu du "Secret file" 'wsl-known-hosts' comme un chemin de fichier temporaire
-                // et le stocke dans la variable d'environnement 'KNOWN_HOSTS_FILE_PATH'.
-                file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH') // <-- Assurez-vous que cette ligne est là
+                sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')
             ]) {
-                echo "Création des répertoires cibles sur WSL pour les artefacts..."
-                sshCommand remote: [
-                    name: 'wsl-target',
-                    host: '172.31.92.36',
-                    user: 'alhassaneba', // Assurez-vous que c'est bien 'user' et non 'username'
-                    port: 22,
-                    knownHosts: KNOWN_HOSTS_FILE_PATH // <-- Assurez-vous que c'est cette variable
-                ], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts"
 
-                // Si vous utilisez sshPublisher pour le transfert réel des fichiers,
-                // assurez-vous de faire la même modification pour le paramètre knownHosts :
-                // sshPublisher(publishers: [
-                //     sshPublisherDesc(
-                //         configName: 'wsl-target',
-                //         transfers: [
-                //             sshTransfer(
-                //                 sourceFiles: 'hybrid-api-front/dist/**/*',
-                //                 removePrefix: 'hybrid-api-front/dist',
-                //                 remoteDirectory: '/home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts/frontend'
-                //             ),
-                //             sshTransfer(
-                //                 sourceFiles: 'hybrid-api-back/target/*.jar',
-                //                 removePrefix: 'hybrid-api-back/target',
-                //                 remoteDirectory: '/home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts/backend'
-                //             )
-                //         ],
-                //         execCommand: '',
-                //         knownHosts: KNOWN_HOSTS_FILE_PATH // <-- UTILISEZ LA VARIABLE D'ENVIRONNEMENT ICI AUSSI
-                //     )
-                // ])
+                echo "Création des répertoires cibles sur WSL pour les artefacts..."
+                sshCommand remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID], command: """
+                    mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target"
+                    mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
+                """
+
+                echo "Copie du JAR Spring Boot vers WSL..."
+                sshPut remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID],
+                    from: JENKINS_SPRING_BOOT_JAR_PATH,
+                    to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}"
+
+                echo "Compression et copie des fichiers Angular vers WSL..."
+                sh "zip -r angular_dist.zip ${JENKINS_ANGULAR_DIST_PATH}"
+                sshPut remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID],
+                    from: 'angular_dist.zip',
+                    to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}/angular_dist.zip"
+
+                sshCommand remote: [host: env.TARGET_WSL_IP, port: 22, username: env.ANSIBLE_USER, credentialsId: env.SSH_CREDENTIAL_ID], command: """
+                    cd "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
+                    unzip -o angular_dist.zip -d ./
+                    rm angular_dist.zip
+                """
+                sh 'rm angular_dist.zip'
             }
         }
     }
 }
+
+// ...
+// stage('Copy Artifacts to WSL for Ansible') {
+//     steps {
+//         script {
+//             withCredentials([
+//                 // Votre clé SSH privée pour l'authentification
+//                 sshUserPrivateKey(credentialsId: 'ssh-wsl-ansible', keyFileVariable: 'ANSIBLE_SSH_KEY_PATH'),
+//                 // Expose le contenu du "Secret file" 'wsl-known-hosts' comme un chemin de fichier temporaire
+//                 // et le stocke dans la variable d'environnement 'KNOWN_HOSTS_FILE_PATH'.
+//                 file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH') // <-- Assurez-vous que cette ligne est là
+//             ]) {
+//                 echo "Création des répertoires cibles sur WSL pour les artefacts..."
+//                 sshCommand remote: [
+//                     name: 'wsl-target',
+//                     host: '172.31.92.36',
+//                     user: 'alhassaneba', // Assurez-vous que c'est bien 'user' et non 'username'
+//                     port: 22,
+//                     knownHosts: KNOWN_HOSTS_FILE_PATH // <-- Assurez-vous que c'est cette variable
+//                 ], command: "mkdir -p /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts"
+
+//                 // Si vous utilisez sshPublisher pour le transfert réel des fichiers,
+//                 // assurez-vous de faire la même modification pour le paramètre knownHosts :
+//                 // sshPublisher(publishers: [
+//                 //     sshPublisherDesc(
+//                 //         configName: 'wsl-target',
+//                 //         transfers: [
+//                 //             sshTransfer(
+//                 //                 sourceFiles: 'hybrid-api-front/dist/**/*',
+//                 //                 removePrefix: 'hybrid-api-front/dist',
+//                 //                 remoteDirectory: '/home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts/frontend'
+//                 //             ),
+//                 //             sshTransfer(
+//                 //                 sourceFiles: 'hybrid-api-back/target/*.jar',
+//                 //                 removePrefix: 'hybrid-api-back/target',
+//                 //                 remoteDirectory: '/home/alhassaneba/document/web/full-stack/hybrid-api-deployment/jenskins-artefacts/backend'
+//                 //             )
+//                 //         ],
+//                 //         execCommand: '',
+//                 //         knownHosts: KNOWN_HOSTS_FILE_PATH // <-- UTILISEZ LA VARIABLE D'ENVIRONNEMENT ICI AUSSI
+//                 //     )
+//                 // ])
+//             }
+//         }
+//     }
+// }
 // ...
 
 // ... (autres stages) ...
