@@ -81,6 +81,16 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
+                        echo "Débogage SSH - Informations sur l'environnement Jenkins:"
+                        sh 'whoami' // Qui exécute la commande ? (devrait être jenkins)
+                        sh 'pwd'    // Où sommes-nous ?
+                        sh 'ls -l ${ANSIBLE_SSH_KEY_PATH}' // Permissions du fichier de clé temporaire
+                        sh 'cat ${ANSIBLE_SSH_KEY_PATH}' // Afficher le contenu de la clé (ATTENTION: ne pas laisser en production!)
+                        sh 'ls -ld ~/.ssh' // Vérifier le .ssh de l'utilisateur jenkins
+                        sh 'ls -l ~/.ssh/known_hosts' // Vérifier le known_hosts de l'utilisateur jenkins
+                        sh 'ssh -v -i ${ANSIBLE_SSH_KEY_PATH} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${env.ANSIBLE_USER}@${env.TARGET_WSL_IP} "echo SSH connection test successful"'
+                        // La commande ci-dessus est un test de connexion détaillé.
+
                         echo "Création des répertoires cibles sur WSL pour les artefacts..."
                         // Utilisation de ssh natif via sh
                         sh """

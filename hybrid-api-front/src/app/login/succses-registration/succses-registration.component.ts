@@ -24,6 +24,7 @@ export class SuccsesRegistrationComponent implements OnInit {
   }
 
 authService: AuthService=inject(AuthService);
+  isAuthenticated: any;
 
   ngOnInit() {
 this.authService.getRegistrationResponse().subscribe({
