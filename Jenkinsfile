@@ -81,22 +81,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
-                        echo "Débogage SSH - Informations sur l'environnement Jenkins:"
-                        sh 'whoami' // Qui exécute la commande ? (devrait être jenkins)
-                        sh 'pwd'    // Où sommes-nous ?
-                        sh 'ls -l ${ANSIBLE_SSH_KEY_PATH}' // Permissions du fichier de clé temporaire
-                        sh 'cat ${ANSIBLE_SSH_KEY_PATH}' // Afficher le contenu de la clé (ATTENTION: ne pas laisser en production!)
-                        sh 'ls -ld ~/.ssh' // Vérifier le .ssh de l'utilisateur jenkins
-                        sh 'ls -l ~/.ssh/known_hosts' // Vérifier le known_hosts de l'utilisateur jenkins
-                        // Test de connexion SSH détaillé avec -v
-                        sh "ssh -v -i ${ANSIBLE_SSH_KEY_PATH} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${env.ANSIBLE_USER}@${env.TARGET_WSL_IP} 'echo SSH connection test successful'"
-
                         echo "Création des répertoires cibles sur WSL pour les artefacts..."
                         // Utilisation de ssh natif via sh
                         sh "ssh -i ${ANSIBLE_SSH_KEY_PATH} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${env.ANSIBLE_USER}@${env.TARGET_WSL_IP} 'mkdir -p \"${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target\" && mkdir -p \"${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}\"'"
 
                         echo "Copie du JAR Spring Boot vers WSL..."
-                        // Note: Pour scp, le chemin de destination doit être cité par le shell local, pas forcément échappé pour le shell distant.
                         sh "scp -i ${ANSIBLE_SSH_KEY_PATH} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.JENKINS_SPRING_BOOT_JAR_PATH}\" ${env.ANSIBLE_USER}@${env.TARGET_WSL_IP}:'${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}'"
 
                         echo "Compression et copie des fichiers Angular vers WSL..."
