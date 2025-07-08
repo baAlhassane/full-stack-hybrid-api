@@ -81,15 +81,17 @@ pipeline {
             steps {
                 script {
                     withCredentials([
-                        sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH') // Supprimez le file(credentialsId: 'wsl-known-hosts'...) ici
+                        sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH'),
+                        // Si vous avez un credential 'wsl-known-hosts' de type 'Secret file' contenant le known_hosts, décommentez ceci:
+                        // file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH')
                     ]) {
                         def remoteCfg = [
                             name: 'wsl-target',
                             host: env.TARGET_WSL_IP,
-                            port: 22, // Ou 2222 si vous utilisez ce port pour le débogage
+                            port: 22,
                             user: env.ANSIBLE_USER,
-                            allowAnyHosts: true // <--- AJOUTÉ : Désactive la vérification des clés d'hôte
-                            // knownHosts: KNOWN_HOSTS_FILE_PATH // <--- COMMENTÉ OU SUPPRIMÉ
+                            keyFile: "${ANSIBLE_SSH_KEY_PATH}", // Utilise la clé privée fournie par withCredentials
+                            knownHosts: '/var/lib/jenkins/.ssh/known_hosts' // Chemin vers le known_hosts de Jenkins
                         ]
 
                         echo "Création des répertoires cibles sur WSL pour les artefacts..."
@@ -97,7 +99,24 @@ pipeline {
                             mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target"
                             mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
                         """
-                        // ... (reste du stage Copy Artifacts) ...
+
+                        echo "Copie du JAR Spring Boot vers WSL..."
+                        sshPut remote: remoteCfg,
+                            from: env.JENKINS_SPRING_BOOT_JAR_PATH,
+                            to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}"
+
+                        echo "Compression et copie des fichiers Angular vers WSL..."
+                        sh "zip -r angular_dist.zip ${env.JENKINS_ANGULAR_DIST_PATH}"
+                        sshPut remote: remoteCfg,
+                            from: 'angular_dist.zip',
+                            to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}/angular_dist.zip"
+
+                        sshCommand remote: remoteCfg, command: """
+                            cd "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
+                            unzip -o angular_dist.zip -d ./
+                            rm angular_dist.zip
+                        """
+                        sh 'rm angular_dist.zip' // Nettoie l'archive locale dans l'espace de travail Jenkins
                     }
                 }
             }
@@ -106,18 +125,24 @@ pipeline {
         stage('Run Ansible Deployment') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) { // Supprimez le file(credentialsId: 'wsl-known-hosts'...) ici
+                    withCredentials([
+                        sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH'),
+                        // Si vous avez un credential 'wsl-known-hosts' de type 'Secret file' contenant le known_hosts, décommentez ceci:
+                        // file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH')
+                    ]) {
                         def remoteCfg = [
                             name: 'wsl-target',
                             host: env.TARGET_WSL_IP,
-                            port: 22, // Ou 2222 si vous utilisez ce port pour le débogage
+                            port: 22,
                             user: env.ANSIBLE_USER,
-                            allowAnyHosts: true // <--- AJOUTÉ : Désactive la vérification des clés d'hôte
-                            // knownHosts: KNOWN_HOSTS_FILE_PATH // <--- COMMENTÉ OU SUPPRIMÉ
+                            keyFile: "${ANSIBLE_SSH_KEY_PATH}", // Utilise la clé privée fournie par withCredentials
+                            knownHosts: '/var/lib/jenkins/.ssh/known_hosts' // Chemin vers le known_hosts de Jenkins
                         ]
                         echo "Exécution du playbook Ansible sur WSL..."
+                        // Exécuter le playbook Ansible sur la machine WSL.
+                        // Les chemins sont maintenant corrects selon votre structure.
                         sshCommand remote: remoteCfg, command: """
-                            cd "${env.WSL_BASE_DEPLOY_PATH}/ansible-config"
+                            cd "${env.WSL_BASE_DEPLOY_PATH}/ansible-config" // Navigue vers le dossier ansible-config
                             ansible-playbook -i inventory/hosts.ini playbooks/deploy_local_with_jenskin_ansible.yaml
                         """
                     }
@@ -125,73 +150,6 @@ pipeline {
             }
         }
     }
-
-    //     stage('Copy Artifacts to WSL for Ansible') {
-    //         steps {
-    //             script {
-    //                 withCredentials([
-    //                     sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH'),
-    //                     file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH')
-    //                 ]) {
-    //                     def remoteCfg = [
-    //                         name: 'wsl-target', // <--- AJOUTÉ : Le nom de l'hôte distant
-    //                         host: env.TARGET_WSL_IP,
-    //                         port: 22,
-    //                         user: env.ANSIBLE_USER,
-    //                         knownHosts: KNOWN_HOSTS_FILE_PATH
-    //                     ]
-
-    //                     echo "Création des répertoires cibles sur WSL pour les artefacts..."
-    //                     sshCommand remote: remoteCfg, command: """
-    //                         mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target"
-    //                         mkdir -p "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
-    //                     """
-
-    //                     echo "Copie du JAR Spring Boot vers WSL..."
-    //                     sshPut remote: remoteCfg,
-    //                         from: env.JENKINS_SPRING_BOOT_JAR_PATH,
-    //                         to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-backend/target/${env.SPRING_BOOT_JAR_FILENAME}"
-
-    //                     echo "Compression et copie des fichiers Angular vers WSL..."
-    //                     sh "zip -r angular_dist.zip ${env.JENKINS_ANGULAR_DIST_PATH}"
-    //                     sshPut remote: remoteCfg,
-    //                         from: 'angular_dist.zip',
-    //                         to: "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}/angular_dist.zip"
-
-    //                     sshCommand remote: remoteCfg, command: """
-    //                         cd "${env.WSL_BASE_DEPLOY_PATH}/hybrid-api-front/dist/${env.ANGULAR_DIST_BROWSER_DIR}"
-    //                         unzip -o angular_dist.zip -d ./
-    //                         rm angular_dist.zip
-    //                     """
-    //                     sh 'rm angular_dist.zip'
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     stage('Run Ansible Deployment') {
-    //         steps {
-    //             script {
-    //                 withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH'), file(credentialsId: 'wsl-known-hosts', variable: 'KNOWN_HOSTS_FILE_PATH')]) { // Ajout de wsl-known-hosts ici aussi
-    //                     def remoteCfg = [ // Définir remoteCfg ici aussi
-    //                         name: 'wsl-target', // <--- AJOUTÉ : Le nom de l'hôte distant
-    //                         host: env.TARGET_WSL_IP,
-    //                         port: 22,
-    //                         user: env.ANSIBLE_USER,
-    //                         knownHosts: KNOWN_HOSTS_FILE_PATH // Important pour la vérification de l'hôte
-    //                     ]
-    //                     echo "Exécution du playbook Ansible sur WSL..."
-    //                     // Exécuter le playbook Ansible sur la machine WSL.
-    //                     // Les chemins sont maintenant corrects selon votre structure.
-    //                     sshCommand remote: remoteCfg, command: """
-    //                         cd "${env.WSL_BASE_DEPLOY_PATH}/ansible-config" // Navigue vers le dossier ansible-config
-    //                         ansible-playbook -i inventory/hosts.ini playbooks/deploy_local_with_jenskin_ansible.yaml
-    //                     """
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     post {
         always {
