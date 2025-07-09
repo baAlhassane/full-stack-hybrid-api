@@ -66,13 +66,13 @@
 
     - name: Attendre que le backend soit disponible (port 8080)
       ansible.builtin.wait_for:
-        port: 8080
+        port: 8081
         host: 127.0.0.1
         timeout: 60 # Attendre jusqu'à 60 secondes
       delegate_to: localhost # Exécuter cette tâche localement
 
     - name: Vérifier l'accessibilité du backend
       ansible.builtin.uri:
-        url: "http://127.0.0.1:8080/actuator/health" # Cible l'endpoint de santé d'Actuator
+        url: "http://127.0.0.1:8081/actuator/health" # Cible l'endpoint de santé d'Actuator
         status_code: 200 # Attend un statut 200 OK
       delegate_to: localhost
