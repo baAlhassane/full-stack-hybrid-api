@@ -57,7 +57,7 @@
     - name: Démarrer l'application Spring Boot backend
       ansible.builtin.shell: "{{ linux_base_deploy_path }}/start_backend.sh"
       async: 1 # Lance la commande en arrière-plan
-      poll: 0  # Ne pas attendre la fin de la commande
+      poll: 0 # Ne pas attendre la fin de la commande
 
     - name: Démarrer l'application Angular frontend
       ansible.builtin.shell: "{{ linux_base_deploy_path }}/start_frontend.sh"
