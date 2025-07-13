@@ -52,6 +52,12 @@ Les utilisateurs peuvent :
 - Script shell lunix
 
 
+### Struture du github 
+Ce projet contient 3 branches à ce stade : 
+- La branche master : est une branche clasique du projet 
+- La brache firts-deployment-with-ansible: est une brache juste pour déployer avec ansible du code de la branche master. Ansible est instanllé dans WSL. Et donc le déploiement est dans WSL
+- La brache second-deployment-with-ansible_and_jenskin : C'est une baranche qui intègre jenkins dans le projet. Jenkins glone le code , le buide et le transmet à Ansible et ansible le déploie. 
+
 
 
 
