@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, input, OnInit, signal} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {AuthService} from "../../users/authService/auth.service";
 
@@ -14,12 +14,14 @@ import {AuthService} from "../../users/authService/auth.service";
 export class UserInfoComponent implements OnInit {
 authService:AuthService=inject(AuthService);
   user: any;
-  isAuthenticated = signal<boolean>(false);
+  isAuthenticatedSig = signal<boolean>(false);
+  isAuthenticated=input.required<boolean>();
 
+  validationErrors: { [key: string]: string } = {};
 
   ngOnInit(): void {
     this.authService.emitisAutSubject().subscribe({
-      next: isAuth => {this.isAuthenticated.set(isAuth)}})
+      next: isAuth => {this.isAuthenticatedSig.set(isAuth)}})
       this.authService.emitUserSubject().subscribe({
         next: user => {this.user=user;},
       });
@@ -29,5 +31,6 @@ authService:AuthService=inject(AuthService);
 
   logout() {
 this.authService.logout();
+
   }
 }

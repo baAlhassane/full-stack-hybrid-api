@@ -28,11 +28,14 @@ export const routes: Routes = [
   },
 
   {
-    path:"user", component: UserComponent
+    path:"user", component: UserComponent, canActivate:[authGuard],
+    data: {authorities: ["ROLE_LANDLORD"]}
   },
 
   {
-    path:"jobber", component: JobberComponent
+    path:"jobber", component: JobberComponent,
+    canActivate:[authGuard],
+    data: {authorities: ["ROLE_LANDLORD"]}
   },
 
   {

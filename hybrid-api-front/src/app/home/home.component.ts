@@ -19,7 +19,7 @@ export class HomeComponent {
   color: string='red';
   b: boolean=true;
   private subscription: Subscription = new Subscription();
-  private isAuthenticated: boolean=true;
+  private isAuthenticated: boolean=false;
 
 
   constructor(public authService: AuthService) {

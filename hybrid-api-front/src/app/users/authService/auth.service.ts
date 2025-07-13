@@ -10,7 +10,7 @@ import {FormLogin, FormRegister, RegistrationResponse, User} from "../models/use
 })
 export class AuthService {
 
-  private userSubject = new BehaviorSubject<any | null>(null);
+  private userSubject = new BehaviorSubject<User | null>(null);
  public user$ = this.userSubject.asObservable().pipe(
     filter(user => user !== null) // Ne garde que les valeurs valides
   );
@@ -28,7 +28,7 @@ export class AuthService {
   private router=inject(Router);
 
 
-  validationErrors: { [key: string]: string } = {};
+  private validationErrors: { [key: string]: string } = {};
   private validationErrorsSubject=new BehaviorSubject<any>(this.validationErrors) ;
   validationErrorsObs=this.validationErrorsSubject.asObservable();
 
@@ -89,6 +89,7 @@ export class AuthService {
    this.http.post(`${this.H_API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
       this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
       this.isAuthenticated.next(false);
+      this.validationErrorsSubject.next({});
       setTimeout(() => {
         this.router.navigate(['/signin']); // Redirection propre
       }, 100);
@@ -100,7 +101,7 @@ export class AuthService {
  public emitisAutSubject(): Observable<boolean> {
    return this.isAuthenticated$;
   }
-  public emitUserSubject(): Observable<any> {
+  public emitUserSubject(): Observable<User | null> {
     return this.user$;
   }
 
@@ -136,10 +137,13 @@ export class AuthService {
         //console.log("user ", response);
         //this.router.navigate(['/userinfo']);
       },
-      error: err => {
-        if(err.status === 401){
+      error: error => {
+        if(error.status === 401 || (typeof error.error === 'string' && error.error.includes('Identifiants invalides (email ou mot de passe incorrect).' ))){
+          this.validationErrors = { email: error.error };
+          this.validationErrorsSubject.next(this.validationErrors);
+
         }
-        console.error("Login failed", err);
+        console.error("Login failed", error);
       }
     });
   }
@@ -181,6 +185,8 @@ export class AuthService {
              console.log("test ", this.validationErrors['email'] );
             //this.emailAlreadyUsed = true;
           }
+
+
         }
       });
     //console.log('Form submitted:', this.formLogin);;
