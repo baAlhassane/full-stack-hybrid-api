@@ -31,7 +31,8 @@ Les utilisateurs peuvent :
 - Angular 17
 - RxJS
 - PrimeNG
-- Les signaux
+- Les signaux d'angular
+- Test frontend avec  Karma + Puppeteer + Chrome Headless
 
 ### Backend
 - Spring Boot 3.3
@@ -40,24 +41,32 @@ Les utilisateurs peuvent :
 - PostgreSQL
 - Hibernate/JPA
 - Kafka
+- test Unitaire JUnit( en mode Skip d'abord)
 
 ### Déploiement
 - Docker & Docker Compose
 - Kubernetes (Skaffold)
-- Http-server
-- Ansible
-- Jenkins
-- Kubernetes
-- WSL et VirtualBox
-- Script shell lunix
+- Http-server pour le déploiement 
+- Ansible pour le déploiment 
+- Jenkins pour le  CI/CD
+- Kubernetes pour l'infrastructure 
+- WSL(pour les déploiement local) et VirtualBox poutr les envirionnment opérationnel , hautement disponible
+- Script shell lunix( pour le démarage de certain processus en arrienre plan)
 
 
 ### Struture du github 
 Ce projet contient 3 branches à ce stade : 
-- La branche master : est une branche clasique du projet 
-- La brache firts-deployment-with-ansible: est une brache juste pour déployer avec ansible du code de la branche master. Ansible est instanllé dans WSL. Et donc le déploiement est dans WSL
-- La brache second-deployment-with-ansible_and_jenskin : C'est une baranche qui intègre jenkins dans le projet. Jenkins glone le code , le buide et le transmet à Ansible et ansible le déploie. 
+- La branche master : est une branche clasique du projet. Code sans stack de déploement 
+- La brache firts-deployment-with-ansible: est une brache juste pour déployer avec ansible du code de la branche master. Ansible est  
+  instanllé dans WSL. Et donc le déploiement est dans WSL
+- La brache second-deployment-with-ansible_and_jenskin : C'est une baranche qui intègre jenkins dans le projet. Jenkins clone le code , 
+  le buide et le transmet à Ansible et ansible le déploie.
+- Third-deployment-with-ansible_jenkins_and_k8s : est une branhe qui contient le code du déploiment avec ansible, jenkins et kubernetes
+  Est en cours de développment. Ici ansible ne va pa gérer le déploiement. Il va servir de provisionner des serveur pour l'infrasture de k8s. 
+- Forth-deployment-with-ansible_jenkins_and_k8s-kafka( à venir)
 
+
+Je suis entrain de mettre en place l'intégration des outils de déploiment et d'infrastruture pour ensuite continuer le développment. En mode CI/CD. 
 
 
 
