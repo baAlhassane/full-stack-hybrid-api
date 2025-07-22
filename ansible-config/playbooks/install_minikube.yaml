@@ -60,11 +60,26 @@
         dest: /usr/local/bin/kubectl
         mode: '0755'
 
+        
     - name: Démarrer Minikube (avec le driver Docker)
       ansible.builtin.shell: |
         minikube stop || true
         minikube delete || true
-        # AJOUT DE --force ICI
-        minikube start --driver=docker --listen-address=0.0.0.0 --force
+        minikube start --driver=docker --listen-address=0.0.0.0
       args:
         creates: /home/alhassaneba/.minikube/machines/minikube/config.json
+      # --- C'EST ICI QUE VOUS AJOUTEZ become_user ---
+      become: yes # Maintenez 'become: yes' pour cette tâche si elle doit toujours être exécutée avec sudo,
+                  # mais 'become_user' prendra le dessus pour l'utilisateur.
+      become_user: alhassaneba # <--- AJOUTEZ CETTE LIGNE ICI
+      # Cela signifie : "Exécute cette tâche en tant qu'utilisateur 'alhassaneba',
+      # mais utilise 'sudo' pour le faire si nécessaire (car 'become: yes' est actif)."
+
+    # - name: Démarrer Minikube (avec le driver Docker)
+    #   ansible.builtin.shell: |
+    #     minikube stop || true
+    #     minikube delete || true
+    #     # AJOUT DE --force ICI
+    #     minikube start --driver=docker --listen-address=0.0.0.0
+    #   args:
+    #     creates: /home/alhassaneba/.minikube/machines/minikube/config.json
