@@ -33,7 +33,7 @@
 
     - name: Copier l'application Spring Boot JAR
       ansible.builtin.copy:
-        src: "{{ spring_boot_jar_src_path }}"
+        src: "{{ spring_boot_jar_src_path }}"  
         dest: "{{ linux_base_deploy_path }}/hybrid-api-backend/target/{{ backend_jar_final_name }}"
         remote_src: no # Indique que la source est locale à la machine Ansible (WSL)
         mode: '0644'

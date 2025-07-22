@@ -1,0 +1,46 @@
+# Définition du Deployment pour le frontend Angular
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hybrid-api-front-deployment # Nom unique pour ce déploiement.
+  labels:
+    app: hybrid-api-front # Labels pour identifier les ressources liées à cette application.
+spec:
+  replicas: 1 # Nombre d'instances (Pods) de l'application à exécuter.
+  selector:
+    matchLabels:
+      app: hybrid-api-front # Le sélecteur pour trouver les Pods gérés par ce déploiement.
+  template: # Modèle pour les Pods qui seront créés par ce déploiement.
+    metadata:
+      labels:
+        app: hybrid-api-front # Labels appliqués aux Pods créés.
+    spec:
+      containers:
+        - name: hybrid-api-front # Nom du conteneur dans le Pod.
+          image: alhas2186/hybrid-api-front:1.0.0 # L'image Docker à utiliser (REMPLACEZ VOTRE NOM D'UTILISATEUR).
+          ports:
+            - containerPort: 80 # Le port sur lequel Nginx écoute à l'intérieur du conteneur.
+          resources:
+            requests: # Requêtes minimales de ressources.
+              memory: "128Mi"
+              cpu: "200m"
+            limits: # Limites maximales de ressources.
+              memory: "256Mi"
+              cpu: "400m"
+
+--- 
+# Définition du Service pour le frontend Angular
+apiVersion: v1
+kind: Service
+metadata:
+  name: hybrid-api-front-service # Nom unique pour ce service.
+spec:
+  selector:
+    app: hybrid-api-front # Sélectionne les Pods avec ce label.
+  ports:
+    - protocol: TCP
+      port: 80 # Le port du Service (accessible à l'intérieur du cluster).
+      targetPort: 80 # Le port du conteneur Nginx.
+  type: NodePort # IMPORTANT: Utilise NodePort pour rendre le frontend accessible depuis l'extérieur de Minikube.
+                 # Minikube attribuera un port aléatoire (généralement entre 30000 et 32767) sur votre WSL.
+                 # Vous utiliserez 'minikube service hybrid-api-front-service --url' pour trouver l'URL.

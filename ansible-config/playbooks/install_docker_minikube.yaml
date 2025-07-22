@@ -1,0 +1,77 @@
+---
+- name: Installer Docker et Minikube sur WSL2
+  hosts: localhost # S'exécute sur l'instance WSL où Ansible est lancé
+  become: yes # Nécessite les privilèges root pour l'installation
+
+  tasks:
+    - name: Mettre à jour les paquets apt
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Installer les dépendances requises pour Docker
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        state: present
+
+    - name: Ajouter la clé GPG officielle de Docker
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Ajouter le dépôt Docker APT
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Installer Docker Engine
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+
+    - name: Ajouter l'utilisateur 'alhassaneba' au groupe docker
+      ansible.builtin.user:
+        name: alhassaneba
+        groups: docker
+        append: yes
+
+    - name: Vérifier que Docker est en cours d'exécution
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Télécharger Minikube
+      ansible.builtin.get_url:
+        url: https://github.com/kubernetes/minikube/releases/download/v1.32.0/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: '0755' # Rendre le binaire exécutable
+
+    - name: Télécharger kubectl (outil en ligne de commande pour Kubernetes)
+      ansible.builtin.get_url:
+        url: https://dl.k8s.io/release/v1.28.2/bin/linux/amd64/kubectl # Version compatible avec Minikube 1.32.0 (vérifiez la compatibilité si vous utilisez une version différente de Minikube)
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
+
+    - name: Démarrer Minikube (avec le driver Docker)
+      ansible.builtin.shell: |
+        # Arrête Minikube s'il est déjà en cours d'exécution
+        minikube stop || true
+        # Supprime le cluster existant pour un démarrage propre
+        minikube delete || true
+        # Démarre Minikube avec le driver Docker.
+        # '--listen-address=0.0.0.0' permet d'accéder aux services depuis l'extérieur de WSL.
+        # '--driver=docker' est le driver le plus simple pour WSL2.
+        minikube start --driver=docker --listen-address=0.0.0.0
+      args:
+        creates: /home/alhassaneba/.minikube/machines/minikube/config.json # N'exécute la commande que si Minikube n'est pas déjà démarré
+      # Note: Le premier démarrage de Minikube peut prendre du temps.
+      # Assurez-vous que l'utilisateur 'alhassaneba' a les droits d'exécuter docker et minikube sans sudo.
+      # Un redémarrage de la session WSL peut être nécessaire après l'ajout au groupe docker.

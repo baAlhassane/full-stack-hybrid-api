@@ -1,0 +1,67 @@
+# Définition du Deployment pour le backend Spring Boot
+# Un Deployment gère le déploiement et la mise à jour de vos Pods.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hybrid-api-backend-deployment # Nom unique pour ce déploiement.
+  labels:
+    app: hybrid-api-backend # Labels pour identifier les ressources liées à cette application.
+spec:
+  replicas: 1 # Nombre d'instances (Pods) de l'application à exécuter.
+  selector:
+    matchLabels:
+      app: hybrid-api-backend # Le sélecteur pour trouver les Pods gérés par ce déploiement.
+  template: # Modèle pour les Pods qui seront créés par ce déploiement.
+    metadata:
+      labels:
+        app: hybrid-api-backend # Labels appliqués aux Pods créés.
+    spec:
+      containers:
+        - name: hybrid-api-backend # Nom du conteneur dans le Pod.
+          image: alhas2186/hybrid-api-backend:1.0.0 # L'image Docker à utiliser (REMPLACEZ VOTRE NOM D'UTILISATEUR).
+          ports:
+            - containerPort: 8081 # Le port sur lequel l'application Spring Boot écoute à l'intérieur du conteneur.
+          # Ressources (optionnel mais recommandé pour la gestion des ressources du cluster)
+          resources:
+            requests: # Requêtes minimales de ressources pour que le Pod puisse être planifié.
+              memory: "512Mi"
+              cpu: "500m" # 0.5 CPU
+            limits: # Limites maximales de ressources que le Pod peut consommer.
+              memory: "1024Mi"
+              cpu: "1000m" # 1 CPU
+          # Vérification de l'état de santé de l'application (Liveness et Readiness Probes)
+          # Kubernetes utilise ces probes pour savoir si le conteneur est en vie et prêt à recevoir du trafic.
+          livenessProbe: # Vérifie si l'application est toujours en cours d'exécution. Si elle échoue, le Pod est redémarré.
+            httpGet:
+              path: /actuator/health # L'endpoint de santé de Spring Boot.
+              port: 8081
+            initialDelaySeconds: 30 # Attendre 30 secondes avant la première vérification.
+            periodSeconds: 10 # Vérifier toutes les 10 secondes.
+            failureThreshold: 3 # Nombre d'échecs consécutifs avant de considérer le Pod comme non sain.
+          readinessProbe: # Vérifie si l'application est prête à recevoir du trafic. Si elle échoue, le Pod n'est pas routé.
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 20 # Attendre 20 secondes avant la première vérification.
+            periodSeconds: 5 # Vérifier toutes les 5 secondes.
+            failureThreshold: 3
+
+---
+# Définition du Service pour le backend Spring Boot
+# Un Service expose votre application à l'intérieur ou à l'extérieur du cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hybrid-api-backend-service # Nom unique pour ce service.
+spec:
+  selector:
+    app: hybrid-api-backend # Sélectionne les Pods avec ce label (ceux du déploiement ci-dessus).
+  ports:
+    - protocol: TCP
+      port: 8081 # Le port du Service (accessible à l'intérieur du cluster).
+      targetPort: 8081 # Le port du conteneur vers lequel le trafic est redirigé.
+  type: ClusterIP # Type de service:
+                  # ClusterIP: Accessible uniquement à l'intérieur du cluster (par défaut).
+                  # NodePort: Expose le service sur un port de chaque nœud du cluster (accessible depuis l'extérieur).
+                  # LoadBalancer: Crée un load balancer externe (pour les fournisseurs de cloud).
+                  # ExternalName: Mappe le service à un nom DNS externe.

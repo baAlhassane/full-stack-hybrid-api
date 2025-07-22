@@ -9,12 +9,11 @@ Error: listen EADDRINUSE: address already in use 0.0.0.0:4200
     at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
 Emitted 'error' event on Server instance at:
     at emitErrorNT (node:net:1838:8)
-    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
-  code: 'EADDRINUSE',
-  errno: -98,
-  syscall: 'listen',
-  address: '0.0.0.0',
-  port: 4200
-}
-
-Node.js v18.19.1
+    at process.processTicksAndRejections (node:internal/process/task_qu[2025-07-09T12:02:50.797Z]  "GET /" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+(node:15254) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2025-07-09T12:02:50.858Z]  "GET /polyfills-FFHMD2TL.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+[2025-07-09T12:02:50.865Z]  "GET /main-JCGZ3UIL.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+[2025-07-09T12:02:50.878Z]  "GET /styles-YUF6OWU5.css" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+[2025-07-09T12:02:50.911Z]  "GET /styles-YUF6OWU5.css" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+[2025-07-09T12:02:51.568Z]  "GET /favicon.ico" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
