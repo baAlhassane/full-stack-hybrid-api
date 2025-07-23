@@ -109,6 +109,11 @@ pipeline {
 
                         echo "Description du pod backend (pour plus de détails sur les événements et les erreurs)..."
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- describe pod -l app=hybrid-api-backend\"'"
+                        
+                        // --- AJOUT : Logs de Minikube pour le débogage de l'image pull ---
+                        echo "Affichage des logs de Minikube (pour les problèmes d'image pull/démarrage)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"minikube logs --tail=50\"'"
+
                         echo "Logs du pod backend (pour voir les erreurs d'application)..."
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-backend --tail=100\"'"
 
