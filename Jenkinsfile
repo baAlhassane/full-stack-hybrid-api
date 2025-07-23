@@ -69,9 +69,18 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
+                        echo "Vérification de l'état de Minikube avant déploiement..."
+                        // Ajout d'une boucle de vérification de l'état de Minikube
+                        // Cela s'assure que le cluster est bien démarré et accessible
+                        retry(5) { // Tente 5 fois
+                            sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"minikube status\"'"
+                            sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} kubectl cluster-info\"'"
+                            // Ajout d'un petit délai après les vérifications
+                            sleep 10 // Attend 10 secondes
+                        }
+
                         echo "Déploiement des applications sur Minikube..."
-                        
-                        // Utilise KUBECONFIG pour pointer explicitement vers le fichier de configuration de Minikube
+                        // Applique les manifestes Kubernetes
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/backend-deployment.yaml\"'"
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/frontend-deployment.yaml\"'"
                         
