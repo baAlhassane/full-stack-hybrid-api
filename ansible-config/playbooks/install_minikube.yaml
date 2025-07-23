@@ -1,7 +1,7 @@
 ---
 - name: Installer Docker et Minikube sur WSL2
   hosts: localhost # S'exécute sur l'instance WSL où Ansible est lancé
-  become: yes # Nécessite les privilèges root pour l'installation
+  become: yes # Nécessite les privilèges root pour l'installation des paquets et la gestion de Docker
 
   tasks:
     - name: Mettre à jour les paquets apt
@@ -64,8 +64,10 @@
       ansible.builtin.shell: |
         minikube stop || true
         minikube delete || true
-        minikube start --driver=docker --listen-address=0.0.0.0 --force
-      # REMOVED: args: creates: /home/alhassaneba/.minikube/machines/minikube/config.json
+        minikube start --driver=docker --listen-address=0.0.0.0
+      # IMPORTANT: become: no et become_user: pour exécuter minikube en tant qu'utilisateur non-root
+      become: no # Désactive le sudo pour cette tâche spécifique
+      become_user: alhassaneba # Exécute la commande en tant qu'utilisateur alhassaneba
       # Note: Le premier démarrage de Minikube peut prendre du temps.
       # Assurez-vous que l'utilisateur 'alhassaneba' a les droits d'exécuter docker et minikube sans sudo.
       # Un redémarrage de la session WSL peut être nécessaire après l'ajout au groupe docker.
