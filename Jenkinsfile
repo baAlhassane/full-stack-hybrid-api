@@ -116,10 +116,14 @@ pipeline {
                         
                         echo "Si des pods sont en état 'Pending' ou 'Error', vérifiez leurs logs avec 'minikube kubectl -- logs <nom-du-pod>'."
                         // --- Commandes de débogage supplémentaires (décommentez si nécessaire) ---
-                        // echo "Description du pod frontend (pour plus de détails sur les événements et les erreurs)..."
-                        // sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- describe pod -l app=hybrid-api-front\"'"
-                        // echo "Logs du pod frontend (pour voir les erreurs d'application)..."
-                        // sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-front --tail=100\"'"
+                        echo "Description du pod backend (pour plus de détails sur les événements et les erreurs)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- describe pod -l app=hybrid-api-backend\"'"
+                        echo "Description du pod frontend (pour plus de détails sur les événements et les erreurs)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- describe pod -l app=hybrid-api-front\"'"
+                        echo "Logs du pod backend (pour voir les erreurs d'application)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-backend --tail=100\"'"
+                        echo "Logs du pod frontend (pour voir les erreurs d'application)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-front --tail=100\"'"
 
 
                         echo "Tentative de récupération de l'URL du frontend..."
