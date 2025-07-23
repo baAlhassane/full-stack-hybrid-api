@@ -7,9 +7,13 @@ pipeline {
         SSH_CREDENTIAL_ID = 'ssh-wsl-ansible'
         
         DOCKER_REGISTRY = 'docker.io'
-        DOCKER_USERNAME = 'alhas2186' // Assurez-vous que c'est bien votre nom d'utilisateur Docker Hub
+        DOCKER_USERNAME = 'alhas2186' // Mis à jour avec votre nom d'utilisateur Docker Hub
         DOCKER_CREDENTIAL_ID = 'docker-hub-credentials'
         APP_VERSION = '1.0.0'
+        
+        # --- NOUVELLE VARIABLE : Chemin du Kubeconfig de Minikube ---
+        # Remplacez 'alhassaneba' si votre utilisateur Jenkins est différent dans WSL.
+        MINIKUBE_KUBECONFIG = '/home/alhassaneba/.kube/config'
     }
 
     stages {
@@ -19,7 +23,6 @@ pipeline {
             }
         }
 
-        // --- NOUVEL EMPLACEMENT : Installer Minikube via Ansible (maintenant en premier) ---
         stage('Install Minikube via Ansible') {
             steps {
                 script {
@@ -67,11 +70,13 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: env.SSH_CREDENTIAL_ID, keyFileVariable: 'ANSIBLE_SSH_KEY_PATH')]) {
                         echo "Déploiement des applications sur Minikube..."
-                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/backend-deployment.yaml\"'"
-                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/frontend-deployment.yaml\"'"
+                        
+                        # Utilise KUBECONFIG pour pointer explicitement vers le fichier de configuration de Minikube
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/backend-deployment.yaml\"'"
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/frontend-deployment.yaml\"'"
                         
                         echo "Déploiement Kubernetes terminé. Récupération de l'URL du frontend..."
-                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"minikube service hybrid-api-front-service --url\"'"
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube service hybrid-api-front-service --url\"'"
                     }
                 }
             }
