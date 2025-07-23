@@ -118,9 +118,9 @@ pipeline {
                         echo "Logs du pod backend (pour voir les erreurs d'application)..."
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-backend --tail=100\"'"
                         
-                        // --- NOUVELLE COMMANDE : Afficher la configuration Nginx du pod frontend ---
+                        // --- COMMANDE CORRIGÉE : Afficher la configuration Nginx du pod frontend ---
                         echo "Affichage de la configuration Nginx du pod frontend..."
-                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- exec -it $(minikube kubectl -- get pod -l app=hybrid-api-front -o jsonpath='{.items[0].metadata.name}') -- cat /etc/nginx/conf.d/default.conf\"'"
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- exec -it \$(minikube kubectl -- get pod -l app=hybrid-api-front -o jsonpath='{.items[0].metadata.name}') -- cat /etc/nginx/conf.d/default.conf\"'"
                         
                         echo "Logs du pod frontend (pour voir les erreurs d'application)..."
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-front --tail=100\"'"
