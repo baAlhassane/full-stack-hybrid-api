@@ -104,21 +104,26 @@ pipeline {
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/backend-deployment.yaml\"'"
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- apply -f /home/alhassaneba/document/web/full-stack/hybrid-api-deployment/kubernetes-manifests/frontend-deployment.yaml\"'"
                         
+                        echo "Vérification de l'état des pods avant attente (pour le débogage)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- get pods -A -o wide\"'"
+
+                        echo "Description du pod backend (pour plus de détails sur les événements et les erreurs)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- describe pod -l app=hybrid-api-backend\"'"
+                        echo "Logs du pod backend (pour voir les erreurs d'application)..."
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-backend --tail=100\"'"
+
                         echo "Attente que les déploiements soient prêts..."
-                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- wait --for=condition=Available deployment/hybrid-api-backend-deployment --timeout=300s\"'"
+                        // Attendre que le déploiement backend soit prêt (timeout augmenté)
+                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- wait --for=condition=Available deployment/hybrid-api-backend-deployment --timeout=600s\"'"
+                        // Attendre que le déploiement frontend soit prêt
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- wait --for=condition=Available deployment/hybrid-api-front-deployment --timeout=300s\"'"
 
                         echo "Vérification finale de l'état des pods après attente..."
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- get pods -A -o wide\"'"
                         
-                        echo "Description du pod backend (pour plus de détails sur les événements et les erreurs)..."
-                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- describe pod -l app=hybrid-api-backend\"'"
                         echo "Description du pod frontend (pour plus de détails sur les événements et les erreurs)..."
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- describe pod -l app=hybrid-api-front\"'"
-                        echo "Logs du pod backend (pour voir les erreurs d'application)..."
-                        sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- logs -l app=hybrid-api-backend --tail=100\"'"
                         
-                        // --- COMMANDE CORRIGÉE : Afficher la configuration Nginx du pod frontend ---
                         echo "Affichage de la configuration Nginx du pod frontend..."
                         sh "bash -c 'ssh -i \"${ANSIBLE_SSH_KEY_PATH}\" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"${env.ANSIBLE_USER}\"@\"${env.TARGET_WSL_IP}\" \"KUBECONFIG=${env.MINIKUBE_KUBECONFIG} minikube kubectl -- exec -it \$(minikube kubectl -- get pod -l app=hybrid-api-front -o jsonpath='{.items[0].metadata.name}') -- cat /etc/nginx/conf.d/default.conf\"'"
                         
