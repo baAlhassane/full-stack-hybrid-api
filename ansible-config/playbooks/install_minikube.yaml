@@ -62,14 +62,8 @@
 
     - name: Démarrer Minikube (avec le driver Docker)
       ansible.builtin.shell: |
-        # Arrête Minikube s'il est déjà en cours d'exécution, ignore les erreurs si non démarré
         minikube stop || true
-        # Supprime le cluster existant pour un démarrage propre, ignore les erreurs si non existant
         minikube delete || true
-        # Démarre Minikube avec le driver Docker.
-        # '--listen-address=0.0.0.0' permet d'accéder aux services depuis l'extérieur de WSL.
-        # '--driver=docker' est le driver le plus simple pour WSL2.
-        # '--force' est ajouté pour forcer le démarrage même en cas de problèmes de permissions ou d'état.
         minikube start --driver=docker --listen-address=0.0.0.0 --force
       # REMOVED: args: creates: /home/alhassaneba/.minikube/machines/minikube/config.json
       # Note: Le premier démarrage de Minikube peut prendre du temps.
