@@ -1,0 +1,67 @@
+# Définition du Deployment pour la base de données PostgreSQL
+# Ce déploiement gère le Pod (l'instance) de votre base de données.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment # Nom unique pour le déploiement PostgreSQL
+  labels:
+    app: postgres # Label pour identifier les pods PostgreSQL
+spec:
+  replicas: 1 # Pour l'apprentissage, une seule réplique est suffisante
+  selector:
+    matchLabels:
+      app: postgres # Sélectionne les pods avec ce label
+  template: # Modèle pour les pods PostgreSQL
+    metadata:
+      labels:
+        app: postgres # Labels des pods
+    spec:
+      containers:
+        - name: postgres # Nom du conteneur
+          image: postgres:latest # L'image officielle de PostgreSQL depuis Docker Hub
+          ports:
+            - containerPort: 5432 # Port par défaut de PostgreSQL
+          env: # Variables d'environnement pour configurer PostgreSQL (doivent correspondre à votre application Spring Boot)
+            - name: POSTGRES_DB
+              value: hybrid_api # Nom de votre base de données
+            - name: POSTGRES_USER
+              value: postgres # Nom d'utilisateur de la base de données
+            - name: POSTGRES_PASSWORD
+              value: draslom3 # Mot de passe de la base de données
+            - name: PGDATA # Chemin des données PostgreSQL à l'intérieur du conteneur
+              value: /var/lib/postgresql/data
+          volumeMounts: # Montage du volume persistant
+            - name: postgres-data # Nom du volume à monter
+              mountPath: /var/lib/postgresql/data # Chemin dans le conteneur
+      volumes: # Définition du volume (utilisera le provisioner de stockage par défaut de Minikube)
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc # Nom du PersistentVolumeClaim (PVC)
+---
+# Définition du Service pour PostgreSQL
+# Un Service expose la base de données à l'intérieur du cluster pour que d'autres pods puissent y accéder.
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service # Nom du service (sera le hostname DNS pour le backend Spring Boot)
+spec:
+  selector:
+    app: postgres # Sélectionne les pods du déploiement PostgreSQL
+  ports:
+    - protocol: TCP
+      port: 5432 # Port du service (accessible à l'intérieur du cluster)
+      targetPort: 5432 # Port du conteneur PostgreSQL
+  type: ClusterIP # Service accessible uniquement à l'intérieur du cluster (recommandé pour les bases de données)
+---
+# Définition du PersistentVolumeClaim (PVC) pour PostgreSQL
+# Un PVC est une requête de stockage persistant pour votre base de données.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc # Nom du PVC (utilisé par le déploiement)
+spec:
+  accessModes:
+    - ReadWriteOnce # Le volume peut être monté en lecture-écriture par un seul nœud à la fois
+  resources:
+    requests:
+      storage: 1Gi # Requête de 1 Gigaoctet de stockage (ajustez si besoin)

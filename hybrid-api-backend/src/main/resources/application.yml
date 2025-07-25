@@ -9,7 +9,8 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/hybrid_api
+    # --- MODIFIÉ : Pointe vers le Service Kubernetes de PostgreSQL ---
+    url: jdbc:postgresql://postgres-service:5432/hybrid_api
     username: postgres
     password: draslom3
     driverClassName: org.postgresql.Driver
@@ -17,31 +18,108 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update # Ou 'validate' ou 'none' en production après les migrations initiales
     show-sql: false
 
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
+# --- SUPPRIMÉ : Flyway n'est pas utilisé ---
+# flyway:
+#   enabled: true
+#   baseline-on-migrate: true
 
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/
-##          audiences:
-##            - https://alhas.com/api
-#
 jwt:
   secret: "WoslKZzExlBMQ5IdfaG2Gye5bIyEI0X17X0+6hyDAf7rWk2BvBbp9RPBrNZronFU/7Lxbk2CdNalrWm55Dk4Rw=="
+# J'ai commenté les lignes JWT car le secret JWT ne doit pas être en clair dans le code.
+# En Kubernetes, il est préférable de le gérer via un Kubernetes Secret ou un système de gestion de secrets.
+# Si vous en avez absolument besoin dans application.yml pour le moment, décommentez et assurez-vous de la sécurité.
 
-# application.yml
 management:
   endpoints:
     web:
       exposure:
         include: "*"
 
-
-
-
 server:
   port: 8081
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# debug: true # Ajoutez cette ligne ici
+# logging:
+#   level:
+#     org:
+#       springframework:
+#         security: TRACE #DEBUG
+#     com:
+#       mycompany: INFO
+
+# spring:
+#   datasource:
+#     url: jdbc:postgresql://localhost:5432/hybrid_api
+#     username: postgres
+#     password: draslom3
+#     driverClassName: org.postgresql.Driver
+
+#   jpa:
+#     database-platform: org.hibernate.dialect.PostgreSQLDialect
+#     hibernate:
+#       ddl-auto: create
+#     show-sql: false
+
+#   flyway:
+#     enabled: true
+#     baseline-on-migrate: true
+
+# #      resourceserver:
+# #        jwt:
+# #          issuer-uri: https://dev-lbu4c820m2nza8vh.us.auth0.com/
+# ##          audiences:
+# ##            - https://alhas.com/api
+# #
+# jwt:
+#   secret: "WoslKZzExlBMQ5IdfaG2Gye5bIyEI0X17X0+6hyDAf7rWk2BvBbp9RPBrNZronFU/7Lxbk2CdNalrWm55Dk4Rw=="
+
+# # application.yml
+# management:
+#   endpoints:
+#     web:
+#       exposure:
+#         include: "*"
+
+
+
+
+# server:
+#   port: 8081
