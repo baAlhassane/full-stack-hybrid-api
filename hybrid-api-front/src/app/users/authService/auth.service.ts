@@ -134,7 +134,7 @@ export class AuthService {
         console.log("Login success", response);
       },
       error: error => {
-        if(error.status === 401 || (typeof error.error === 'string' && error.error.includes('Identifiants invalides (email ou mot de passe incorrect).' ))){
+        if(error.status === 401 || (typeof error.error === 'string' && error.error.includes('Identifiants invalides (email ou mot de passe incorrect). \n ' ))){
           this.validationErrors = { email: error.error };
           this.validationErrorsSubject.next(this.validationErrors);
         }
@@ -168,7 +168,7 @@ export class AuthService {
           console.log("form registration ", form);
         },
         error: error => {
-          if (error.status === 409 || (typeof error.error === 'string' && error.error.includes('Email is already taken'))) {
+          if (error.status === 409 || (typeof error.error === 'string' && error.error.includes('Email is already taken \n '))) {
             this.validationErrors = { email: error.error };
             this.validationErrorsSubject.next(this.validationErrors);
             console.log("test ", this.validationErrors['email'] );

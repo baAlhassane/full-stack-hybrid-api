@@ -1,0 +1,132 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hybrid-api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hybrid-api-front-dev.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hybrid-api-front-service
+            port:
+              # Assurez-vous que ce port correspond à celui exposé par votre service front-end
+              number: 80
+  - host: hybrid-api-back-dev.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hybrid-api-backend-service
+            port:
+              # Le chemin complet pour votre API Spring Boot
+              number: 8081
+
+
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: hybrid-api-ingress
+#   annotations:
+#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#   - host: hybrid-api-front-dev.local
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: hybrid-api-front-service
+#             port:
+#               # Remplacez 80 par le port réel de votre service front-end
+#               number: 80
+#   - host: hybrid-api-back-dev.local
+#     http:
+#       paths:
+#       - path: /api/hybrid-api
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: hybrid-api-backend-service
+#             port:
+#               number: 8081
+
+
+
+#----------------------------pour changer de nom de domaine non publique
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: hybrid-api-ingress
+#   annotations:
+#     # On supprime toutes les annotations de réécriture et de regex
+#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#   - host: monsite.com
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: hybrid-api-front-service
+#             port:
+#               number: 80
+#   - host: api.monsite.com
+#     http:
+#       paths:
+#       # Le chemin d'accès exact sans réécriture
+#       - path: /api/hybrid-api
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: hybrid-api-backend-service
+#             port:
+#               number: 8081
+
+    
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: hybrid-api-ingress
+#   annotations:
+#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+# spec:
+#   rules:
+#   - host: monsite.com
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: hybrid-api-front-service
+#             port:
+#               number: 80
+#   - host: api.monsite.com
+#     http:
+#       paths:
+#       - path: /api/hybrid-api
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: hybrid-api-backend-service
+#             port:
+#               number: 8081

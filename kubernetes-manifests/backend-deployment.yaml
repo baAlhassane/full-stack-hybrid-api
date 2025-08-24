@@ -7,7 +7,7 @@ metadata:
   labels:
     app: hybrid-api-backend # Labels pour identifier ce déploiement et ses pods associés
 spec:
-  replicas: 1 # Nombre d'instances (pods) de l'application à exécuter. Pour l'apprentissage, 1 est suffisant.
+  replicas: 1 # Nombre d'instances (pods) de l'application à exécuter.
   selector:
     matchLabels:
       app: hybrid-api-backend # Sélectionne les pods avec ce label pour que le déploiement les gère
@@ -18,9 +18,21 @@ spec:
     spec:
       containers:
         - name: hybrid-api-backend # Nom du conteneur dans le pod
-          image: alhas2186/hybrid-api-backend:1.0.0 # L'image Docker que nous avons poussée (CORRIGÉ)
+          # CORRIGEZ L'IMAGE : alhas2186/hybrid-api-backend:1.0.0 (ou le nom de votre image)
+          image: hybrid-api-backend:latest
+          imagePullPolicy: Never # Permet à Kubernetes de ne pas télécharger l'image si elle est déjà disponible en local.
           ports:
             - containerPort: 8081 # Le port sur lequel l'application Spring Boot écoute DANS le conteneur
+          # Définition des variables d'environnement pour la base de données.
+          # C'est ici que vous spécifiez la configuration de connexion.
+          # REMARQUE : Pour la production, il est fortement recommandé d'utiliser des Secrets Kubernetes pour stocker ces valeurs.
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-service:5432/hybrid_api
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: draslom3
           # Ressources (optionnel, mais bonne pratique pour la gestion des ressources du cluster)
           resources:
             requests: # Requêtes minimales de ressources (Kubernetes essaiera de garantir ces ressources)
@@ -35,7 +47,7 @@ spec:
             httpGet:
               path: /actuator/health # L'endpoint de santé de Spring Boot
               port: 8081
-            initialDelaySeconds: 30 # Attendre 30 secondes avant la première vérification
+            initialDelaySeconds: 60 # Attendre 30 secondes avant la première vérification
             periodSeconds: 10 # Vérifier toutes les 10 secondes
             failureThreshold: 3 # Nombre d'échecs consécutifs avant de considérer le pod comme non sain
           readinessProbe: # Vérifie si l'application est prête à recevoir du trafic (si elle est prête, le trafic lui est envoyé)
@@ -47,21 +59,37 @@ spec:
             failureThreshold: 3
 
 ---
-# Définition du Service pour le backend Spring Boot
-# Un Service expose votre application à l'intérieur du cluster ou à d'autres services.
 apiVersion: v1
 kind: Service
 metadata:
-  name: hybrid-api-backend-service # Nom du service (sera utilisé pour la découverte de service)
+  name: hybrid-api-backend-service
 spec:
+  type: NodePort
   selector:
-    app: hybrid-api-backend # Sélectionne les pods du déploiement ci-dessus (basé sur leurs labels)
+    app: hybrid-api-backend   # Assure-toi que ce label correspond bien à celui du déploiement backend
   ports:
-    - protocol: TCP
-      port: 8081 # Le port du service (accessible à l'intérieur du cluster par d'autres pods)
-      targetPort: 8081 # Le port du conteneur vers lequel le trafic est redirigé
-  type: ClusterIP # Type de service:
-                  # ClusterIP: Accessible uniquement à l'intérieur du cluster (par défaut et recommandé pour les backends)
-                  # NodePort: Expose le service sur un port de chaque nœud du cluster (accessible depuis l'extérieur)
-                  # LoadBalancer: Crée un load balancer externe (pour les fournisseurs de cloud comme AWS, GCP, Azure)
-                  # ExternalName: Mappe le service à un nom DNS externe
+    - port: 8081             # Port interne du service (backend souvent sur 8080)
+      targetPort: 8081       # Port exposé par le conteneur backend
+      nodePort: 30081        # Port fixe pour accéder au backend depuis l’extérieur (ex : http://127.0.0.1:30081)
+      
+
+
+
+# Définition du Service pour le backend Spring Boot
+# Un Service expose votre application à l'intérieur du cluster ou à d'autres services.
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: hybrid-api-backend-service # Nom du service (sera utilisé pour la découverte de service)
+# spec:
+#   selector:
+#     app: hybrid-api-backend # Sélectionne les pods du déploiement ci-dessus (basé sur leurs labels)
+#   ports:
+#     - protocol: TCP
+#       port: 8081 # Le port du service (accessible à l'intérieur du cluster par d'autres pods)
+#       targetPort: 8081 # Le port du conteneur vers lequel le trafic est redirigé
+#   type: ClusterIP # Type de service:
+                 # ClusterIP: Accessible uniquement à l'intérieur du cluster (par défaut et recommandé pour les backends)
+                 # NodePort: Expose le service sur un port de chaque nœud du cluster (accessible depuis l'extérieur)
+                 # LoadBalancer: Crée un load balancer externe (pour les fournisseurs de cloud comme AWS, GCP, Azure)
+                 # ExternalName: Mappe le service à un nom DNS externe

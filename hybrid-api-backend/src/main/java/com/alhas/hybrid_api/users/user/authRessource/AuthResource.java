@@ -116,12 +116,21 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginReques
 
 @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody
-                                      @Valid RegistrationRequest registrationRequest) {
+                                      @Valid RegistrationRequest registrationRequest, HttpServletRequest request) {
         String fullName =registrationRequest.getRole()+" "+ registrationRequest.getFirstname() + " " + registrationRequest.getLastname();
         System.out.println(fullName+ " registered successfully ");
+        xemple d'utilisation de l'objet request
+        String remoteIpAddress = request.getRemoteAddr();
+        System.out.println("Requête d'enregistrement reçue de l'adresse IP : " + remoteIpAddress);
+        String fullURL = request.getRequestURL().toString();
+       String queryString = request.getQueryString();
+      if (queryString != null) {
+    fullURL += "?" + queryString;
+}
+         System.out.println("URL complète : " + fullURL);
 
         userService.registerUser(registrationRequest);
-    return ResponseEntity.ok(new RegistrationResponse(true, fullName,"User registered successfully"));
+    return ResponseEntity.ok(new RegistrationResponse(true, fullName," User registred successfully \n"));
 }
 
 

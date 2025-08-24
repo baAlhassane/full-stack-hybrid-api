@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app-frontend-ingress
+spec:
+  rules:
+  - host: monsite.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hybrid-api-front-service
+            port:
+              number: 80

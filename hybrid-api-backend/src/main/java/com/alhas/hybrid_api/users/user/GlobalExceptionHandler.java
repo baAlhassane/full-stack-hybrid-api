@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
         // Retournez une réponse standardisée pour l'UI, sans révéler trop de détails
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new LoginResponse(null, "Identifiants invalides (email ou mot de passe incorrect).", null));
+                .body(new LoginResponse(null, "Identifiants invalides (email ou mot de passe incorrect \n ).", null));
     }
  
     // Vous voudrez peut-être aussi gérer AccessDeniedException ici si elle se produit encore pour d'autres raisons

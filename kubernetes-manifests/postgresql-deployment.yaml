@@ -31,10 +31,10 @@ spec:
             - name: PGDATA # Chemin des données PostgreSQL à l'intérieur du conteneur
               value: /var/lib/postgresql/data
           volumeMounts: # Montage du volume persistant
-            - name: postgres-data # Nom du volume à monter
+            - name: postgres-data-hybrid-api-k8s # Nom du volume à monter
               mountPath: /var/lib/postgresql/data # Chemin dans le conteneur
       volumes: # Définition du volume (utilisera le provisioner de stockage par défaut de Minikube)
-        - name: postgres-data
+        - name: postgres-data-hybrid-api-k8s
           persistentVolumeClaim:
             claimName: postgres-pvc # Nom du PersistentVolumeClaim (PVC)
 ---

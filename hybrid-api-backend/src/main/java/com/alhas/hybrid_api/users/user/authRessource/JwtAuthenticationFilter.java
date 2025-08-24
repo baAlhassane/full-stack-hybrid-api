@@ -31,11 +31,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+         String method = request.getMethod();
+        String path = request.getServletPath();
+           if (path.startsWith("/api/hybrid-api/auth/")) {
+              filterChain.doFilter(request, response);
+            return;
+         }
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
+            // Autoriser OPTIONS et endpoints publics sans JWT
+    if (HttpMethod.OPTIONS.matches(method) ||
+        path.startsWith("/api/hybrid-api/auth/register") ||
+        path.startsWith("/api/hybrid-api/auth/login")) {
+        filterChain.doFilter(request, response);
+        return;
+    }
+    if ("OPTIONS".equalsIgnoreCase(request.getMethod()) || 
+    path.startsWith("/api/hybrid-api/auth/register") || 
+    path.startsWith("/api/hybrid-api/auth/login")) {
+    filterChain.doFilter(request, response);
+    return;
+}
+
 
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwt);

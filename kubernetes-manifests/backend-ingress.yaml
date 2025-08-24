@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app-backend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: api.monsite.com
+    http:
+      paths:
+      - path: /api/hybrid-api
+        pathType: Prefix
+        backend:
+          service:
+            name: hybrid-api-backend-service
+            port:
+              number: 8081

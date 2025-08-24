@@ -1,3 +1,4 @@
+
 package com.alhas.hybrid_api.infrastructure.config;
 import com.alhas.hybrid_api.users.user.UserRepository;
 import com.alhas.hybrid_api.users.user.authRessource.CustomUserDetailsService;
@@ -47,16 +48,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
                  .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Utilisez la source de configuration CORS que nous allons définir
+                  //.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/hybrid-api/auth/login").permitAll()
-                        .requestMatchers("/api/hybrid-api/auth/register").permitAll()
-                        .requestMatchers("/error").permitAll() // Permettre l'accès aux pages d'erreur
-                        .requestMatchers("/").permitAll()
-                // Si vous avez un endpoint public de connexion/inscription
-                .requestMatchers("/api/hybrid-api/auth/**").permitAll() // Autorise l'accès à tout ce qui est sous /api/hybrid-api/auth/
-                       .requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
-                         .requestMatchers("/actuator/health").permitAll() // Autorise l'accès à /actuator/health
-
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                       // .requestMatchers("/api/hybrid-api/auth/**").permitAll()
+                       .requestMatchers("/api/hybrid-api/auth/register").permitAll()
+            .requestMatchers("/api/hybrid-api/auth/login").permitAll()
+                .requestMatchers("/actuator/health", "/error", "/").permitAll()
+                         .requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
                         .anyRequest()
                         .authenticated() // Toute autre requête nécessite une authentification
                 )
@@ -88,20 +87,30 @@ public class SecurityConfig {
 
         return http.build();
     }
-
- @Bean
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Autorise l'origine de votre frontend Angular
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Méthodes HTTP autorisées
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Autorise tous les en-têtes (y compris Content-Type, Authorization, etc.)
-        configuration.setAllowCredentials(true); // Très important pour les requêtes avec cookies/tokens (comme votre cas avec `withCredentials: true`)
+        // Pour un déploiement avec un proxy, la meilleure pratique est d'autoriser toutes les origines
+        //configuration.setAllowedOrigins(Arrays.asList("*")); 
+//         configuration.setAllowedOriginPatterns(Arrays.asList(
+//             "http://hybrid-api-front-dev.local",
+//               "http://hybrid-api-back-dev.local")
+ 
+
+    configuration.setAllowedOriginPatterns(List.of(
+       //"http://localhost:*",       // tous les ports localhost
+        "http://127.0.0.1:4200",      // tous les ports loopback
+      //  "http://192.168.49.2:*",   // ton IP minikube
+    ));
+
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Applique cette config CORS à toutes les routes de votre backend
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
