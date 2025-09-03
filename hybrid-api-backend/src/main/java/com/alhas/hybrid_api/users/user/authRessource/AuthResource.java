@@ -54,7 +54,7 @@ public class AuthResource {
 @PostMapping("/login")
 public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest,  HttpServletRequest httpRequest) {
     System.out.println("Login successsss ");
-    System.out.println("loginRequest = " + loginRequest.getEmail() + ", " + loginRequest.getPassword());
+    System.out.println("loginRequest = " + loginRequest + ", " + loginRequest.getPassword());
 
     System.out.println("Attempting login for loginRequest.getEmail(): " + loginRequest.getEmail());
 

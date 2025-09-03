@@ -1,4 +1,6 @@
 logging:
+#  file:
+#    name: /logs/hybrid-api.log
   level:
     org:
       springframework:
@@ -32,4 +34,6 @@ spring:
 jwt:
   secret: "WoslKZzExlBMQ5IdfaG2Gye5bIyEI0X17X0+6hyDAf7rWk2BvBbp9RPBrNZronFU/7Lxbk2CdNalrWm55Dk4Rw=="
 
+server:
+  port: 8081
 

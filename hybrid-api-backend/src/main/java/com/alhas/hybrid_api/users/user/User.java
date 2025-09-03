@@ -81,5 +81,4 @@ public class User implements Serializable {
     @Column(name="password_set" ,nullable = false)
     private boolean passwordSet = false;
 
-
 }

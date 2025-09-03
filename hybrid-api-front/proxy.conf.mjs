@@ -1,12 +1,12 @@
 export default {
   "/api/hybrid-api": {
-    "target": "http://localhost:8080",
+    "target": "http://localhost:8081",
     "secure": false,
     "changeOrigin": true
   }
   ,
   "/oauth2": {
-    "target": "http://localhost:8080",
+    "target": "http://localhost:8081",
     "secure": false,
     "changeOrigin": true
   }

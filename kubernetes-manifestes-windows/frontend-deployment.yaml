@@ -1,0 +1,94 @@
+# Définition du Deployment pour le frontend Angular
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hybrid-api-front-deployment # Nom unique pour ce déploiement
+  labels:
+    app: hybrid-api-front # Labels pour identifier ce déploiement et ses pods associés
+spec:
+  replicas: 1 # Nombre d'instances (pods)
+  selector:
+    matchLabels:
+      app: hybrid-api-front # Sélectionne les pods avec ce label
+  template: # Modèle pour les pods
+    metadata:
+      labels:
+        app: hybrid-api-front # Labels des pods
+    spec:
+      containers:
+        - name: hybrid-api-front # Nom du conteneur
+          image: hybrid-api-front:v3.0 # hybrid-api-front:latest # alhas2186/hybrid-api-front:1.0.0 # L'image Docker que nous avons poussée (CORRIGÉ)
+          imagePullPolicy: Never       # Ajout de cette ligne
+          ports:
+            - containerPort: 80 # Le port sur lequel Nginx écoute DANS le conteneur
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "200m"
+            limits:
+              memory: "256Mi"
+              cpu: "400m"
+              
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hybrid-api-front-service
+spec:
+  selector:
+    app: hybrid-api-front
+  ports:
+    - protocol: TCP
+      port: 80         # Port interne du cluster
+      targetPort: 80   # Port exposé par ton conteneur frontend (Nginx)
+  type: ClusterIP
+
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: hybrid-api-front-service
+# spec:
+#   selector:
+#     app: hybrid-api-front
+#   ports:
+#     - protocol: TCP
+#       port: 80         # Port accessible à l'intérieur du cluster
+#       targetPort: 80   # Port exposé par le conteneur (Nginx dans ton cas)
+#       nodePort: 30080  # Port fixe sur l'hôte Minikube (accessible via http://127.0.0.1:30080)
+#   type: NodePort
+
+
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: hybrid-api-front-service
+# spec:
+#   selector:
+#     app: hybrid-api-front
+#   ports:
+#     - protocol: TCP
+#       port: 80
+#       targetPort: 80
+#   type: ClusterIP # NodePort n'est plus nécessaire, Ingress s'en charge
+
+# Définition du Service pour le frontend Angular
+# Ce Service expose le frontend Angular à l'extérieur du cluster.
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: hybrid-api-front-service # Nom du service
+# spec:
+#   selector:
+#     app: hybrid-api-front # Sélectionne les pods du déploiement ci-dessus
+#   ports:
+#     - protocol: TCP
+#       port: 80 # Le port du service (accessible à l'intérieur du cluster)
+#       targetPort: 80 # Le port du conteneur Nginx
+#   type: NodePort # IMPORTANT: Utilise NodePort pour rendre le frontend accessible depuis l'extérieur de Minikube
+#                  # Minikube attribuera un port aléatoire (généralement entre 30000 et 32767) sur votre WSL.
+#                  # Vous utiliserez 'minikube service hybrid-api-front-service --url' pour trouver l'URL.

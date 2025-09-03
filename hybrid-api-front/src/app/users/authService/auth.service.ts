@@ -4,6 +4,8 @@ import {Observable, BehaviorSubject, of, Subject, filter, audit, throwError} fro
 import { catchError, tap } from 'rxjs/operators';
 import {Router} from "@angular/router";
 import {FormLogin, FormRegister, RegistrationResponse, User} from "../models/users";
+// import {environment} from "../../../environments/environment";
+import {environment} from "../../../environments/environment.development";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +21,8 @@ export class AuthService {
   isAuthenticated$=this.isAuthenticated.asObservable();
 
 
-  API_URL = '/api';
-  H_API_URL = "/api/hybrid-api";
+  //API_URL = '/api';
+   API_URL = "/api/hybrid-api";
   user:any;
 
 
@@ -50,7 +52,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     });
 
-    this.http.get<User>(`${this.H_API_URL}/auth/get-authenticated-user-auth0`, { headers: headers }).pipe(
+    this.http.get<User>(`${this.API_URL}/auth/get-authenticated-user-auth0`, { headers: headers }).pipe(
       tap(userData => {
         this.userSubject.next(userData);
         this.isAuthenticated.next(true);
@@ -86,7 +88,7 @@ export class AuthService {
 
   //auth.service.ts
   logout(): void {
-   this.http.post(`${this.H_API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
+   this.http.post(`${environment.API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
       this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
       this.isAuthenticated.next(false);
       this.validationErrorsSubject.next({});
@@ -117,7 +119,9 @@ export class AuthService {
   }
 
   public loging() {
-    if (!this.isAuthenticated) {
+    console.log("this.isthenticated before :  ",this.isAuthenticated.value);
+    if (!this.isAuthenticated.value) {
+      console.log("this.isthenticated after:  ",this.isAuthenticated.value);
       console.log("Utilisateur non authentifié dans headerr.toggleShowLogging(), redirection vers /signin  ");
        this.router.navigate(['/signin']);
        // this.authenticatedSuject.next(false);
@@ -129,7 +133,7 @@ export class AuthService {
   }
 
   loginForm(email: string, password: string): void {
-    this.http.post<User>(`${this.H_API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
+    this.http.post<User>(`${this.API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
       next: response => {
         this.userSubject.next(response);
         this.isAuthenticated.next(true);
@@ -151,7 +155,7 @@ export class AuthService {
 
   registerForm(email: string, password: string): Observable<any> {
 
-    return this.http.post(`${this.H_API_URL}/auth/registration`, { email, password}, { withCredentials: true });
+    return this.http.post(`${this.API_URL}/auth/registration`, { email, password}, { withCredentials: true });
 
   }
 
@@ -165,7 +169,7 @@ export class AuthService {
    private registrationResponse$ = this.registrationResponseObs.asObservable();
 
   postRegistrationForm(formregister: FormRegister ) {
-     this.http.post<RegistrationResponse>(`${this.H_API_URL}/auth/register`,formregister, { withCredentials: true }).subscribe(
+     this.http.post<RegistrationResponse>(`${this.API_URL}/auth/register`,formregister, { withCredentials: true }).subscribe(
       {
         next: (form) => {
           //this.emailAlreadyUsed = false;
@@ -247,7 +251,7 @@ getvalidationErrorsObs():Observable<any> {
 
 
   setPassword(email: string, password: string): Observable<void> {
-    return this.http.post<void>(`${this.H_API_URL}/auth/set-password`, {
+    return this.http.post<void>(`${this.API_URL}/auth/set-password`, {
       email,
       password
     });

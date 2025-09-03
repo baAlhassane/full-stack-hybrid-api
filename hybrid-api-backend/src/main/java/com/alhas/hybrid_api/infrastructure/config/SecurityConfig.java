@@ -7,6 +7,7 @@ import com.alhas.hybrid_api.users.user.authRessource.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,6 +22,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig {
@@ -42,12 +50,16 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // <-- Important pour CORS
                         .requestMatchers("/api/hybrid-api/auth/login").permitAll()
                         .requestMatchers("/api/hybrid-api/auth/register").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/api/hybrid-api/auth/logout-hybrid-api").permitAll()
                         .requestMatchers("/error").permitAll() // Permettre l'accès aux pages d'erreur
-                        .requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
-
+                        //.requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
+                        .requestMatchers("/api/**").permitAll()// plus de vérification de rôle
                         .anyRequest()
                         .authenticated() // Toute autre requête nécessite une authentification
                 )
@@ -73,6 +85,22 @@ public class SecurityConfig {
         return http.build();
     }
 
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOriginPatterns(Arrays.asList(
+                    "http://localhost:*",           // tous les ports localhost
+                    "http://127.0.0.1:*",
+                    "http://hybrid-api-front-dev.local",
+                    "http://hybrid-api-back-dev.local"));
+            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            configuration.setAllowedHeaders(Arrays.asList("*"));
+            configuration.setAllowCredentials(true);
+
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", configuration);
+            return source;
+        }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {

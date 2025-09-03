@@ -1,0 +1,103 @@
+# Définition du Deployment pour le backend Spring Boot
+# Un Deployment gère la création et la mise à jour des Pods (instances de votre application).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hybrid-api-backend-deployment # Nom unique pour ce déploiement
+  labels:
+    app: hybrid-api-backend # Labels pour identifier ce déploiement et ses pods associés
+spec:
+  replicas: 1 # Nombre d'instances (pods) de l'application à exécuter.
+  selector:
+    matchLabels:
+      app: hybrid-api-backend # Sélectionne les pods avec ce label pour que le déploiement les gère
+  template: # Modèle pour les pods qui seront créés par ce déploiement
+    metadata:
+      labels:
+        app: hybrid-api-backend # Labels des pods
+    spec:
+      containers:
+        - name: hybrid-api-backend # Nom du conteneur dans le pod
+          # CORRIGEZ L'IMAGE : alhas2186/hybrid-api-backend:1.0.0 (ou le nom de votre image)
+          image: hybrid-api-backend:v3.0  # hybrid-api-backend:latest
+          imagePullPolicy: Never # Permet à Kubernetes de ne pas télécharger l'image si elle est déjà disponible en local.
+          ports:
+            - containerPort: 8081 # Le port sur lequel l'application Spring Boot écoute DANS le conteneur
+          # Définition des variables d'environnement pour la base de données. 
+          # C'est ici que vous spécifiez la configuration de connexion.
+          # REMARQUE : Pour la production, il est fortement recommandé d'utiliser des Secrets Kubernetes pour stocker ces valeurs.
+          # env:
+          #   - name: SPRING_DATASOURCE_URL
+          #     value: jdbc:postgresql://postgres-service:5432/prod_hybrid_api
+          #   - name: SPRING_DATASOURCE_USERNAME
+          #     value: postgres
+          #   - name: SPRING_DATASOURCE_PASSWORD
+          #     value: draslom3
+          env:
+              - name: SPRING_PROFILES_ACTIVE
+                value: "prod"
+              - name: SPRING_DATASOURCE_URL
+                value: "jdbc:postgresql://postgres-service:5432/prod_hybrid_api"
+              - name: SPRING_DATASOURCE_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-secret
+                    key: POSTGRES_USER
+              - name: SPRING_DATASOURCE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-secret
+                    key: POSTGRES_PASSWORD
+              - name: SERVER_PORT
+                value: "8081"
+          # Ressources (optionnel, mais bonne pratique pour la gestion des ressources du cluster)
+          resources:
+            requests: # Requêtes minimales de ressources (Kubernetes essaiera de garantir ces ressources)
+              memory: "512Mi"
+              cpu: "500m" # 0.5 CPU
+            limits: # Limites maximales de ressources (le conteneur ne dépassera pas ces limites)
+              memory: "1024Mi"
+              cpu: "1000m" # 1 CPU
+          #Vérification de l'état de santé de l'application (Liveness et Readiness Probes)
+         # Kubernetes utilisera ces probes pour savoir si le conteneur est en vie et prêt à recevoir du trafic
+          livenessProbe: # Vérifie si l'application est toujours en cours d'exécution (si elle plante, Kubernetes la redémarre)
+            httpGet:
+              path: /actuator/health # L'endpoint de santé de Spring Boot
+              port: 8081
+            initialDelaySeconds: 90 # Attendre 30 secondes avant la première vérification
+            periodSeconds: 15 # Vérifier toutes les 10 secondes
+            failureThreshold: 3 # Nombre d'échecs consécutifs avant de considérer le pod comme non sain
+          readinessProbe: # Vérifie si l'application est prête à recevoir du trafic (si elle est prête, le trafic lui est envoyé)
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 20 # Attendre 20 secondes avant la première vérification
+            periodSeconds: 5 # Vérifier toutes les 5 secondes
+            failureThreshold: 3
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hybrid-api-backend-service
+spec:
+  type: ClusterIP   # ⚡ Ingress a besoin de ça
+  selector:
+    app: hybrid-api-backend
+  ports:
+    - port: 8081       # Port interne exposé au cluster
+      targetPort: 8081 # Port de ton conteneur backend
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: hybrid-api-backend-service
+# spec:
+#   type: NodePort
+#   selector:
+#     app: hybrid-api-backend   # Assure-toi que ce label correspond bien à celui du déploiement backend
+#   ports:
+#     - port: 8081             # Port interne du service (backend souvent sur 8080)
+#       targetPort: 8081       # Port exposé par le conteneur backend
+#       nodePort: 30081        # Port fixe pour accéder au backend depuis l’extérieur (ex : http://127.0.0.1:30081)
+      

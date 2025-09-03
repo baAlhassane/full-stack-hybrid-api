@@ -1,3 +1,4 @@
+
 services:
   postgres:
     container_name: hybrid_api_container
@@ -16,3 +17,21 @@ volumes:
   hybrid_api:
     name: hybrid_api_volume
 
+#
+#  services:
+#    postgres:
+#      container_name: dev_hybrid_api_container
+#      image: 'postgres:17.6'
+#      environment:
+#        - 'POSTGRES_DB=hybrid_api'
+#        - 'POSTGRES_PASSWORD=draslom3'
+#        - 'POSTGRES_USER=postgres'
+#        - 'PGDATA=/var/lib/postgresql/data'
+#      volumes:
+#        - dev_hybrid_api:/var/lib/postgresql/data
+#      ports:
+#        - '5432:5432'
+#
+#  volumes:
+#    dev_hybrid_api:
+#      name: dev_hybrid_api_volume

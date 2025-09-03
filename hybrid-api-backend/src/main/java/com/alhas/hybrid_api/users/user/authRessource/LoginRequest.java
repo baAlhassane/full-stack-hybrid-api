@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginRequest {
     //private String firstname;
-   private  String email;
+    private  String email;
     private String password;
 
 }

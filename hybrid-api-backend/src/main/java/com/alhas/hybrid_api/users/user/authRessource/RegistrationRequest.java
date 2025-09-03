@@ -31,4 +31,6 @@ public class RegistrationRequest {
     @NotEmpty(message = " Role is mandatory")
     @NotBlank(message = "Role is mandatory")
     private String role;
+
+
 }

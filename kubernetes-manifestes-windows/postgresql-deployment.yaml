@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment # Nom unique pour le déploiement PostgreSQL
+  labels:
+    app: postgres # Label pour identifier les pods PostgreSQL
+spec:
+  replicas: 1 # Pour l'apprentissage, une seule réplique est suffisante
+  selector:
+    matchLabels:
+      app: postgres # Sélectionne les pods avec ce label
+  template:
+    metadata:
+      labels:
+        app: postgres # Labels des pods
+    spec:
+      containers:
+        - name: postgres # Nom du conteneur
+          image: postgres:16 # L'image officielle de PostgreSQL avec une version stable
+          ports:
+            - containerPort: 5432 # Port par défaut de PostgreSQL
+          env: # Variables d'environnement pour configurer PostgreSQL, récupérées depuis le Secret
+            - name: POSTGRES_DB
+              value: prod_hybrid_api # Le nom de la base de données
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts: # Montage du volume persistant
+            - name: postgres-data-hybrid-api-k8s
+              mountPath: /var/lib/postgresql/data
+      volumes: # Définition du volume (utilisera le provisioner de stockage par défaut de Minikube)
+        - name: postgres-data-hybrid-api-k8s
+          persistentVolumeClaim:
+            claimName: postgres-pvc # Nom du PersistentVolumeClaim (PVC)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service # Nom du service (sera le hostname DNS pour le backend Spring Boot)
+spec:
+  selector:
+    app: postgres # Sélectionne les pods du déploiement PostgreSQL
+  ports:
+    - protocol: TCP
+      port: 5432 # Port du service (accessible à l'intérieur du cluster)
+      targetPort: 5432 # Port du conteneur PostgreSQL
+  type: ClusterIP # Service accessible uniquement à l'intérieur du cluster
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc # Nom du PVC (utilisé par le déploiement)
+spec:
+  accessModes:
+    - ReadWriteOnce # Le volume peut être monté en lecture-écriture par un seul nœud à la fois
+  resources:
+    requests:
+      storage: 1Gi # Requête de 1 Gigaoctet de stockage
+
+#-------------------------------------------------
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: postgres-deployment
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: postgres
+#   template:
+#     metadata:
+#       labels:
+#         app: postgres
+#     spec:
+#       containers:
+#         - name: postgres
+#           image: postgres:17.6
+#           ports:
+#             - containerPort: 5432
+#           env:
+#             - name: POSTGRES_DB
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: postgres-secret
+#                   key: POSTGRES_DB
+#             - name: POSTGRES_USER
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: postgres-secret
+#                   key: POSTGRES_USER
+#             - name: POSTGRES_PASSWORD
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: postgres-secret
+#                   key: POSTGRES_PASSWORD
+#           volumeMounts:
+#             - mountPath: /var/lib/postgresql/data
+#               name: postgres-storage
+#       volumes:
+#         - name: postgres-storage
+#           persistentVolumeClaim:
+#             claimName: postgres-pvc 
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: postgres-service
+# spec:
+#   selector:
+#     app: postgres
+#   ports:
+#     - protocol: TCP
+#       port: 5432
+#       targetPort: 5432
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: postgres-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
