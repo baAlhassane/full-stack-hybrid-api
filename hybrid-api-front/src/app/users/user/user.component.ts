@@ -4,14 +4,16 @@ import {NgIf} from "@angular/common";
 import {AuthService} from "../authService/auth.service";
 import {Subscription} from "rxjs";
 import {User} from "../models/users";
+import {NotificationComponent} from "../../notification/notification/notification.component";
 
 @Component({
   selector: 'app-user',
   standalone: true,
-    imports: [
-        LoginComponent,
-      NgIf
-    ],
+  imports: [
+    LoginComponent,
+    NgIf,
+    NotificationComponent
+  ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

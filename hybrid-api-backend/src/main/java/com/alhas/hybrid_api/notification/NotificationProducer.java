@@ -14,10 +14,22 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification {
+@Service
+public class NotificationProducer {
     @Id
     @GeneratedValue
     private long id;
+    private final KafkaTemplate<String, UserEvent> kafkaTemplate;
 
+    public NotificationProducer(KafkaTemplate<String, UserEvent> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public void sendRegistrationEvent(UserEvent event) {
+        kafkaTemplate.send("user-registrations", event);
+    }
 
 }
+
+
+
