@@ -57,6 +57,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/hybrid-api/auth/register").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/hybrid-api/auth/logout-hybrid-api").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/topic/**").permitAll()
                         .requestMatchers("/error").permitAll() // Permettre l'accès aux pages d'erreur
                         //.requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
                         .requestMatchers("/api/**").permitAll()// plus de vérification de rôle

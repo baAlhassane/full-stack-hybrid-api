@@ -1,5 +1,7 @@
 package com.alhas.hybrid_api.users.user;
 
+import com.alhas.hybrid_api.notification.NotificationProducer;
+import com.alhas.hybrid_api.notification.UserEvent;
 import com.alhas.hybrid_api.users.jobber.Jobber;
 import com.alhas.hybrid_api.users.provider.Provider;
 import com.alhas.hybrid_api.users.user.authRessource.Authority;
@@ -10,6 +12,7 @@ import com.alhas.hybrid_api.users.user.mapper.UserMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,14 +32,16 @@ public class UserService {
     private final AuthorityService authorityService;
 
     private final PasswordEncoder passwordEncoder;
+    private final NotificationProducer notificationProducer;
 
     Set<Authority> authorities=new HashSet<>();
 
-    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, AuthorityService authorityService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, AuthorityService authorityService, PasswordEncoder passwordEncoder, NotificationProducer notificationProducer) {
         this.userRepository = userRepository;
           this.authorityRepository = authorityRepository;
         this.authorityService = authorityService;
         this.passwordEncoder = passwordEncoder;
+        this.notificationProducer = notificationProducer;
     }
 
 
@@ -76,8 +81,11 @@ public class UserService {
         user.setLastname(request.getLastname());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+       // NotificationProducer(KafkaTemplate<String, UserEvent > kafkaTemplate)
+
 
         userRepository.save(user);
+        notificationProducer.sendRegistrationEvent(new UserEvent(request.getFirstname(), request.getEmail()));
     }
 
     public void register(@Valid RegistrationRequest registrationRequest) {

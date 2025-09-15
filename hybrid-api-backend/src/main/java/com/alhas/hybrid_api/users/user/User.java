@@ -1,6 +1,6 @@
 package com.alhas.hybrid_api.users.user;
 
-import com.alhas.hybrid_api.notification.Notification;
+import com.alhas.hybrid_api.notification.NotificationProducer;
 import com.alhas.hybrid_api.users.Address;
 import com.alhas.hybrid_api.users.Role;
 import com.alhas.hybrid_api.users.user.authRessource.Authority;
@@ -48,8 +48,8 @@ public class User implements Serializable {
     private String password;
     @Column(name = "user_type", insertable = false, updatable = false)
     private String userType;
-    @OneToMany
-    private Set<Notification> notifications;
+    //@OneToMany
+    //private Set<Notification> notifications;
     private boolean isJobber;
 
     @Embedded

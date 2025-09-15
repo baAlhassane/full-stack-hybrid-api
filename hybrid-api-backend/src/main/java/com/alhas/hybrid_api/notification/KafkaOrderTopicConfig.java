@@ -1,7 +1,10 @@
 package com.alhas.hybrid_api.notification;
 
+<<<<<<< Updated upstream
 import org.springframework.context.annotation.Bean;
 
+=======
+>>>>>>> Stashed changes
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +16,11 @@ public class KafkaOrderTopicConfig {
     @Bean
     public NewTopic ordersTopic() {
         return TopicBuilder
+<<<<<<< Updated upstream
                 .name("order-topic")
+=======
+                .name("user-registrations")
+>>>>>>> Stashed changes
                 .build();
     }
 }

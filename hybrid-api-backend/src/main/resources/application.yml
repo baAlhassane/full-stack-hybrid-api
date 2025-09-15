@@ -5,6 +5,8 @@ logging:
     org:
       springframework:
         security: TRACE #DEBUG
+        org.springframework.kafka: DEBUG
+        org.apache.kafka: INFO
     com:
       mycompany: INFO
 
@@ -24,6 +26,35 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+
+  kafka:
+    bootstrap-servers: localhost:29092  # kafka:9092
+    # Propriétés spécifiques au consommateur
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # Changez le désérialiseur de valeur pour lire les objets JSON
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        # Indique au désérialiseur la classe de l'objet attendu
+        spring.json.value.default.type: com.alhas.hybrid_api.notification.UserEvent
+
+    # Propriétés spécifiques au producteur
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # Changez le sérialiseur de valeur pour envoyer des objets en JSON
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+#    consumer:
+#      group-id: my-group
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
 
 #      resourceserver:
 #        jwt:
