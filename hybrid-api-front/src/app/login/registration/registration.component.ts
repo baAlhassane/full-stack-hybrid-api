@@ -9,7 +9,6 @@ import {BehaviorSubject, Observable} from "rxjs";
 
 @Component({
   selector: 'app-registration',
-  standalone: true,
   imports: [
     FormsModule,
     PaginatorModule,
@@ -17,6 +16,7 @@ import {BehaviorSubject, Observable} from "rxjs";
     NgIf,
   ],
   templateUrl: './registration.component.html',
+  standalone: true,
   styleUrl: './registration.component.css'
 })
 export class RegistrationComponent implements OnInit {

@@ -10,14 +10,11 @@ import {authGuard} from "../../../users/authService/authGuard";
 
 @Component({
   selector: 'app-sig-in',
-  standalone: true,
   imports: [CommonModule,
     LoginComponent,
-    FaIconComponent,
-    RouterLink,
-    NgStyle
   ],
   templateUrl: './sig-in.component.html',
+  standalone: true,
   styleUrl: './sig-in.component.css'
 })
 export class SigInComponent implements OnInit, OnDestroy {

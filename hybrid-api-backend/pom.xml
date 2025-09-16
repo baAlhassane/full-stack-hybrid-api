@@ -91,23 +91,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
-<<<<<<< Updated upstream
-	</dependencies>
-=======
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
     </dependencies>
->>>>>>> Stashed changes
 
 	<build>
 		<plugins>

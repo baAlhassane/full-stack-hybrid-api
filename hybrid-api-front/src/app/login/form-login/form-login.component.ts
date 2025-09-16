@@ -9,7 +9,6 @@ import {FormLogin, User} from "../../users/models/users";
 
 @Component({
   selector: 'app-form-login',
-  standalone: true,
   imports: [
     FormsModule,
     InputTextModule,
@@ -17,6 +16,7 @@ import {FormLogin, User} from "../../users/models/users";
     PaginatorModule
   ],
   templateUrl: './form-login.component.html',
+  standalone: true,
   styleUrl: './form-login.component.css'
 })
 export class FormLoginComponent {

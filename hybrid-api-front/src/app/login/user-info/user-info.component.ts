@@ -5,12 +5,12 @@ import {NotificationComponent} from "../../notification/notification/notificatio
 
 @Component({
   selector: 'app-user-info',
-  standalone: true,
   imports: [
     NgIf,
-    NotificationComponent
+    NotificationComponent,
   ],
   templateUrl: './user-info.component.html',
+  standalone: true,
   styleUrl: './user-info.component.css'
 })
 export class UserInfoComponent implements OnInit {

@@ -6,18 +6,18 @@ import  {FooterComponent } from "././layout/footer/footer.component"
 import {ButtonModule} from "primeng/button";
 import {LoginComponent} from "./login/login.component";
 import {AuthService} from "./users/authService/auth.service";
+import {NotificationComponent} from "./notification/notification/notification.component";
 
 
 
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
+    selector: 'app-root',
   imports: [HeaderComponent, FooterComponent,
-    ButtonModule, HomeComponent, RouterOutlet
+    ButtonModule, HomeComponent, RouterOutlet,
   ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   authService=inject(AuthService);

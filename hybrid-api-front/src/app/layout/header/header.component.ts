@@ -15,17 +15,16 @@ import {DataRowOutlet} from "@angular/cdk/table";
 
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    RouterLink,
-    NgIf,
-    NgStyle,
-  ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+    selector: 'app-header',
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        RouterLink,
+        NgIf,
+        NgStyle,
+    ],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

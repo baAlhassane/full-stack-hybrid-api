@@ -6,13 +6,11 @@ import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [
-    NgClass,
-    NgStyle,
-    LoginComponent,
+
   ],
   templateUrl: './home.component.html',
+  standalone: true,
   styleUrl: './home.component.css'
 })
 export class HomeComponent {

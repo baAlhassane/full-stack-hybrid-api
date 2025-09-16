@@ -6,14 +6,13 @@ import {NgIf} from "@angular/common";
 import {RouterModule} from "@angular/router";
 
 @Component({
-  selector: 'app-succses-registration',
-  standalone: true,
-  imports: [
-    NgIf,
-    RouterModule
-  ],
-  templateUrl: './succses-registration.component.html',
-  styleUrl: './succses-registration.component.css'
+    selector: 'app-succses-registration',
+    imports: [
+        NgIf,
+        RouterModule
+    ],
+    templateUrl: './succses-registration.component.html',
+    styleUrl: './succses-registration.component.css'
 })
 export class SuccsesRegistrationComponent implements OnInit {
 

@@ -8,9 +8,12 @@
    userRole: string,
    type: string,
    authorities:string[]
-
+ notification: NotificationRgisgister
  }
-
+export type  NotificationRgisgister={
+  name:string,
+  email : string
+ }
  export type FormLogin ={
    // firstname: string,
    // lastname ? : string,

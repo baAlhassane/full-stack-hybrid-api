@@ -5,13 +5,12 @@ import {JsonPipe} from "@angular/common";
 import {CommonModule} from "@angular/common";
 
 @Component({
-  selector: 'app-notification',
-  standalone: true,
-  imports: [
-    JsonPipe, CommonModule,
-  ],
-  templateUrl: './notification.component.html',
-  styleUrl: './notification.component.css'
+    selector: 'app-notification',
+    imports: [
+        CommonModule, //JsonPipe,
+    ],
+    templateUrl: './notification.component.html',
+    styleUrl: './notification.component.css'
 })
 export class NotificationComponent implements OnInit {
 
@@ -26,7 +25,12 @@ export class NotificationComponent implements OnInit {
       .subscribe((notification: any) => {
         this.lastNotification = notification;
       });
+    // this.notificationService.notificationSubject
+    //   .pipe(filter(n => n !== null))
+    //   .subscribe((notification: any) => {
+    //     this.lastNotification = notification;
+    //   });
 
   }
-
+ // ngOnInit() {}
 }

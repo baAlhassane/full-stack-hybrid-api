@@ -25,17 +25,14 @@ import {UserInfoComponent} from "./user-info/user-info.component";
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [CommonModule,
-    ButtonDirective,
-    NgIf,
     FormsModule,
     ChipsModule,
     FormLoginComponent,
     RegistrationComponent, UserInfoComponent
-
   ],
   templateUrl: './login.component.html',
+  standalone: true,
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit, OnDestroy {

@@ -3,18 +3,19 @@ import {LoginComponent} from "../../login/login.component";
 import {NgIf} from "@angular/common";
 import {AuthService} from "../authService/auth.service";
 import {Subscription} from "rxjs";
-import {User} from "../models/users";
+import {NotificationRgisgister, User} from "../models/users";
 import {NotificationComponent} from "../../notification/notification/notification.component";
+import {NotificationService} from "../../notification/notification.service";
 
 @Component({
   selector: 'app-user',
-  standalone: true,
   imports: [
-    LoginComponent,
     NgIf,
-    NotificationComponent
+    NotificationComponent,
+
   ],
   templateUrl: './user.component.html',
+  standalone: true,
   styleUrl: './user.component.css'
 })
 export class UserComponent {
@@ -23,6 +24,8 @@ export class UserComponent {
   isAuthenticated: boolean=false;
   private subscription: Subscription= new Subscription();
   user: User | undefined | null=null;
+  notification: NotificationRgisgister | undefined;
+  notificationService: NotificationService=inject(NotificationService);
 
   ngOnInit(): void {
 
@@ -38,6 +41,21 @@ export class UserComponent {
     this.authService.emitisAutSubject().subscribe({
       next: (value: boolean) => {this.isAuthenticated = value;}
     });
+
+this.notificationService.notifications.subscribe({
+  next: (notification)=>{
+   if(this.user) {  this.user.notification=notification;}
+  }
+})
+
+    // this.notificationService.notificationSubject.subscribe({
+    //   next: (notification)=>{
+    //    if(this.user ) {  this.notification=notification;}
+    //
+    //   }
+    // })
+
+
   }
 
 }
