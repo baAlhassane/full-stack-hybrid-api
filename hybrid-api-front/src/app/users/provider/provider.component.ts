@@ -4,12 +4,13 @@ import {AuthService} from "../authService/auth.service";
 import {NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-provider',
-    imports: [
-        NgIf
-    ],
-    templateUrl: './provider.component.html',
-    styleUrl: './provider.component.css'
+  selector: 'app-provider',
+  imports: [
+    NgIf
+  ],
+  templateUrl: './provider.component.html',
+  standalone: true,
+  styleUrl: './provider.component.css'
 })
 export class ProviderComponent implements OnInit {
 

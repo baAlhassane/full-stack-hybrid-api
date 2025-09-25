@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.notification;
+package com.alhas.hybrid_api.websocket.notification;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

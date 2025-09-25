@@ -12,12 +12,13 @@ import {NotificationComponent} from "./notification/notification/notification.co
 
 
 @Component({
-    selector: 'app-root',
+  selector: 'app-root',
   imports: [HeaderComponent, FooterComponent,
     ButtonModule, HomeComponent, RouterOutlet,
   ],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.css'
+  templateUrl: './app.component.html',
+  standalone: true,
+  styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   authService=inject(AuthService);

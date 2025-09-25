@@ -38,7 +38,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         # Indique au désérialiseur la classe de l'objet attendu
-        spring.json.value.default.type: com.alhas.hybrid_api.notification.UserEvent
+        spring.json.value.default.type: com.alhas.hybrid_api.websocket.notification.UserEvent
 
     # Propriétés spécifiques au producteur
     producer:

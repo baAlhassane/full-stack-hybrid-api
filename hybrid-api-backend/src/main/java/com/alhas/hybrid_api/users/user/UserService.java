@@ -1,27 +1,19 @@
 package com.alhas.hybrid_api.users.user;
 
-import com.alhas.hybrid_api.notification.NotificationProducer;
-import com.alhas.hybrid_api.notification.UserEvent;
+import com.alhas.hybrid_api.websocket.notification.NotificationProducer;
+import com.alhas.hybrid_api.websocket.notification.UserEvent;
 import com.alhas.hybrid_api.users.jobber.Jobber;
 import com.alhas.hybrid_api.users.provider.Provider;
 import com.alhas.hybrid_api.users.user.authRessource.Authority;
 import com.alhas.hybrid_api.users.user.authRessource.AuthorityRepository;
 import com.alhas.hybrid_api.users.user.authRessource.AuthorityService;
 import com.alhas.hybrid_api.users.user.authRessource.RegistrationRequest;
-import com.alhas.hybrid_api.users.user.mapper.UserMapper;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {

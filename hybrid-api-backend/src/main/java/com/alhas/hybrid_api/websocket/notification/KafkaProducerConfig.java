@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.notification;
+package com.alhas.hybrid_api.websocket.notification;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;

@@ -4,12 +4,13 @@ import {User} from "../models/users";
 import {NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-jobber',
-    imports: [
-        NgIf
-    ],
-    templateUrl: './jobber.component.html',
-    styleUrl: './jobber.component.css'
+  selector: 'app-jobber',
+  imports: [
+    NgIf
+  ],
+  templateUrl: './jobber.component.html',
+  standalone: true,
+  styleUrl: './jobber.component.css'
 })
 export class JobberComponent implements OnInit {
 

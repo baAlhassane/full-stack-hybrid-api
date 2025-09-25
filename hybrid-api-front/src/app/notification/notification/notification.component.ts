@@ -10,6 +10,7 @@ import {CommonModule} from "@angular/common";
         CommonModule, //JsonPipe,
     ],
     templateUrl: './notification.component.html',
+    standalone: true,
     styleUrl: './notification.component.css'
 })
 export class NotificationComponent implements OnInit {

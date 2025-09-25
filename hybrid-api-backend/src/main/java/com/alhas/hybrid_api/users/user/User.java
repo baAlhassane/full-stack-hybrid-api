@@ -1,8 +1,6 @@
 package com.alhas.hybrid_api.users.user;
 
-import com.alhas.hybrid_api.notification.NotificationProducer;
 import com.alhas.hybrid_api.users.Address;
-import com.alhas.hybrid_api.users.Role;
 import com.alhas.hybrid_api.users.user.authRessource.Authority;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -11,9 +9,6 @@ import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.Instant;
