@@ -1,0 +1,9 @@
+<p>user-profile works!</p>
+<h2>👤 Mon profil</h2>
+<li><a routerLink="profile"><i class="pi pi-briefcase"></i> Profil</a></li>
+<img [src]="user?.imageUrl" alt="Photo" width="100">
+<p><strong>Nom :</strong> {{ user?.firstname }} {{ user?.lastname }}</p>
+<p><strong>Email :</strong> {{ user?.email }}</p>
+<p><strong>Type :</strong> {{ user?.type }}</p>
+<p><strong>Rôle :</strong> {{ user?.userRole }}</p>
+

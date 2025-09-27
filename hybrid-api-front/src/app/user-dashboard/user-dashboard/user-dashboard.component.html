@@ -1,0 +1,22 @@
+<p>user-dashboard works!</p>
+<div class="dashboard">
+  <!-- Barre latérale -->
+  <aside class="sidebar">
+    <h2>Mon espace</h2>
+    <nav>
+      <ul>
+        <li><a routerLink="profile">👤 Profil</a></li>
+        <li><a routerLink="chat">💬 Discussions</a></li>
+        <li><a routerLink="applications">📑 Offres postulées</a></li>
+        <li><a routerLink="missions">🛠️ Missions</a></li>
+        <li><a routerLink="calendar">📅 Calendrier</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Contenu principal -->
+  <main class="content flex justify-content-start ">content
+    <router-outlet></router-outlet>
+  </main>
+</div>
+

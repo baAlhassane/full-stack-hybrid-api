@@ -6,6 +6,7 @@ import {Subscription} from "rxjs";
 import {AuthService} from "../../../users/authService/auth.service";
 import {CommonModule, NgStyle} from "@angular/common";
 import {authGuard} from "../../../users/authService/authGuard";
+import {User} from "../../../users/models/users";
 
 
 @Component({
@@ -25,7 +26,7 @@ export class SigInComponent implements OnInit, OnDestroy {
   isAuthenticated=signal(false) ;
 
   constructor(private authService: AuthService) {}
-  user: any | null = null;
+  user: User | null = null;
   ngOnInit() {
 
     this.authService.emitUserSubject()

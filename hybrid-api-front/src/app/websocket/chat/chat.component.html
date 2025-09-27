@@ -1,0 +1,59 @@
+<div class="chat-dashboard">
+  <!-- Zone des messages -->
+  <div #messagesContainer class="messages-container">
+    <div
+      *ngFor="let msg of messages"
+      class="message"
+      [ngClass]="{ 'own-message': msg.sender === user().firstname }"
+    >
+      <div class="message-header">
+        <strong>{{ msg.sender }}</strong>
+        <span class="timestamp">{{ msg.timestamp | relativeTime }}</span>
+      </div>
+      <div class="message-content">{{ msg.content }}</div>
+    </div>
+  </div>
+
+  <!-- Liste des utilisateurs connectés -->
+  <div class="users-container">
+    <h4>Utilisateurs connectés</h4>
+    <ul>
+      <li *ngFor="let user of senders">{{ user.firstname+ " "+user.lastname }}</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Input pour envoyer un message -->
+<div class="chat-input">
+  <input
+    [(ngModel)]="newMessage"
+    (keyup.enter)="send()"
+    placeholder="Écrire un message..."
+  />
+  <button (click)="send()">Envoyer</button>
+</div>
+
+
+<!--<p>chat works!</p>-->
+<!--<div class="chat-container">-->
+<!--  <div class="messages">-->
+<!--    @for (msg of messages; track msg.timestamp) {-->
+<!--      <div>-->
+<!--        <b>{{ msg.sender }}</b>: {{ msg.content }}-->
+<!--        <i>({{ msg.timestamp | relativeTime }})</i>-->
+<!--      </div>-->
+<!--    }-->
+<!--  </div>-->
+
+<!--  <div class="input-area">-->
+<!--    <input [(ngModel)]="newMessage" placeholder="Écrire un message..." />-->
+<!--    <button (click)="send()">Envoyer</button>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<p>chat works!</p>-->
+
+
+
+
+

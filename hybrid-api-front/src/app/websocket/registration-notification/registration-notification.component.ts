@@ -1,24 +1,21 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {NotificationService} from "../notification.service";
+import { NotificationService } from '../notification.service';
 import {filter} from "rxjs";
-import {JsonPipe} from "@angular/common";
-import {CommonModule} from "@angular/common";
+import {JsonPipe, NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-notification',
-    imports: [
-        CommonModule, //JsonPipe,
-    ],
-    templateUrl: './notification.component.html',
-    standalone: true,
-    styleUrl: './notification.component.css'
+  selector: 'app-registration-notification',
+  standalone: true,
+  imports: [
+    JsonPipe,
+    NgIf
+  ],
+  templateUrl: './registration-notification.component.html',
+  styleUrl: './registration-notification.component.css'
 })
-export class NotificationComponent implements OnInit {
-
-
+export class RegistrationNotificationComponent  implements OnInit {
   notificationService: NotificationService = inject(NotificationService);
   lastNotification: any;
-
   ngOnInit() {
 
     this.notificationService.notifications
@@ -33,5 +30,4 @@ export class NotificationComponent implements OnInit {
     //   });
 
   }
- // ngOnInit() {}
 }

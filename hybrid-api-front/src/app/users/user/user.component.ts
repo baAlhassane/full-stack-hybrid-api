@@ -4,15 +4,20 @@ import {NgIf} from "@angular/common";
 import {AuthService} from "../authService/auth.service";
 import {Subscription} from "rxjs";
 import {NotificationRgisgister, User} from "../models/users";
-import {NotificationComponent} from "../../notification/notification/notification.component";
-import {NotificationService} from "../../notification/notification.service";
+//import {NotificationComponent} from "../../notification/notification/notification.component";
+
+import {
+  RegistrationNotificationComponent
+} from "../../websocket/registration-notification/registration-notification.component";
+import {UserDashboardComponent} from "../../user-dashboard/user-dashboard/user-dashboard.component";
+import {NotificationService} from "../../websocket/notification.service";
+import {ChatService} from "../../websocket/chat.service";
 
 @Component({
   selector: 'app-user',
   imports: [
     NgIf,
-    NotificationComponent,
-
+    RegistrationNotificationComponent, UserDashboardComponent
   ],
   templateUrl: './user.component.html',
   standalone: true,
@@ -26,6 +31,7 @@ export class UserComponent {
   user: User | undefined | null=null;
   notification: NotificationRgisgister | undefined;
   notificationService: NotificationService=inject(NotificationService);
+  chatService: ChatService=inject(ChatService);
 
   ngOnInit(): void {
 

@@ -1,0 +1,144 @@
+.chat-dashboard {
+  display: flex;
+  height: 500px; /* hauteur fixe */
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.messages-container {
+  flex: 3; /* 3/4 de la largeur */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto; /* scroll vertical */
+  background-color: #f9f9f9;
+}
+
+.message {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background: #e6e6ff;
+  word-wrap: break-word;
+}
+
+.own-message {
+  background: #d4f7d4;
+  align-self: flex-end;
+}
+
+.message-header {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.message-content {
+  font-size: 14px;
+}
+
+.users-container {
+  flex: 1; /* 1/4 de la largeur */
+  padding: 10px;
+  border-left: 1px solid #ccc;
+  background-color: #fafafa;
+  overflow-y: auto;
+}
+
+.chat-input {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.chat-input button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+.chat-input button:hover {
+  background: #0056b3;
+}
+
+
+/*.chat-container {*/
+/*  !* Définit une hauteur maximale pour l'interface de chat *!*/
+/*  max-width: 100%;*/
+/*  height: 70vh; !* 70% de la hauteur de la vue pour un meilleur aperçu *!*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  padding: 1rem; !* p-3 de PrimeFlex *!*/
+/*}*/
+
+/*!* Zone des messages qui doit défiler *!*/
+/*.messages {*/
+/*  flex-grow: 1; !* Permet à la zone de messages de prendre tout l'espace restant *!*/
+/*  overflow-y: auto; !* Active le défilement vertical si le contenu est trop long *!*/
+/*  padding-right: 0.5rem; !* Espace pour la barre de défilement *!*/
+/*}*/
+
+/*!* ⚠️ NOUVEAU CONTENEUR PARENT : Ce conteneur (appliqué dans le HTML) gère la bulle ET l'heure *!*/
+/*!* Ce style doit être appliqué au <div> qui entoure la bulle et le timestamp dans le HTML *!*/
+/*.message-wrapper {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  margin-bottom: 0.75rem; !* Espace entre les messages *!*/
+/*}*/
+
+/*!* Assure que le message est affiché en ligne et prend seulement la largeur nécessaire *!*/
+/*.message-bubble {*/
+/*  !* MODIFICATION : Augmentation de la largeur maximale à 85% *!*/
+/*  max-width: 85%;*/
+/*  word-wrap: break-word; !* Gère les mots très longs *!*/
+/*  !* NOUVEAU : Supprime la structure flex interne pour le contenu *!*/
+/*}*/
+
+/*!* Style pour le texte de l'heure *!*/
+/*!* L'heure est maintenant à l'extérieur de la bulle (mais dans le wrapper) *!*/
+/*.timestamp {*/
+/*  font-size: 0.7rem; !* Rendu encore plus petit *!*/
+/*  font-style: italic;*/
+/*  opacity: 0.8; !* Légère transparence *!*/
+/*  margin-top: 0.2rem; !* Petite marge entre le bas de la bulle et l'heure *!*/
+/*  !* Utilisation de PrimeFlex dans le HTML pour aligner à droite *!*/
+/*}*/
+
+/*!* Couleurs des bulles (personnalisation basée sur les classes PrimeFlex bg-primary/surface-card) *!*/
+
+/*!* 1. Couleur Primaire (Expéditeur : votre message) - Bleu/Turquoise *!*/
+/*.bg-primary {*/
+/*  background-color: var(--primary-color, #10b981);*/
+/*  color: var(--primary-color-text, #ffffff);*/
+/*}*/
+
+/*!* 2. Couleur Secondaire (Interlocuteur : message de l'autre) - Vert soutenu *!*/
+/*!* NOTE: On utilise .surface-card pour remplacer le style par défaut de PrimeFlex *!*/
+/*!* AJOUT de .chat-container > pour augmenter la spécificité *!*/
+/*.chat-container .surface-card {*/
+/*  !* MODIFIÉ : Fond vert soutenu *!*/
+/*  background-color: #4CAF50 !important; !* Ajout de !important pour forcer le style *!*/
+/*  !* MODIFIÉ : Texte blanc pour un meilleur contraste *!*/
+/*  color: #ffffff !important;*/
+/*}*/
+
+/*!* Pour que les messages soient visibles immédiatement en bas *!*/
+/*.messages::-webkit-scrollbar {*/
+/*  width: 8px;*/
+/*}*/
+
+/*.messages::-webkit-scrollbar-thumb {*/
+/*  background-color: var(--surface-border, #ccc);*/
+/*  border-radius: 4px;*/
+/*}*/

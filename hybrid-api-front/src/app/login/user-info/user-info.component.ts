@@ -1,13 +1,15 @@
 import {Component, inject, input, OnInit, signal} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {AuthService} from "../../users/authService/auth.service";
-import {NotificationComponent} from "../../notification/notification/notification.component";
+import {
+  RegistrationNotificationComponent
+} from "../../websocket/registration-notification/registration-notification.component";
 
 @Component({
   selector: 'app-user-info',
   imports: [
     NgIf,
-    NotificationComponent,
+    RegistrationNotificationComponent
   ],
   templateUrl: './user-info.component.html',
   standalone: true,

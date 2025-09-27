@@ -6,9 +6,7 @@ import  {FooterComponent } from "././layout/footer/footer.component"
 import {ButtonModule} from "primeng/button";
 import {LoginComponent} from "./login/login.component";
 import {AuthService} from "./users/authService/auth.service";
-import {NotificationComponent} from "./notification/notification/notification.component";
-
-
+import {RegistrationNotificationComponent} from "./websocket/registration-notification/registration-notification.component";
 
 
 @Component({
