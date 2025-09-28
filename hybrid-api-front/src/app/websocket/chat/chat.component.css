@@ -72,6 +72,30 @@
   background: #0056b3;
 }
 
+/* Message système */
+.system-message {
+  text-align: center;
+  margin: 12px 0;
+}
+
+.system-notification {
+  background: #fff3cd; /* Jaune clair */
+  color: #856404; /* Texte brun */
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-style: italic;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.system-notification i {
+  color: #856404;
+  font-size: 14px;
+}
+
+
 
 /*.chat-container {*/
 /*  !* Définit une hauteur maximale pour l'interface de chat *!*/

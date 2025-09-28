@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {FormLogin, FormRegister, RegistrationResponse, User} from "../models/users";
 // import {environment} from "../../../environments/environment";
 import {environment} from "../../../environments/environment.development";
+import {ChatService} from "../../websocket/chat.service";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,8 @@ export class AuthService {
   private validationErrors: { [key: string]: string } = {};
   private validationErrorsSubject=new BehaviorSubject<any>(this.validationErrors) ;
   validationErrorsObs=this.validationErrorsSubject.asObservable();
+  private chatService: ChatService=inject(ChatService);
+
 
   constructor(private http: HttpClient) {}
 
@@ -88,7 +91,13 @@ export class AuthService {
 
   //auth.service.ts
   logout(): void {
+    const currentUser = this.userSubject.value;
+
+    if(currentUser){
+      this.chatService.leaveAllRooms(currentUser);
+    }
    this.http.post(`${environment.API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
+
       this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
       this.isAuthenticated.next(false);
       this.validationErrorsSubject.next({});

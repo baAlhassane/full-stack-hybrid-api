@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy, effect, InputSignal, input, ViewChild, Ele
 import { ChatService } from '../chat.service';
 import { ChatMessage} from "../chat.Model";
 import {FormsModule} from "@angular/forms";
-import {DatePipe, NgClass, NgFor} from "@angular/common";
+import {DatePipe, NgClass, NgFor, NgIf} from "@angular/common";
 import {Subscription} from "rxjs";
 import {RelativeTimePipe} from "../../pipes/relative-time.pipe";
 import {User} from "../../users/models/users";
@@ -13,7 +13,7 @@ import {User} from "../../users/models/users";
   imports: [
     RelativeTimePipe,
     FormsModule,
-    NgClass, NgFor
+    NgClass, NgFor, NgIf
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
@@ -37,11 +37,12 @@ export class ChatComponent implements OnInit, OnDestroy  {
       console.log(" ChatComponent.ngOnInit this.sub = this.chatService.getMessages().subscribe + this.messages ", this.messages);
       console.log(" ChatComponent.ngOnInit this.sub = this.chatService.getMessages().subscribe + this.messages ", this.user().firstname);
     });
+
     this.chatService.getSenders().subscribe(senders => {
       this.senders = senders;
+      console.log("Utilisateurs connectés :", this.senders);
+    });
 
-    })
-    this.chatService.addUserToSenders(this.user());
     console.log("this.messages ", this.messages);
   }
   send() {
@@ -60,7 +61,7 @@ export class ChatComponent implements OnInit, OnDestroy  {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-    this.chatService.leaveRoom(this.roomId());
+   // this.chatService.leaveRoom(this.roomId(), this.user()); // deplacer dans logout
   }
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
@@ -75,6 +76,8 @@ export class ChatComponent implements OnInit, OnDestroy  {
         this.messagesContainer.nativeElement.scrollHeight;
     } catch (err) {}
   }
+
+
 
 }
 

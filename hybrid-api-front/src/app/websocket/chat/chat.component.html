@@ -1,16 +1,33 @@
+
+
+
+
+
 <div class="chat-dashboard">
   <!-- Zone des messages -->
   <div #messagesContainer class="messages-container">
     <div
       *ngFor="let msg of messages"
       class="message"
-      [ngClass]="{ 'own-message': msg.sender === user().firstname }"
+      [ngClass]="{
+        'own-message': msg.sender === user().firstname,
+        'system-message': msg.sender === 'SYSTEM'
+      }"
     >
-      <div class="message-header">
-        <strong>{{ msg.sender }}</strong>
-        <span class="timestamp">{{ msg.timestamp | relativeTime }}</span>
+      <!-- Message utilisateur -->
+      <div *ngIf="msg.sender !== 'SYSTEM'">
+        <div class="message-header">
+          <strong>{{ msg.sender }}</strong>
+          <span class="timestamp">{{ msg.timestamp | relativeTime }}</span>
+        </div>
+        <div class="message-content">{{ msg.content }}</div>
       </div>
-      <div class="message-content">{{ msg.content }}</div>
+
+      <!-- Message système -->
+      <div *ngIf="msg.sender === 'SYSTEM'" class="system-notification">
+        <i class="fas fa-info-circle"></i>
+        {{ msg.content }}
+      </div>
     </div>
   </div>
 
@@ -18,7 +35,7 @@
   <div class="users-container">
     <h4>Utilisateurs connectés</h4>
     <ul>
-      <li *ngFor="let user of senders">{{ user.firstname+ " "+user.lastname }}</li>
+      <li *ngFor="let user of senders">{{ user.firstname + " " + user.lastname }}</li>
     </ul>
   </div>
 </div>
@@ -32,6 +49,74 @@
   />
   <button (click)="send()">Envoyer</button>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!----------------------------------------------code ok qui marche parfaitemement juste j
+'ai voulu ajouté un style pour un systeme de notification de leavchat
+ --------------------------------------------------------------------------------->
+<!--<div class="chat-dashboard">-->
+<!--  &lt;!&ndash; Zone des messages &ndash;&gt;-->
+<!--  <div #messagesContainer class="messages-container">-->
+<!--    <div-->
+<!--      *ngFor="let msg of messages"-->
+<!--      class="message"-->
+<!--      [ngClass]="{ 'own-message': msg.sender === user().firstname }"-->
+<!--    >-->
+<!--      <div class="message-header">-->
+<!--        <strong>{{ msg.sender }}</strong>-->
+<!--        <span class="timestamp">{{ msg.timestamp | relativeTime }}</span>-->
+<!--      </div>-->
+<!--      <div class="message-content">{{ msg.content }}</div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Liste des utilisateurs connectés &ndash;&gt;-->
+<!--  <div class="users-container">-->
+<!--    <h4>Utilisateurs connectés</h4>-->
+<!--    <ul>-->
+<!--      <li *ngFor="let user of senders">{{ user.firstname+ " "+user.lastname }}</li>-->
+<!--    </ul>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Input pour envoyer un message &ndash;&gt;-->
+<!--<div class="chat-input">-->
+<!--  <input-->
+<!--    [(ngModel)]="newMessage"-->
+<!--    (keyup.enter)="send()"-->
+<!--    placeholder="Écrire un message..."-->
+<!--  />-->
+<!--  <button (click)="send()">Envoyer</button>-->
+<!--</div>-->
+
+<!----------------------------------------------code ok qui marche parfaitemement juste j
+'ai voulu ajouté un style pour un systeme de notification de leavchat
+ --------------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
 
 
 <!--<p>chat works!</p>-->

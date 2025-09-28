@@ -4,7 +4,7 @@ import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { BehaviorSubject } from 'rxjs';
 import {ChatMessage} from "./chat.Model";
-import {User} from "../users/models/users";
+import {NotificationRgisgister, User} from "../users/models/users";
 
 @Injectable({
   providedIn: 'root'
@@ -39,20 +39,46 @@ export class ChatService {
     const subscription = this.client.subscribe(`/topic/messages/${roomId}`, (message: IMessage) => {
       const msg: ChatMessage = JSON.parse(message.body);
       this.messages$.next([...this.messages$.value, msg]);
-     this.addUserToSenders(user);
 
+    });
+    // utilisateurs connectés
+    const subscriptionUsers = this.client.subscribe(
+      `/topic/users/${roomId}`,
+      (message: IMessage) => {
+        const users: User[] = JSON.parse(message.body);
+        this.senders$.next(users);
+        console.log(this.senders$.value);
+      }
+    );
+    const currentUser = {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      imageUrl: user.imageUrl,
+      type: user.type
+    };
+
+    // prévenir le serveur qu’on rejoint
+    this.client.publish({
+      destination: `/app/join/${roomId}`,
+      body: JSON.stringify( currentUser )
     });
 
     this.activeSubscriptions[roomId] = subscription;
   }
 
 
-  leaveRoom(roomId: string) {
+  leaveRoom(roomId: string, user: User) {
     if (this.activeSubscriptions[roomId]) {
       this.activeSubscriptions[roomId].unsubscribe();
       console.log("leave room");
       delete this.activeSubscriptions[roomId];
     }
+    //  prévenir le serveur
+    this.client.publish({
+      destination: `/app/leave/${roomId}`,
+      body: JSON.stringify(user)
+    });
   }
 
   sendMessage(roomId: string, msg: ChatMessage) {
@@ -69,36 +95,18 @@ export class ChatService {
     return this.senders$.asObservable();
   }
 
+  leaveAllRooms(user: User) {
+    Object.keys(this.activeSubscriptions).forEach(roomId => {
+      this.activeSubscriptions[roomId].unsubscribe();
+      delete this.activeSubscriptions[roomId];
 
-  public addUserToSenders(user: User) {
-    const current = this.senders$.value;
-    // éviter les doublons
-    if (!current.find(u => u.email === user.email)) {
-      this.senders$.next([...current, user]);
-    }
+      this.client.publish({
+        destination: `/app/leave/${roomId}`,
+        body: JSON.stringify(user)
+      });
+    });
   }
-  //
-  // public addUserToSender(user: User): void {
-  //   // 1. Récupérer le tableau actuel des utilisateurs
-  //   const currentUsers = this.senders$.getValue();
-  //
-  //   // 2. Vérifier si l'utilisateur existe déjà
-  //   // On utilise un identifiant unique (par exemple, 'id', 'email', etc.) pour la vérification.
-  //   // Dans cet exemple, nous supposons que chaque utilisateur a un 'firstname' et un 'lastname'.
-  //   // Pour une vérification plus robuste, utilisez un identifiant unique.
-  //   const userExists = currentUsers.some(
-  //     (u) => u.firstname === user.firstname && u.lastname === user.lastname
-  //   );
-  //
-  //   // 3. Si l'utilisateur n'existe pas, l'ajouter et mettre à jour le BehaviorSubject
-  //   if (!userExists) {
-  //     const updatedUsers = [...currentUsers, user];
-  //     this.senders$.next(updatedUsers);
-  //     console.log(`L'utilisateur ${user.firstname} a été ajouté à la liste des expéditeurs.`);
-  //   } else {
-  //     console.log(`L'utilisateur ${user.firstname} est déjà dans la liste des expéditeurs.`);
-  //   }
-  // }
+
 }
 
 

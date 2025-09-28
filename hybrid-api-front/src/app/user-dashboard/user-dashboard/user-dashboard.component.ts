@@ -24,14 +24,14 @@ export class UserDashboardComponent implements OnInit {
   notificationService: NotificationService=inject(NotificationService);
 
   ngOnInit(): void {
-    // this.authService.emitUserSubject().subscribe({
-    //     next: (user)=>{
-    //       this.user = user;
-    //       console.log("user in login ", user);
-    //     }
-    //
-    //   }
-    // )
+    this.authService.emitUserSubject().subscribe({
+        next: (user)=>{
+          this.user = user;
+          console.log("user in login ", user);
+        }
+
+      }
+    )
     //
     // this.authService.emitisAutSubject().subscribe({
     //   next: (value: boolean) => {this.isAuthenticated = value;}
