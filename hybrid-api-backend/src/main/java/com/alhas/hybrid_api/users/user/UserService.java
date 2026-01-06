@@ -58,7 +58,7 @@ public class UserService {
         }
 
         User user ;
-        switch (request.getRole()) {
+        switch (request.getUserRole()) {
             case "JOBBER":
                 user = new Jobber();
                 break;
@@ -73,10 +73,13 @@ public class UserService {
         user.setLastname(request.getLastname());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setUserType(request.getUserRole());
        // NotificationProducer(KafkaTemplate<String, UserEvent > kafkaTemplate)
 
 
+
         userRepository.save(user);
+        System.out.println("user.getUserType() :: "+user.getUserType());
         notificationProducer.sendRegistrationEvent(new UserEvent(request.getFirstname(), request.getEmail()));
     }
 

@@ -11,6 +11,15 @@ logging:
       mycompany: INFO
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      # Autorise jusqu'à 10 Mo par image
+      max-file-size: 100MB
+      # Autorise jusqu'à 50 Mo pour l'ensemble de la requête (toutes les photos + le JSON)
+      max-request-size: 100MB
+      # Important : permet de traiter les données avant que les filtres ne bloquent
+      resolve-lazily: true
   datasource:
     url: jdbc:postgresql://localhost:5432/hybrid_api
     username: postgres

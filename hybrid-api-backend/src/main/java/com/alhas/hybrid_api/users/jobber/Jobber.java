@@ -33,11 +33,12 @@ public class Jobber extends User {
     @Column(name = "skill")
     @ElementCollection
     @CollectionTable(name = "jobber_skills", joinColumns = @JoinColumn(name = "jobber_id"))
-    private  List<String> skills;
+    private  Set<String> skills;
 
 
     @OneToMany
     private  List<Comment> comments;
+
     @ManyToMany(mappedBy = "jobbers")
     private  Set<Job> jobs;
 

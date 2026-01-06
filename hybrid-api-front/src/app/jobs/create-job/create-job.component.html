@@ -1,0 +1,59 @@
+<p>create-job works!</p>
+
+
+@switch(this.currentStep.id) {
+  @case (stepId.CATEGORY){
+    <app-job-category
+      [(selectedCategory)]="job.typeOfJob"
+      (stepValidityChange)="onValidityChange($event)"
+    >
+    </app-job-category>
+  }
+  @case (stepId.DESCRIPTION) {
+    <app-job-description [(title)]="job.title"
+                         [(description)]="job.description"
+                         (stepValidityChange)="onValidityChange($event)"
+    ></app-job-description>
+  }
+  @case(stepId.PROVIDER_INFO) {
+    <app-provider-infos [(firstname)]="firstname"
+                        [(lastname)]="lastname"
+                        (stepValidityChange)="onValidityChange($event)"
+    ></app-provider-infos>
+  }
+  @case (stepId.DATE) {
+<!--    {{console.log(" case DATE : " , job.date.toISO())}}-->
+  case DATE :  {{job.date.toISO()}}
+    <app-job-date
+      [(date)]="job.date"
+      (stepValidityChange)="onValidityChange($event)"
+    ></app-job-date>
+  }
+  @case (stepId.TIMES){
+    <app-job-time
+      [(heureDeDebut)]="job.heureDebut"
+      [(heureDeFin)]="job.heureFin"
+     [(tarifPerHours)]="job.tarifPerHours"
+      [(totalPrice)]="job.totalPrice"
+    (stepValidityChange)="onValidityChange($event)"
+    ></app-job-time>
+  }
+
+  @case(stepId.PICTURES){
+<app-job-picure
+  [(jobPictures)]="job.jobPictures"
+(stepValidityChange)="onValidityChange($event)"
+>
+</app-job-picure>
+  }
+}
+<app-foot-seq-step
+  (next)="nextStep()"
+  (previous)="previousStep()"
+  (finish)="finishStep()"
+  [currentStep]="currentStep"
+  [loading]="loardingCreation"
+  [isAllStepValid]="isAllStepValid()"
+></app-foot-seq-step>
+
+

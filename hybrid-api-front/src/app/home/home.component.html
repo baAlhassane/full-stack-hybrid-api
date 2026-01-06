@@ -4,18 +4,26 @@
 <!--<h1 [ngStyle]="{'background-color': 'red'}"> tetst NgStyle</h1>-->
 
 <div class="flex flex-column  ">
-  <br>
-  <br>
-  <br>
-  <div>
+  @if(isAuthenticated){
+    <h1 >Veuillez cliquer le bouton vert en haut à gauche pour acceder à votre dashbor !</h1>
+  }
 
-  </div>
+<!--  <p>Debug : {{ date()?.toISO() }}</p>-->
 
-  <br>
-  <br>
-  <br>
+<!--  @if (date()) {-->
+<!--    <div class="grid">-->
+<!--      date()?.toJSDate()-->
+<!--    </div>-->
+<!--  } @else {-->
+<!--    <p>Erreur : La date est indéfinie !</p>-->
+<!--  }-->
+<!--  <p-calendar-->
+<!--    [ngModel]="date()?.toJSDate()"-->
+<!--    (ngModelChange)="date.set(convertToLuxon($event))">-->
+<!--  </p-calendar>-->
 
 
-</div>
+
+    </div>
 
 

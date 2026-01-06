@@ -1,9 +1,9 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal, Signal} from '@angular/core';
 import {LoginComponent} from "../../login/login.component";
 import {NgIf} from "@angular/common";
 import {AuthService} from "../authService/auth.service";
 import {Subscription} from "rxjs";
-import {NotificationRgisgister, User} from "../models/users";
+import {AppUser, NotificationRegister, User} from "../models/users";
 //import {NotificationComponent} from "../../notification/notification/notification.component";
 
 import {
@@ -16,8 +16,7 @@ import {ChatService} from "../../websocket/chat.service";
 @Component({
   selector: 'app-user',
   imports: [
-    NgIf,
-    RegistrationNotificationComponent, UserDashboardComponent
+     UserDashboardComponent
   ],
   templateUrl: './user.component.html',
   standalone: true,
@@ -28,16 +27,18 @@ export class UserComponent {
   authService=inject(AuthService);
   isAuthenticated: boolean=false;
   private subscription: Subscription= new Subscription();
-  user: User | undefined | null=null;
-  notification: NotificationRgisgister | undefined;
+  user: AppUser | undefined | null=null;
+  notification: NotificationRegister | undefined;
   notificationService: NotificationService=inject(NotificationService);
   chatService: ChatService=inject(ChatService);
+  userTypeDashboard = signal<string>("");
 
   ngOnInit(): void {
 
     this.authService.emitUserSubject().subscribe({
         next: (user)=>{
           this.user = user;
+          this.userTypeDashboard.set(<string>user?.userType);
           console.log("user in login ", user);
         }
 

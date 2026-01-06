@@ -1,22 +1,51 @@
 <p>user-dashboard works!</p>
 <div class="dashboard">
   <!-- Barre latérale -->
+
   <aside class="sidebar">
     <h2>Mon espace</h2>
     <nav>
       <ul>
         <li><a routerLink="profile">👤 Profil</a></li>
         <li><a routerLink="chat">💬 Discussions</a></li>
-        <li><a routerLink="applications">📑 Offres postulées</a></li>
-        <li><a routerLink="missions">🛠️ Missions</a></li>
         <li><a routerLink="calendar">📅 Calendrier</a></li>
+
+
+
+        <!-- Spécifique au USER -->
+        <li *ngIf="user?.userType === 'USER'">
+          <a routerLink="applications">📑 Offres postulées</a>
+        </li>
+        <li *ngIf="user?.userType === 'USER'">
+          <a routerLink="missions">🛠️ Missions</a>
+        </li>
+
+        <!-- Spécifique au JOBBER -->
+        <li *ngIf="user?.userType === 'JOBBER'">
+          <a routerLink="missions">🧰 Mes missions</a>
+        </li>
+        <li *ngIf="user?.userType=== 'JOBBER'">
+          <a routerLink="disponibilites">📆 Disponibilités</a>
+        </li>
+
+        <!-- Spécifique au PROVIDER -->
+        <li *ngIf="user?.userType === 'PROVIDER'">
+          <a routerLink="offres">📑 Offres publiées</a>
+        </li>
+        <li *ngIf="user?.userType === 'PROVIDER'">
+          <a routerLink="create-job">➕ Publier une offre</a>
+        </li>
       </ul>
     </nav>
-  </aside>
-
+  </aside><!---->
   <!-- Contenu principal -->
   <main class="content flex justify-content-start "> {{user?.firstname +" "+ user?.lastname}}
+
     <router-outlet></router-outlet>
+
+    <div>
+<!--      Vous avez aucune mission en cours. Et aucune candidature en cours.-->
+    </div>
   </main>
 </div>
 

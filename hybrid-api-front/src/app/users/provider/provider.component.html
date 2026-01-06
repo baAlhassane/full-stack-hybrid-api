@@ -11,17 +11,17 @@
 <!--  -->
 <!--</div>-->
 
-@if(isAuthenticated && user!=null && user.userRole === 'PROVIDER'){
-  <div style="background-color: #FFCC80; height: 250px;width: 300px; " *ngIf="isAuthenticated" >
-    <img [src]="user.imageUrl" alt="Photo de profil" width="40"> <br>
-    <h2> <span> FirstName : </span>   {{ user.firstname }} </h2>
-    <h2> <span> LastName : </span> {{ user.lastname }}</h2>
-    <h3> <span> Email    :  </span> {{ user.email }}</h3>
-    <h3> <span> Type User :  </span> {{ user.type}}</h3>
-    <h3> <span> Role     :   </span>  {{ user.userRole }}</h3>
-  </div>
+@if(userTypeDashboard()==="PROVIDER"){
+  @if (publishJobList.length ===0){
+    <h1> Vous n'avez aucune publication de job en cours en cours </h1>
+  }
+  <app-user-dashboard [userTypeDashbord]="userTypeDashboard()"></app-user-dashboard>
 }
 @else {
 
-  <h1> Vous n'avez pas le droit d'acceder à cette page ! Car Vous n'êtes pas Jobber</h1>
+  <h1> Vous n'avez pas le droit d'acceder à cette page ! Car Vous n'êtes pas PROVIDER </h1>
 }
+
+<!--<app-job-description [(title)]="title" [(description)]="description"></app-job-description>-->
+
+<!--<h1>{{ title()}} &#45;&#45;in provider - {{description()}}</h1>-->

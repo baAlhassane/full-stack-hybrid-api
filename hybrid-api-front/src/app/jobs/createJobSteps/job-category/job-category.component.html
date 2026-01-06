@@ -1,0 +1,122 @@
+<p>job-category works!</p>
+<h1> Choisissez une categorie de travail </h1>
+
+<div class="grid mt-2 mx-auto justify-content-center" style="max-width: 30rem;">
+  @for (cat of categories; track cat.technicalName) {
+    <div class="col-3 p-1">
+      <div
+        pRipple
+        class="flex flex-column align-items-center justify-content-center p-3 border-round border-1 cursor-pointer transition-colors transition-duration-150 h-full"
+        [ngClass]="{
+          'surface-card border-200 hover:surface-100': selectedCategory() !== cat.technicalName,
+          'bg-gray-500 border-gray-600 text-white shadow-3': selectedCategory() === cat.technicalName
+        }"
+        (click)="select(cat.technicalName)">
+
+        <div class="mb-2" [class.text-primary]="selectedCategory() !== cat.technicalName">
+          <fa-icon [icon]="['fas', cat.icon]" size="lg"></fa-icon>
+        </div>
+
+        <span class="text-xs font-semibold text-center line-height-2" style="font-size: 0.7rem;">
+          {{ cat.displayName }}
+        </span>
+      </div>
+    </div>
+  }
+</div>
+
+<!--<div class="grid mt-2 justify-content-center">-->
+<!--  @for (cat of categories; track cat.technicalName) {-->
+<!--    <div class="col-3 p-1">  &lt;!&ndash; 4 cartes par ligne &ndash;&gt;-->
+<!--      <div-->
+<!--        pRipple-->
+<!--        class="category-card flex flex-column align-items-center justify-content-center p-3 border-round border-1 cursor-pointer transition-colors transition-duration-150 h-full"-->
+<!--        [ngClass]="{-->
+<!--          'surface-card border-200 hover:surface-100': selectedCategory() !== cat.technicalName,-->
+<!--          'bg-gray-500 border-gray-600 text-white shadow-3': selectedCategory() === cat.technicalName-->
+<!--        }"-->
+<!--        (click)="select(cat.technicalName)">-->
+
+<!--        <div class="mb-2" [class.text-primary]="selectedCategory() !== cat.technicalName">-->
+<!--          <fa-icon [icon]="['fas', cat.icon]" size="lg"></fa-icon>-->
+<!--        </div>-->
+
+<!--        <span class="text-xs font-semibold text-center line-height-2">-->
+<!--          {{ cat.displayName }}-->
+<!--        </span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  }-->
+<!--</div>-->
+
+
+<!--<div class="grid mt-2 justify-content-center">-->
+<!--  @for (cat of categories; track cat.technicalName) {-->
+<!--    <div class="col-6 sm:col-4 md:col-3 lg:col-2 p-1">-->
+<!--      <div-->
+<!--        pRipple-->
+<!--        class="category-card flex flex-column align-items-center justify-content-center p-2 border-round border-1 cursor-pointer transition-colors transition-duration-150 h-full"-->
+<!--        [ngClass]="{-->
+<!--          'surface-card border-200 hover:surface-100': selectedCategory() !== cat.technicalName,-->
+<!--          'bg-gray-500 border-gray-600 text-white shadow-3': selectedCategory() === cat.technicalName-->
+<!--        }"-->
+<!--        (click)="select(cat.technicalName)">-->
+
+<!--        <div class="mb-1" [class.text-primary]="selectedCategory() !== cat.technicalName">-->
+<!--          <fa-icon [icon]="['fas', cat.icon]" size="lg"></fa-icon>-->
+<!--        </div>-->
+
+<!--        <span class="text-xs font-semibold text-center line-height-2">-->
+<!--          {{ cat.displayName }}-->
+<!--        </span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  }-->
+<!--</div>-->
+
+
+
+<!--<div class="grid mt-2">-->
+<!--  @for (cat of categories; track cat.technicalName) {-->
+<!--    <div class="col-3 p-1">-->
+<!--      <div-->
+<!--        pRipple-->
+<!--        class="flex flex-column align-items-center justify-content-center p-3 border-round border-1 cursor-pointer transition-colors transition-duration-150 h-full"-->
+<!--        [ngClass]="{-->
+<!--          'surface-card border-200 hover:surface-100': selectedCategory() !== cat.technicalName,-->
+<!--          'bg-gray-500 border-gray-600 text-white shadow-3': selectedCategory() === cat.technicalName-->
+<!--        }"-->
+<!--        (click)="select(cat.technicalName)">-->
+
+<!--        <div class="mb-2" [class.text-primary]="selectedCategory() !== cat.technicalName">-->
+<!--          <fa-icon [icon]="['fas', cat.icon]" size="lg"></fa-icon>-->
+<!--        </div>-->
+
+<!--        <span class="text-xs font-semibold text-center line-height-2">{{ cat.displayName }}</span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  }-->
+<!--</div>-->
+
+<!--<div class="grid mt-2">-->
+<!--  @for (cat of categories; track cat.technicalName) {-->
+<!--    <div class="col-3 md:col-2 lg:col-1 p-1">-->
+<!--      <div-->
+<!--        pRipple-->
+<!--        class="flex flex-column align-items-center justify-content-center p-3 border-round border-1 cursor-pointer transition-colors transition-duration-150 h-full"-->
+<!--        [ngClass]="{-->
+<!--          'surface-card border-200 hover:surface-100': selectedCategory() !== cat.technicalName,-->
+<!--          'bg-gray-500 border-gray-600 text-white shadow-3': selectedCategory() === cat.technicalName-->
+<!--        }"-->
+<!--        (click)="select(cat.technicalName)">-->
+
+<!--        <div class="mb-2" [class.text-primary]="selectedCategory() !== cat.technicalName">-->
+<!--          <fa-icon [icon]="['fas', cat.icon]" size="lg"></fa-icon>-->
+<!--        </div>-->
+
+<!--        <span class="text-xs font-semibold text-center line-height-2">{{ cat.displayName }}</span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  }-->
+<!--</div>-->
+

@@ -1,7 +1,14 @@
 <p>user works!</p>
 <h1> Bienvenue dans votre espace utilisateur. </h1>
 <h2> Si  vousnee avez un statut Jobber ou Provider ou User  Veillez cliquer sur ces bouton pour voir plus d'information sur votre profil. </h2>
-<app-user-dashboard></app-user-dashboard>
+
+@if(userTypeDashboard()==="USER"){
+  <app-user-dashboard [userTypeDashbord]="userTypeDashboard()"></app-user-dashboard>
+}
+@else {
+
+  <h1> Vous n'avez pas le droit d'acceder à cette page ! Car Vous n'êtes pas ni User </h1>
+}
 <!--<div style="background-color: chartreuse; height: 250px;width: 300px; " *ngIf="isAuthenticated" >-->
 <!--  <img [src]="user?.imageUrl" alt="Photo de profil" width="40"> <br>-->
 <!--    <h2> <span> FirstName : </span>   {{ user?.firstname }} </h2>-->

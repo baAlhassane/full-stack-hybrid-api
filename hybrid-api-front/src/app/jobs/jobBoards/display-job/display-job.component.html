@@ -1,0 +1,112 @@
+
+
+
+<div class="job-card p-ripple" (click)="onCardClick()">
+
+  <div class="card-body">
+
+    <!-- Titre -->
+    <h3 class="job-title">
+      {{ job().title }}
+    </h3>
+
+    <!-- Catégorie -->
+    <div class="job-category mb-3">
+      <span class="label">Catégorie</span>
+      <span class="p-badge p-badge-info ml-2">
+        {{ job().typeOfJob }}
+      </span>
+    </div>
+
+    <!-- Description -->
+    <div class="job-section">
+      <span class="label">Description</span>
+      <p class="description">
+        {{ job().description }}
+      </p>
+    </div>
+
+    <!-- Tarif -->
+    <div class="job-section">
+      <span class="label">Tarif horaire</span>
+      <span class="price-hour">
+        {{ job().tarifPerHours }} € / h
+      </span>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer mt-3">
+
+      <div class="info-row">
+        <span>Date</span>
+        <span class="value"> {{ job().date }}</span>
+      </div>
+
+      <div class="info-row">
+        <span>Début</span>
+        <span class="value"> {{ job().heureDebut }}</span>
+      </div>
+
+      <div class="info-row">
+        <span>Fin</span>
+        <span class="value"> {{ job().heureFin }}</span>
+      </div>
+
+      <div class="total-price mt-2">
+        Prix total : <strong>{{ job().totalPrice }} €</strong>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<p>display-job works!</p>-->
+<!--<div class="job-card" (click)="onCardClick()">-->
+<!--&lt;!&ndash;  <div class="card-image">&ndash;&gt;-->
+<!--&lt;!&ndash;    @if (job().jobPictures && job().jobPictures.length > 0) {&ndash;&gt;-->
+<!--&lt;!&ndash;      <img [src]="job().jobPictures[0].urlDisplay" alt="Image du job">&ndash;&gt;-->
+<!--&lt;!&ndash;    } @else {&ndash;&gt;-->
+<!--&lt;!&ndash;      <div class="placeholder">Pas d'image</div>&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--  <div class="card-body">-->
+<!--    <span> Title :</span>-->
+<!--    <h3 class="title">  <span> Title :</span> {{ job().title }}</h3>-->
+
+<!--    <p class="type-badge">-->
+<!--      <span>Catégorie de Job : </span>-->
+<!--      <span class="p-badge p-badge-info"> {{ job().typeOfJob }}</span>-->
+<!--    </p>-->
+<!--    <span> Description  : </span>-->
+<!--    <p class="type-badge">  {{ job().description }}</p>-->
+<!--    <p class="type-badge"> Tarif Horaire : {{ job().tarifPerHours }}</p>-->
+
+<!--    <div class="card-footer flex-column justify-content-start">-->
+<!--      <div> Date : <span class="date"> Le {{ job().date }}</span> </div>-->
+<!--      <div>  Heure de début  : <span class="date"> Le {{ job().heureDebut }}</span>  </div>-->
+<!--      <div>  Heure de fin  : <span class="date"> Le {{ job().heureFin}}</span> </div>-->
+<!--      <div>   <span class="price"> <strong> Prix total : {{ job().totalPrice }}€</strong></span></div>-->
+<!--    </div>-->
+
+<!--  </div>-->
+<!--</div>-->

@@ -1,0 +1,18 @@
+:host ::ng-deep .p-calendar {
+  display: inline-flex !important;
+  width: 100%;
+}
+/* Permet au composant de déborder de sa cellule de grille */
+:host {
+  display: block;
+  overflow: visible !important;
+}
+
+.grid {
+  overflow: visible !important;
+}
+
+/* Force une hauteur minimale quand le calendrier est ouvert si nécessaire */
+::ng-deep .p-datepicker {
+  min-width: 300px !important;
+}

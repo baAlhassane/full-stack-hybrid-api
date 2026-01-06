@@ -1,5 +1,7 @@
 package com.alhas.hybrid_api.job;
 
+import com.alhas.hybrid_api.picture.JobPicture;
+import com.alhas.hybrid_api.users.Address;
 import com.alhas.hybrid_api.users.jobber.Jobber;
 import com.alhas.hybrid_api.users.provider.Provider;
 import jakarta.persistence.*;
@@ -30,13 +32,30 @@ public class Job {
     @UuidGenerator
     @Column(name = "code", nullable = false)
     private UUID jobPublicId;
-
-    private LocalDate date;        // Date de la mission
+    private LocalDate date;
+    @Column(name = "heure_debut")// Date de la mission
     private LocalTime heureDebut; // Heure de début
+    @Column(name = "heure_fin")
     private LocalTime heureFin; ;
+    @Column(name = "tarif_per_hours")
     private int tarifPerHours;
-    private int totaPrice;
+    @Column(name = "total_price")
+    private int totalPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_of_Job")
+    private TypeOfJob typeOfJob;
+
+    @Enumerated(EnumType.STRING)
+    private JOB_STATUS status;
+    private String title;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+
+
 
    @ManyToMany(fetch = FetchType.EAGER)
    @JoinTable(name = "job_jobber_join",
@@ -50,6 +69,8 @@ public class Job {
     @JoinColumn( name ="provider_id", nullable = false )
    private Provider provider;
 
-
+    @OneToMany(mappedBy = "jobListing", cascade = CascadeType.REMOVE)
+    private Set<JobPicture> jobPictures=new HashSet<>();
+    private Address address;
 
 }

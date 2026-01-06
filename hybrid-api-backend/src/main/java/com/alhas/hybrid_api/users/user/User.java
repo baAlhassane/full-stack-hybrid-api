@@ -17,6 +17,7 @@ import java.util.*;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("USER")
 @Table(name="hybrid_api_user")
 @EntityListeners(AuditingEntityListener.class)
 @Getter

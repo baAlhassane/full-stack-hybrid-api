@@ -35,7 +35,7 @@ export class RegistrationComponent implements OnInit {
     lastname:"",
     password:"",
     email:"",
-    role:""
+    userRole:""
   }
   //
 
@@ -47,6 +47,7 @@ registrationResponse: RegistrationResponse = {
   success: false,
   message:"",
   fullName:"",
+  userRole:""
 }
 
 
@@ -60,7 +61,7 @@ registrationResponse: RegistrationResponse = {
       lastname: form.value.lastname,
       email: form.value.email, // ou form.value.firstname si tu utilises ça comme identifiant
       password: form.value.password,
-      role: form.value.role
+      userRole: form.value.role
     };
      this.authService.postRegistrationForm(this.formLogin);
     this.authService.getvalidationErrorsObs().subscribe(
@@ -71,4 +72,5 @@ registrationResponse: RegistrationResponse = {
   }
 
 
+  protected readonly console = console;
 }

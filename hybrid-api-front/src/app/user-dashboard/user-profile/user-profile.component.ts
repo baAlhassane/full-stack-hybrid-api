@@ -1,6 +1,6 @@
 
 import {Component, inject, OnInit} from '@angular/core';
-import {NotificationRgisgister, User} from "../../users/models/users";
+import {AppUser, NotificationRegister, User} from "../../users/models/users";
 import {AuthService} from "../../users/authService/auth.service";
 import {Subscription} from "rxjs";
 import {NotificationService} from "../../websocket/notification.service";
@@ -17,8 +17,8 @@ export class UserProfileComponent implements OnInit {
   authService=inject(AuthService);
   isAuthenticated: boolean=false;
   private subscription: Subscription= new Subscription();
-  user: User | undefined | null=null;
-  notification: NotificationRgisgister | undefined;
+  user: AppUser | undefined | null=null;
+  notification: NotificationRegister | undefined;
   notificationService: NotificationService=inject(NotificationService);
 
   ngOnInit(): void {

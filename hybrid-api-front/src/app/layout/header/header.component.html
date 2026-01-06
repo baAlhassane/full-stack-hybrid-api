@@ -1,5 +1,3 @@
-<!--<p>header works!</p>-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,214 +6,164 @@
   <title>Document</title>
 </head>
 <body>
-<div class="flex justify-content-between  navbar">
+<div class="navbar flex justify-content-between align-items-center">
+  <!-- Menu principal -->
+  <ul class="flex menu-left">
+    <li><a routerLink="" [ngClass]="getLinkClass()">Home</a></li>
+    <li><a routerLink="/about" [ngClass]="getLinkClass()">About</a></li>
+    <li><a routerLink="/contact" [ngClass]="getLinkClass()">Contacts</a></li>
+  </ul>
 
-  <div  class="" >
-    <ul class="flex justify-content-start  align-items-center bg-black-alpha-10">
-      <li>
-        <a  routerLink="">Home</a>
+  <!-- Centre -->
+  <ul class="flex menu-center">
+    <li><a routerLink="/job-board" [ngClass]="getLinkClass()">Job Board</a></li>
+    <li><a routerLink="" [ngClass]="getLinkClass()">News</a></li>
+    <li><a routerLink="" [ngClass]="getLinkClass()">Tendances</a></li>
+    <li><a routerLink="" [ngClass]="getLinkClass()">Video Games</a></li>
+    <li><a routerLink="" [ngClass]="getLinkClass()">Vulgarisation</a></li>
+    <li><a routerLink="" [ngClass]="getLinkClass()">Gift</a></li>
+  </ul>
 
-      </li>
-      <li>
-        <a routerLink="/about">About</a>
+  <!-- Espace authentification + profils -->
+  <ul class="flex menu-right">
+    <li
+      class="flex flex-column p-button p-button-link signout"
+      (click)="toggleShowLogging()"
+      *ngIf="isAuthenticated">
+      <fa-icon [icon]="['fas', 'lock']"></fa-icon>
+      SignOut
+    </li>
+
+    <li
+      class="flex flex-column p-button p-button-link signin"
+      (click)="toggleShowLogging()"
+      *ngIf="!isAuthenticated">
+      <fa-icon [icon]="['fas', 'key']"></fa-icon>
+      SignIn
+    </li>
 
 
-      </li>
-      <li>
-        <a routerLink="/contact">Contacts</a>
+<!--    <li><a routerLink="/user" [ngClass]="getLinkClass()">User</a></li>-->
+<!--    <li><a routerLink="/provider" [ngClass]="getLinkClass()">Provider</a></li>-->
+<!--    <li><a routerLink="/jobber" [ngClass]="getLinkClass()">Jobber</a></li>-->
+    <li class="flex flex-column">
+      <a routerLink="/user"
+         [ngClass]="{'active-user': userType === 'USER'}">User</a>
+    </li>
 
-      </li>
-    </ul>
-  </div>
+    <li class="flex flex-column">
+      <a routerLink="/provider"
+         [ngClass]="{'active-user': userType  === 'PROVIDER'}">Provider</a>
+    </li>
 
-  <div class="" >
-    <ul class="flex justify-content-between w-full align-items-center">
-      <li>
-        <a routerLink="" >  Job Board</a>
-      </li>
-      <li>
-        <a routerLink="" > News</a>
-      </li>
+    <li class="flex flex-column">
+      <a routerLink="/jobber"
+         [ngClass]="{'active-user': userType=== 'JOBBER'}">Jobber</a>
+    </li>
 
-      <li>
-        <a routerLink="">Tendances </a>
-      </li>
-
-      <li>
-        <a routerLink="">Videos Games</a>
-
-      </li>
-
-      <li>
-        <a routerLink="">vulgarisation</a>
-      </li>
-
-      <li>
-        <a routerLink=""> gift</a>
-      </li>
-    </ul>
-  </div>
-
-<div>
-  <ul class="flex justify-content-end align-items-center ">
-  <li class="flex flex-column p-button p-button-link"    (click)="toggleShowLogging()" *ngIf="isAuthenticated"  [ngStyle] ="{ 'background-color':  getColor() }" >
-    <fa-icon [icon]="['fas', 'lock']" class="icon-label">
-    </fa-icon>
-    SignOut
-<!--    <a routerLink="/signout">  SignOut</a>-->
-  </li>
-  <li class="flex flex-column p-button p-button-link "  (click)="toggleShowLogging()" *ngIf="!isAuthenticated" [ngStyle] ="{ 'background-color':  getColor() }"  >
-    <fa-icon [icon]="['fas', 'key']" class="icon-label"> </fa-icon>
-    SignIn
-<!--    <a routerLink="/signin">  SignIn</a>-->
-  </li>
-    </ul>
+  </ul>
 </div>
-  <div>
-    <ul class="flex justify-content-end align-items-center bg-black-alpha-10">
-
-      <li class="flex flex-column">
-        <fa-icon [icon]="'user'" class="icon-label"></fa-icon>
-        <a routerLink="/user">  User</a>
-      </li>
-      <li class="flex flex-column">
-        <fa-icon [icon]="'handshake'" class="icon-label"> </fa-icon>
-        <a routerLink="/provider">Provider</a>
-<!--        <span class="icon-label">Utilisateur</span>icon-container-->
-      </li>
-      <li class="flex flex-column" >
-        <fa-icon [icon]="'people-carry'"  class="icon-label"> </fa-icon>
-        <a routerLink="/jobber" >Jobber</a>
-
-      </li>
-    </ul>
-  </div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--    -->
-
-<!--<div class="icon-container">-->
-<!--  <fa-icon [icon]="['fas', 'user']" size="3x"></fa-icon>-->
-<!--  <span class="icon-label">Utilisateur</span>-->
-<!--</div>-->
-<!--<div class="icon-container">-->
-<!--  <fa-icon [icon]="['fas', 'briefcase']" size="3x"></fa-icon>-->
-<!--  <span class="icon-label">Travail</span>-->
-<!--</div>-->
-
-
-<!--<div  class="grid col-5 justify-content-center align-items-center  gap-3 ">-->
-
-
-<!--<fa-icon [icon]="['fas','user-alt']"> </fa-icon>-->
-<!--<br>-->
-<!--<a  href="/user"> User <fa-icon [icon]="'user'"></fa-icon></a>-->
-<!--<br>-->
-<!--<fa-icon [icon]="'user-alt'"> </fa-icon>-->
-<!--<br>-->
-<!--<br>-->
-<!--<fa-icon [icon]="['fas','user-alt']"> </fa-icon> fas,user-alt-->
-<!--<br>-->
-<!--<fa-icon [icon]="'handshake'"> </fa-icon> handshake-->
-<!--<br>-->
-<!--<fa-icon [icon]="'briefcase'"> </fa-icon> briefcase-->
-<!--<br>-->
-<!--<fa-icon [icon]="'user-tie'"> </fa-icon> user-tie-->
-<!--<br>-->
-<!--<fa-icon [icon]="['fas','user-tie']"> </fa-icon> 'fas','user-tie'-->
-<!--<br>-->
-<!--<fa-icon [icon]="'tasks'"> </fa-icon>tasks-->
-<!--<br>-->
-<!--<fa-icon [icon]="'clipboard-check'"> </fa-icon> clipboard-check-->
-<!--<br>-->
-<!--<fa-icon [icon]="'people-carry'"> </fa-icon> people-carry-->
-<!--<br>-->
-<!--<fa-icon [icon]="'newspaper'"> </fa-icon> newspaper-->
-<!--<br>-->
-<!--<fa-icon [icon]="'bullhorn'"> </fa-icon>  bullhorn-->
-<!--<br>-->
-<!--<fa-icon [icon]="'rss'"> </fa-icon>  rss-->
-<!--<br>-->
-
-<!--<fa-icon [icon]="'user'"> </fa-icon>  user-->
-<!--<br>-->
-<!--<fa-icon [icon]="'user-alt'"> </fa-icon>  user-alt-->
-<!--<br>-->
-<!--<fa-icon [icon]="'user-circle'"> </fa-icon> fa-user-circle-->
-<!--<br>-->
-
-<!--<fa-icon [icon]="'chart-line'"> </fa-icon>  chart-line-->
-<!--<br>-->
-<!--<fa-icon [icon]="'fire'"> </fa-icon>  fire-->
-<!--<br>-->
-<!--<fa-icon [icon]="'arrow-up'"> </fa-icon>  arrow-up-->
-<!--<br>-->
-<!--<fa-icon [icon]="'clipboard-check'"> </fa-icon>  clipboard-check-->
-<!--<br>-->
-<!--<fa-icon [icon]="'lightbulb'"> </fa-icon>  lightbulb-->
-<!--<br>-->
-<!--<fa-icon [icon]="'book-reader'"> </fa-icon>  book-reader-->
-<!--<br>-->
-<!--<fa-icon [icon]="'hand-holding-heart'"> </fa-icon>  hand-holding-heart-->
-<!--<br>-->
-<!--<fa-icon [icon]="'donate'"> </fa-icon>  donate-->
-<!--<br>-->
-<!--<fa-icon [icon]="'heart'"> </fa-icon>  heart-->
-<!--<br>-->
-<!--<fa-icon [icon]="'star'"> </fa-icon>  star-->
-
-<!--<fa-icon class="mb-1" [icon]="'star'" size="2x" > </fa-icon>  star-->
-<!--<br>-->
-
-<!--<fa-icon [icon]="'bars'" ></fa-icon> Bar-->
-<!--&lt;!&ndash;<fa-icon class="mb-1" [icon]="category.icon"></fa-icon>&ndash;&gt;-->
-<!--</div>-->
-
-
-<!--faUser, faUserAlt,-->
-<!--faHandshake,faBriefcase,faUserTie,-->
-<!--faTasks, faClipboardCheck, faPeopleCarry,-->
-<!--faBullhorn,faClipboardList, faFileAlt,-->
-<!--faNewspaper, faBullhorn,faRss,-->
-<!--faChartLine,faFire, faArrowUp,-->
-<!--faClipboardCheck, faLightbulb, faBookReader,-->
-<!--faHandHoldingHeart, faDonate, faHeart-->
-<p> blaa</p>
-<p> blaa</p>
-
-
-
+<!--<router-outlet> </router-outlet>-->
 </body>
 </html>
+
+<!--&lt;!&ndash;<p>header works!</p>&ndash;&gt;-->
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Document</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="flex justify-content-between  navbar">-->
+
+<!--  <div  class="" >-->
+<!--    <ul class="flex justify-content-start  align-items-center bg-black-alpha-10">-->
+<!--      <li>-->
+<!--        <a  routerLink="">Home</a>-->
+
+<!--      </li>-->
+<!--      <li>-->
+<!--        <a routerLink="/about">About</a>-->
+
+
+<!--      </li>-->
+<!--      <li>-->
+<!--        <a routerLink="/contact">Contacts</a>-->
+
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
+
+<!--  <div class="" >-->
+<!--    <ul class="flex justify-content-between w-full align-items-center">-->
+<!--      <li>-->
+<!--        <a routerLink="" >  Job Board</a>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        <a routerLink="" > News</a>-->
+<!--      </li>-->
+
+<!--      <li>-->
+<!--        <a routerLink="">Tendances </a>-->
+<!--      </li>-->
+
+<!--      <li>-->
+<!--        <a routerLink="">Videos Games</a>-->
+
+<!--      </li>-->
+
+<!--      <li>-->
+<!--        <a routerLink="">vulgarisation</a>-->
+<!--      </li>-->
+
+<!--      <li>-->
+<!--        <a routerLink=""> gift</a>-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
+
+<!--<div>-->
+<!--  <ul class="flex justify-content-end align-items-center ">-->
+<!--  <li class="flex flex-column p-button p-button-link"    (click)="toggleShowLogging()" *ngIf="isAuthenticated"  [ngStyle] ="{ 'background-color':  getColor() }" >-->
+<!--    <fa-icon [icon]="['fas', 'lock']" class="icon-label">-->
+<!--    </fa-icon>-->
+<!--    SignOut-->
+<!--&lt;!&ndash;    <a routerLink="/signout">  SignOut</a>&ndash;&gt;-->
+<!--  </li>-->
+<!--  <li class="flex flex-column p-button p-button-link "  (click)="toggleShowLogging()" *ngIf="!isAuthenticated" [ngStyle] ="{ 'background-color':  getColor() }"  >-->
+<!--    <fa-icon [icon]="['fas', 'key']" class="icon-label"> </fa-icon>-->
+<!--    SignIn-->
+<!--&lt;!&ndash;    <a routerLink="/signin">  SignIn</a>&ndash;&gt;-->
+<!--  </li>-->
+<!--    </ul>-->
+<!--</div>-->
+<!--  <div>-->
+<!--    <ul class="flex justify-content-end align-items-center bg-black-alpha-10">-->
+
+<!--      <li class="flex flex-column">-->
+<!--        <fa-icon [icon]="'user'" class="icon-label"></fa-icon>-->
+<!--        <a routerLink="/user">  User</a>-->
+<!--      </li>-->
+<!--      <li class="flex flex-column">-->
+<!--        <fa-icon [icon]="'handshake'" class="icon-label"> </fa-icon>-->
+<!--        <a routerLink="/provider">Provider</a>-->
+<!--&lt;!&ndash;        <span class="icon-label">Utilisateur</span>icon-container&ndash;&gt;-->
+<!--      </li>-->
+<!--      <li class="flex flex-column" >-->
+<!--        <fa-icon [icon]="'people-carry'"  class="icon-label"> </fa-icon>-->
+<!--        <a routerLink="/jobber" >Jobber</a>-->
+
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
+
+
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
+

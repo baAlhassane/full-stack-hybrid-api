@@ -16,7 +16,7 @@ public class LoginResponse {
     private String type = "Bearer";
     private String uerfullname;
     private String email;
-    private String userRole;
+    private String userType;
     private boolean isAuthenticated;
     private String imageUrl;
     public LoginResponse(String token, String username, String email) {

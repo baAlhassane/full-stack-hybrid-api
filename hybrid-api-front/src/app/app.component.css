@@ -1,0 +1,33 @@
+/*!* Le body et le html doivent occuper toute la hauteur *!*/
+/*html, body {*/
+/*  height: 100%;*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*}*/
+
+/*!* Le conteneur principal de ton app *!*/
+/*app-root {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  min-height: 100vh; !* 100% de la hauteur visible *!*/
+/*}*/
+
+/*!* Le router-outlet prend tout l’espace restant entre header et footer *!*/
+/*router-outlet {*/
+/*  flex: 1;*/
+/*  display: block;*/
+/*}*/
+
+/*!* Le footer reste collé en bas *!*/
+/*app-footer {*/
+/*  margin-top: auto; !* pousse le footer vers le bas *!*/
+/*}*/
+
+/*!* Style optionnel : pour ton footer lui-même *!*/
+/*app-footer div {*/
+/*  background-color: #2c3e50;*/
+/*  color: white;*/
+/*  text-align: center;*/
+/*  padding: 1rem;*/
+/*  font-family: 'Segoe UI', sans-serif;*/
+/*}*/

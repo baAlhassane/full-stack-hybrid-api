@@ -30,7 +30,7 @@ public class RegistrationRequest {
     private String password;
     @NotEmpty(message = " Role is mandatory")
     @NotBlank(message = "Role is mandatory")
-    private String role;
+    private String userRole;
 
 
 }

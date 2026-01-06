@@ -1,6 +1,5 @@
-package com.alhas.hybrid_api.users.user.mapper;
+package com.alhas.hybrid_api.websocket.message;
 
-import com.alhas.hybrid_api.users.user.ChatUserDTO;
 import com.alhas.hybrid_api.users.user.User;
 import com.alhas.hybrid_api.users.user.authRessource.Authority;
 

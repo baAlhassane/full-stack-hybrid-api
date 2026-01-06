@@ -4,7 +4,7 @@ import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { BehaviorSubject } from 'rxjs';
 import {ChatMessage} from "./chat.Model";
-import {NotificationRgisgister, User} from "../users/models/users";
+import {AppUser, BaseUser, NotificationRegister, User} from "../users/models/users";
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +21,13 @@ export class ChatService {
       webSocketFactory: () => new SockJS('http://localhost:8081/ws'),
       reconnectDelay: 5000
     });
-
     this.client.onConnect = () => {
       console.log('✅constructor.this.client.onConnect  Connected to chat server');
     };
-
     this.client.activate();
   }
 
-  joinRoom(roomId: string, user: User) {
+  joinRoom(roomId: string, user: AppUser) {
     // ⚠️ toujours string ici
     // if (this.activeSubscriptions[roomId]) {
     //   console.warn(`Already subscribed to room ${roomId}`);
@@ -52,12 +50,11 @@ export class ChatService {
     );
     const currentUser = {
       firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      imageUrl: user.imageUrl,
-      type: user.type
+      lastname:  user.lastname,
+      email:  user.email,
+      imageUrl:  user.imageUrl,
+      type:  user.userType
     };
-
     // prévenir le serveur qu’on rejoint
     this.client.publish({
       destination: `/app/join/${roomId}`,
@@ -68,7 +65,7 @@ export class ChatService {
   }
 
 
-  leaveRoom(roomId: string, user: User) {
+  leaveRoom(roomId: string, user: AppUser) {
     if (this.activeSubscriptions[roomId]) {
       this.activeSubscriptions[roomId].unsubscribe();
       console.log("leave room");
@@ -95,7 +92,7 @@ export class ChatService {
     return this.senders$.asObservable();
   }
 
-  leaveAllRooms(user: User) {
+  leaveAllRooms(user: AppUser) {
     Object.keys(this.activeSubscriptions).forEach(roomId => {
       this.activeSubscriptions[roomId].unsubscribe();
       delete this.activeSubscriptions[roomId];

@@ -1,0 +1,90 @@
+<p>provider-infos works!</p>
+
+<div class="surface-card p-3 border-round-xl shadow-2 w-full max-w-32rem mx-auto mt-2">
+
+  <div class="flex align-items-center mb-3 border-bottom-1 border-100 pb-2">
+    <i class="pi pi-user-edit text-primary text-xl mr-2"></i>
+    <h2 class="text-xl font-bold text-900 m-0">Profil</h2>
+  </div>
+
+  <form #formProviderInfo="ngForm" class="flex flex-column gap-2">
+
+    <div class="flex flex-column gap-1">
+      <label for="firstname" class="text-xs font-semibold text-700 ml-1">Prénom</label>
+      <div class="grid grid-nogutter align-items-center border-1 border-300 border-round-lg surface-50 focus-within:border-primary transition-colors">
+        <div class="col-fixed flex justify-content-center border-right-1 border-200" style="width: 2.5rem;">
+          <i class="pi pi-user text-sm text-600"></i>
+        </div>
+        <div class="col">
+          <input
+            pInputText
+            id="firstname"
+            #firstnameInput="ngModel"
+            required
+            name="firstname"
+            placeholder="Prénom"
+            [ngModel]="firstname()"
+            (ngModelChange)="onFirstname($event)"
+            class="w-full border-none bg-transparent p-2 text-base focus:shadow-none"
+          >
+        </div>
+      </div>
+      @if (firstnameInput.invalid && (firstnameInput.dirty || firstnameInput.touched)) {
+        <small class="p-error text-xs ml-1">Requis</small>
+      }
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label for="lastname" class="text-xs font-semibold text-700 ml-1">Nom de famille</label>
+      <div class="grid grid-nogutter align-items-center border-1 border-300 border-round-lg surface-50 focus-within:border-primary transition-colors">
+        <div class="col-fixed flex justify-content-center border-right-1 border-200" style="width: 2.5rem;">
+          <i class="pi pi-id-card text-sm text-600"></i>
+        </div>
+        <div class="col">
+          <input
+            pInputText
+            id="lastname"
+            #lastnameInput="ngModel"
+            required
+            name="lastname"
+            placeholder="Nom"
+            [ngModel]="lastname()"
+            (ngModelChange)="onLastname($event)"
+            class="w-full border-none bg-transparent p-2 text-base focus:shadow-none"
+          >
+        </div>
+      </div>
+      @if (lastnameInput.invalid && (lastnameInput.dirty || lastnameInput.touched)) {
+        <small class="p-error text-xs ml-1">Requis</small>
+      }
+    </div>
+
+  </form>
+</div>
+<!--<div>-->
+
+
+
+<!--<form #formProviderInfo="ngForm"-->
+<!--      class="flex flex-column  justify-content-around align-items-center"-->
+<!--&gt;-->
+
+<!--  <input-->
+<!--    #firstnameInput="ngModel"-->
+<!--  required-->
+<!--  name="firstname"-->
+<!--  placeholder="firstname"-->
+<!--  [ngModel]="firstname()"-->
+<!--  (ngModelChange)="onFirstname($event)"-->
+<!--  >-->
+<!--  <input-->
+<!--    required-->
+<!--    name="lastname"-->
+<!--    placeholder="firstname"-->
+<!--    #lastnameInput="ngModel"-->
+<!--    [ngModel]="  lastname()"-->
+<!--    (ngModelChange)="onLastname($event)"-->
+<!--  >-->
+
+<!--</form>-->
+<!--</div>-->

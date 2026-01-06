@@ -5,7 +5,7 @@ import {NgIf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {WrappedNodeExpr} from "@angular/compiler";
 import {AuthService} from "../../users/authService/auth.service";
-import {FormLogin, User} from "../../users/models/users";
+import {AppUser, FormLogin, User} from "../../users/models/users";
 
 @Component({
   selector: 'app-form-login',
@@ -24,7 +24,8 @@ export class FormLoginComponent {
   firstname:WritableSignal<string>=signal<string>("");
   email:WritableSignal<string>=signal<string>("");
   password:WritableSignal<string>=signal<string>("");
-
+  //@Input()
+  isAuthenticated=input.required<boolean>();
    formLogin: FormLogin={
     //firstname:"",
     //lastname:"",
@@ -33,12 +34,11 @@ export class FormLoginComponent {
   }
   //formLogin:WritableSignal<User>=signal<FormLogin>(this.formLogin);
 
-  //@Input()
-  isAuthenticated=input.required<boolean>();
+
   authService:  AuthService=inject(AuthService);
   isSubmitting = false;
   isAuth= false;
-  user: User | undefined | null = null;
+  user: AppUser | undefined | null = null;
   validationErrors: { [key: string]: string } = {};
 
   onSubmitForm() {
@@ -52,7 +52,7 @@ export class FormLoginComponent {
     this.authService.emitUserSubject().subscribe({
       next: user => {
         this.user=user;
-        console.log("this.user ::: ",this.user);
+        console.log("this.user in form_login ::: ",this.user);
       }
     })
     this.authService.getvalidationErrorsObs().subscribe(

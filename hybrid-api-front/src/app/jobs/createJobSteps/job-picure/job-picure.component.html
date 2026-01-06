@@ -1,0 +1,59 @@
+<p>job-picure works!</p>
+<div class="mb-3">
+  <h1 class="mb-1"> Add some photos of your job</h1>
+<!--  <h2 class="mt-6"> Your'll need 5 photos to get start it.-->
+<!--    Your can add more later </h2>-->
+  <div class="flex align-items-center justify-content-center mt-3">
+    <input type="file"
+           pInputText
+           id="picture"
+           placeholder="Pictures"
+           accept=".jpg,.jpeg,.png,.svg"
+           multiple="multiple"
+           (change)="onUploadNewPicture($event.target)">
+  </div>
+</div>
+
+
+
+<div class="mt-2 flex flex-wrap gap-3 w-full">
+  @for (picture of jobPictures(); track picture.urlDisplay){
+  <div class="relative border-round-xl overflow-hidden shadow-2"
+       style="width: calc(25% - 1rem); min-width: 100px;">
+
+    <button class="absolute z-5 border-circle border-none flex align-items-center justify-content-center text-white"
+            style="top: 8px; right: 8px; cursor: pointer; width: 32px; height: 32px;"
+            (click)="onTrashPicture(picture)">
+      <fa-icon [icon]="iconTrash" style="font-size: 0.9rem; color: red;"></fa-icon>
+    </button>
+<!--    <button class="absolute z-5 p-button-danger border-circle p-2"-->
+<!--            style="top: 5px; right: 5px; cursor: pointer;"-->
+<!--            (click)="onTrashPicture(picture)">-->
+<!--    <fa-icon [icon]="iconTrash"></fa-icon>-->
+<!--  </button>-->
+
+    <div class="bg-cover bg-no-repeat bg-center h-12rem w-full picture"
+         [style.background-image]="'url('+picture.urlDisplay+ ')'">
+    </div>
+  </div>
+}
+</div>
+
+
+
+<!--@if (jobPictures()){-->
+<!--  <div class="mt-2 flex flex-wrap w-full h-full">-->
+<!--    @for (picture of jobPictures(); track picture.file.name){-->
+
+<!--      <div class="border-1 relative border-transparent  border-round-3xl container-picture">-->
+<!--        <button class="absolute trash-btn p-button" (click)="onTrashPicture(picture)">-->
+<!--          <fa-icon icon="trash-can" ></fa-icon>-->
+<!--        </button>-->
+<!--        <div class="border-1 border-transparent border-round-3xx-->
+<!--          bg-cover bg-no-repeat h-30rem w-full"-->
+<!--             [style.background-image]="'url('+picture.urlDisplay+ ')'"-->
+<!--        ></div>-->
+<!--      </div>-->
+<!--    }-->
+<!--  </div>-->
+<!--}-->

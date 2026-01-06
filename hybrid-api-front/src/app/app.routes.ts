@@ -14,6 +14,8 @@ import {UserChatComponent} from "./user-dashboard/user-chat/user-chat.component"
 import {UserApplicationsComponent} from "./user-dashboard/user-applications/user-applications.component";
 import {UserMissionsComponent} from "./user-dashboard/user-missions/user-missions.component";
 import {UserCalendarComponent} from "./user-dashboard/user-calendar/user-calendar.component";
+import {CreateJobComponent} from "./jobs/create-job/create-job.component";
+import {JobBoardComponent} from "./jobs/jobBoards/job-board/job-board.component";
 
 export const routes: Routes = [
     {
@@ -26,7 +28,17 @@ export const routes: Routes = [
     path:"about", component: HomeComponent
   },
   {
-   path:"signin", component: SigInComponent
+   path:"signin", component: SigInComponent,
+    children: [
+      { path: 'profile', component: UserProfileComponent }, // ✅ sous-route
+      { path: 'chat', component: UserChatComponent },
+      { path: 'applications', component: UserApplicationsComponent },
+      { path: 'missions', component: UserMissionsComponent },
+      { path: 'calendar', component: UserCalendarComponent },
+      // { path: 'user', component: UserComponent },
+      // { path: 'provider', component: ProviderComponent },
+      // { path: 'jobber', component: JobberComponent },
+    ]
   },
   {
     path:"signout", component: SignoutComponent
@@ -44,16 +56,32 @@ export const routes: Routes = [
     ]
   },
 
+
+
   {
     path:"jobber", component: JobberComponent,
     canActivate:[authGuard],
-    data: {authorities: ["ROLE_LANDLORD"]}
+    data: {authorities: ["ROLE_LANDLORD"]},
+    children: [
+      { path: 'profile', component: UserProfileComponent }, // ✅ sous-route
+      { path: 'chat', component: UserChatComponent },
+      { path: 'applications', component: UserApplicationsComponent },
+      { path: 'missions', component: UserMissionsComponent },
+      { path: 'calendar', component: UserCalendarComponent },
+    ]
   },
 
   {
     path:"provider", component: ProviderComponent,
     canActivate:[authGuard],
-    data: {authorities: ["ROLE_LANDLORD"]}
+    data: {authorities: ["ROLE_LANDLORD"]},
+    children: [
+      { path: 'profile', component: UserProfileComponent }, // ✅ sous-route
+      { path: 'chat', component: UserChatComponent },
+      //{ path: 'applications', component: UserApplicationsComponent },
+      { path: 'create-job', component: CreateJobComponent },
+      { path: 'calendar', component: UserCalendarComponent },
+    ]
   },
   {
     path:"login", component: LoginComponent
@@ -63,6 +91,10 @@ export const routes: Routes = [
   },
   {
     path:"successregestration", component: SuccsesRegistrationComponent
+  },
+
+  {
+    path:"job-board", component: JobBoardComponent
   },
 ];
 

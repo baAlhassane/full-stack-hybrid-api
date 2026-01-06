@@ -1,0 +1,51 @@
+<p>job-time works!</p>
+
+<div class="grid">
+  <div class="col-12 md:col-6 field">
+    <label class="font-bold block mb-2">Heure de début</label>
+    <p-calendar
+      [ngModel]="startForPicker()"
+      (ngModelChange)="onTimeChange($event, 'start')"
+      [timeOnly]="true"
+      hourFormat="24"
+      [showIcon]="true"
+      appendTo="body"
+      placeholder="00:00">
+    </p-calendar>
+  </div>
+
+  <div class="col-12 md:col-6 field">
+    <label class="font-bold block mb-2">Heure de fin</label>
+    <p-calendar
+      [ngModel]="endForPicker()"
+      (ngModelChange)="onTimeChange($event, 'end')"
+      [timeOnly]="true"
+      hourFormat="24"
+      [showIcon]="true"
+      appendTo="body"
+      placeholder="00:00">
+    </p-calendar>
+  </div>
+
+  <div class="col-12 field">
+    <label class="font-bold block mb-2">Tarif horaire (€/h)</label>
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon"><i class="pi pi-euro"></i></span>
+      <input type="number"
+             class="p-inputtext p-component w-full"
+             [ngModel]="tarifPerHours()"
+             (ngModelChange)="onTarifHoraireChange($event)"
+             placeholder="Ex: 25">
+    </div>
+  </div>
+
+  <div class="col-12 mt-3">
+    <div class="p-3 border-round bg-primary-reverse text-primary flex justify-content-between align-items-center">
+      <span class="text-lg">Estimation du prix total :</span>
+      <span class="text-2xl font-bold">{{ totalRate() | currency:'EUR' }}</span>
+    </div>
+    @if (heureDeFin() <= heureDeDebut()) {
+      <small class="p-error">L'heure de fin doit être après l'heure de début.</small>
+    }
+  </div>
+</div>

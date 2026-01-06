@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import {Observable, BehaviorSubject, of, Subject, filter, audit, throwError} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {Router} from "@angular/router";
-import {FormLogin, FormRegister, RegistrationResponse, User} from "../models/users";
+import {AppUser, FormLogin, FormRegister, RegistrationResponse, User} from "../models/users";
 // import {environment} from "../../../environments/environment";
 import {environment} from "../../../environments/environment.development";
 import {ChatService} from "../../websocket/chat.service";
@@ -13,7 +13,7 @@ import {ChatService} from "../../websocket/chat.service";
 })
 export class AuthService {
 
-  private userSubject = new BehaviorSubject<User | null>(null);
+  private userSubject = new BehaviorSubject<AppUser | null>(null);
  public user$ = this.userSubject.asObservable().pipe(
     filter(user => user !== null) // Ne garde que les valeurs valides
   );
@@ -24,7 +24,7 @@ export class AuthService {
 
   //API_URL = '/api';
    API_URL = "/api/hybrid-api";
-  user:any;
+  user: User | null = null;
 
 
 
@@ -37,7 +37,9 @@ export class AuthService {
   private chatService: ChatService=inject(ChatService);
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+      this.initAuth(); // Restaure l'état dès que le service est créé
+  }
 
 // MODIFIÉ : getUserInfo() ne retourne PLUS un Observable.
   // L'abonnement est géré en interne.
@@ -112,7 +114,7 @@ export class AuthService {
  public emitisAutSubject(): Observable<boolean> {
    return this.isAuthenticated$;
   }
-  public emitUserSubject(): Observable<User | null> {
+  public emitUserSubject(): Observable<AppUser | null> {
     return this.user$;
   }
 
@@ -124,7 +126,8 @@ export class AuthService {
       authorities=[authorities];
 
     }
-    return this.user.tests.some((authority:string)=>authorities.includes(authority));
+   // return this.user.some((authority:string)=>authorities.includes(authority));
+    return <boolean>this.user?.authorities.some((authority: string) => authorities.includes(authority));
   }
 
   public loging() {
@@ -142,13 +145,23 @@ export class AuthService {
   }
 
   loginForm(email: string, password: string): void {
-    this.http.post<User>(`${this.API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
+    this.http.post<AppUser>(`${this.API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
       next: response => {
         this.userSubject.next(response);
         this.isAuthenticated.next(true);
         console.log("Login success", response);
+        this.router.navigate(['/']);
         //console.log("user ", response);
-        //this.router.navigate(['/userinfo']);
+        // if(this.isAuthenticated.value && this.user?.userRole==="USER") {
+        //   this.router.navigate(['/user']);
+        // }
+        // if(this.isAuthenticated.value && this.user?.userRole==="JOBBER") {
+        //   this.router.navigate(['/jobber']);
+        // }
+        // if(this.isAuthenticated.value && this.user?.userRole==="PROVIDER") {
+        //   this.router.navigate(['/provider']);
+        // }
+
       },
       error: error => {
         if(error.status === 401 || (typeof error.error === 'string' && error.error.includes('Identifiants invalides (email ou mot de passe incorrect).' ))){
@@ -172,6 +185,7 @@ export class AuthService {
     success: false,
     message:"",
     fullName:"",
+    userRole:""
   }
 
   private registrationResponseObs= new BehaviorSubject<RegistrationResponse>(this.registrationResponse);

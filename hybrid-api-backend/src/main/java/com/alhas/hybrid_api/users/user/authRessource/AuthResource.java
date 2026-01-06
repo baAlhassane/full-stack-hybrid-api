@@ -88,7 +88,8 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginReques
          loginResponse.setEmail(user.getEmail());
          loginResponse.setFirstname(user.getFirstname());
          loginResponse.setLastname(user.getLastname());
-         loginResponse.setUserRole(user.getUserType());
+         //loginResponse.set(user.getUserType());
+        loginResponse.setUserType(user.getUserType());
          loginResponse.setToken(jwtToken);
          loginResponse.setUerfullname(fullName);
         return ResponseEntity.ok(loginResponse);
@@ -114,11 +115,11 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginReques
 @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody
                                       @Valid RegistrationRequest registrationRequest) {
-        String fullName =registrationRequest.getRole()+" "+ registrationRequest.getFirstname() + " " + registrationRequest.getLastname();
+        String fullName =registrationRequest.getUserRole()+" "+ registrationRequest.getFirstname() + " " + registrationRequest.getLastname();
         System.out.println(fullName+ " registered successfully ");
 
         userService.registerUser(registrationRequest);
-    return ResponseEntity.ok(new RegistrationResponse(true, fullName,"User registered successfully"));
+    return ResponseEntity.ok(new RegistrationResponse(true, fullName,"User registered successfully", registrationRequest.getUserRole()));
 }
 
 

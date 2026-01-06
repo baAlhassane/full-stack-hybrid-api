@@ -1,16 +1,17 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, input, InputSignal, OnInit, Provider} from '@angular/core';
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {AuthService} from "../../users/authService/auth.service";
 import {Subscription} from "rxjs";
-import {NotificationRgisgister, User} from "../../users/models/users";
+import {AppUser, Jobber, NotificationRegister, User} from "../../users/models/users";
 import {NotificationService} from "../../websocket/notification.service";
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
   imports: [
     RouterOutlet,
-    RouterLink
+    RouterLink, CommonModule
   ],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.css'
@@ -19,10 +20,10 @@ export class UserDashboardComponent implements OnInit {
   authService=inject(AuthService);
   isAuthenticated: boolean=false;
   private subscription: Subscription= new Subscription();
-  user: User | undefined | null=null;
-  notification: NotificationRgisgister | undefined;
+  user: AppUser |  undefined | null=null;
+  notification:NotificationRegister | undefined;
   notificationService: NotificationService=inject(NotificationService);
-
+  userTypeDashbord : InputSignal<string> = input.required<string>();
   ngOnInit(): void {
     this.authService.emitUserSubject().subscribe({
         next: (user)=>{

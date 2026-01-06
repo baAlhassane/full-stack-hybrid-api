@@ -21,6 +21,7 @@ export class SuccsesRegistrationComponent implements OnInit {
     success: false,
     message:"",
     fullName:"",
+    userRole:""
   }
 
 authService: AuthService=inject(AuthService);

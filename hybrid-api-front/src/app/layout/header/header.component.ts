@@ -3,7 +3,7 @@ import { FaIconLibrary, FontAwesomeModule} from "@fortawesome/angular-fontawesom
 import {fontAwesomeIcons} from "../../../font-awesome";
 
 
-import {Router, RouterLink} from "@angular/router";
+import {Router, RouterLink, RouterOutlet} from "@angular/router";
 
 import {AuthService} from "../../users/authService/auth.service";
 import {CommonModule, NgIf, NgStyle} from "@angular/common";
@@ -12,6 +12,7 @@ import {Subscription} from "rxjs";
 import {SignService} from "../sign.service";
 import {Button} from "primeng/button";
 import {DataRowOutlet} from "@angular/cdk/table";
+import {AppUser, User} from "../../users/models/users";
 
 
 @Component({
@@ -21,7 +22,6 @@ import {DataRowOutlet} from "@angular/cdk/table";
     FontAwesomeModule,
     RouterLink,
     NgIf,
-    NgStyle,
   ],
   templateUrl: './header.component.html',
   standalone: true,
@@ -29,7 +29,7 @@ import {DataRowOutlet} from "@angular/cdk/table";
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  user:any;
+  user: AppUser | undefined | null=null;
   userSubscription=new Subscription();
 
   faIconLibrary=inject(FaIconLibrary);
@@ -39,6 +39,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private subscription: Subscription= new Subscription();
   private signService=inject(SignService);
   color:string="";
+  userType: string | undefined = ""; // ou récupéré depuis ton AuthService
+
 
   private initFontAwesome(){
     this.faIconLibrary.addIcons(...fontAwesomeIcons)
@@ -54,6 +56,12 @@ this.initFontAwesome();
 
         }
       });
+    this.authService.emitUserSubject().subscribe({
+      next: (value) => {
+        this.user = value;
+        this.userType= value?.userType;
+        },
+    })
   }
 
   logoutHybridApi(): void {
@@ -64,6 +72,7 @@ this.initFontAwesome();
 
   toggleShowLogging() {
     this.authService.loging();
+    this.userType=" ";
   }
 
   getColor() {
@@ -74,6 +83,9 @@ this.initFontAwesome();
     this.subscription.unsubscribe(); // Évite les fuites de mémoire
   }
 
+  getLinkClass() {
+    return this.isAuthenticated ? 'nav-link active' : 'nav-link';
+  }
 
 
 }

@@ -1,12 +1,26 @@
 <p>user-info works!</p>
 
-<div style="background-color: chartreuse; height: 250px;width: 300px;margin-left: 5px " *ngIf="isAuthenticated()" >
-  <img [src]="user?.imageUrl" alt="Photo de profil" width="40"> <br>
-  <h2>{{ user?.firstname }} {{ user?.lastname }}</h2>
-  <h3>{{ user?.email }}</h3>
-  <button (click)="logout()"
-  >Déconnexion</button>
-  <br>
-<app-registration-notification> </app-registration-notification>
-</div>
+<!--<div style="background-color: chartreuse; height: 250px;width: 300px;margin-left: 5px " *ngIf="isAuthenticated()" >-->
+<!--  <img [src]="user?.imageUrl" alt="Photo de profil" width="40"> <br>-->
+<!--  <h2>{{ user?.firstname }} {{ user?.lastname }}</h2>-->
+<!--  <h3>{{ user?.email }}</h3>-->
+<!--  <button (click)="logout()"-->
+<!--  >Déconnexion</button>-->
+<!--  <br>-->
+<!--<app-registration-notification> </app-registration-notification>-->
+<!--</div>-->
+
+
+
+<!--@if(userTypePage==="USER"){-->
+<!--  <app-user></app-user>-->
+<!--}-->
+<!--@if(userTypePage==="JOBBER"){-->
+<!--  <app-jobber></app-jobber>-->
+<!--}-->
+<!--@if(userTypePage==="PROVIDER"){-->
+<!--  <app-provider></app-provider>-->
+<!--}-->
+
+<app-home></app-home>
 

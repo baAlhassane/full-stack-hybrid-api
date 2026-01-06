@@ -1,8 +1,6 @@
 package com.alhas.hybrid_api.websocket.message;
 
 
-import com.alhas.hybrid_api.users.user.ChatUserDTO;
-import com.alhas.hybrid_api.users.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,8 +12,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static java.rmi.server.LogStream.log;
 
 @Controller
 @Slf4j
@@ -39,7 +35,7 @@ public class ChatController {
         roomUsers.putIfAbsent(roomId, new HashSet<>());
         roomUsers.get(roomId).add(user);
 
-        // 🔥 Diffuser la liste mise à jour à tout le monde
+        //  Diffuser la liste mise à jour à tout le monde
         messagingTemplate.convertAndSend("/topic/users/" + roomId, roomUsers.get(roomId));
         log.info("➡️ Utilisateurs dans la room {} : {}", roomId, roomUsers.get(roomId));
     }

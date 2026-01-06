@@ -1,5 +1,6 @@
-package com.alhas.hybrid_api.users.user;
+package com.alhas.hybrid_api.websocket.message;
 
+import com.alhas.hybrid_api.users.user.NotificationRgisgister;
 import lombok.*;
 
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class ChatUserDTO {
     private String firstname;
     private String lastname;

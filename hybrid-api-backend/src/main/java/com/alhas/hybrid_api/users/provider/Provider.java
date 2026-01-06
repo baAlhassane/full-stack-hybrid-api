@@ -42,7 +42,9 @@ public class Provider extends User {
 
    @OneToMany(mappedBy = "provider")
    private Set<Job> jobs;
-
+  private int numbers_of_jobs_submited=0;
+   @OneToMany(mappedBy = "provider")
+   private List<Job> currentsMissions;
 
 
 }

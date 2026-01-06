@@ -1,7 +1,8 @@
+
 /* ----------- Dashboard général ----------- */
 .dashboard {
   display: flex;
-  min-height: 100vh;
+  max-height: calc(100vh - 60px); /* ↓ réduit la hauteur de 50 à 80 px */
   background: #f5f6fa;
   font-family: Arial, sans-serif;
 }
@@ -52,3 +53,78 @@
   padding: 20px;
   overflow: hidden; /* Empêche le dépassement */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!* ----------- Dashboard général ----------- *!*/
+/*.dashboard {*/
+/*  display: flex;*/
+/*  min-height: 100vh;*/
+/*  background: #f5f6fa;*/
+/*  font-family: Arial, sans-serif;*/
+/*}*/
+
+/*!* ----------- Sidebar ----------- *!*/
+/*.sidebar {*/
+/*  width: 220px;*/
+/*  background: #2c3e50;*/
+/*  color: white;*/
+/*  padding: 20px;*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
+
+/*.sidebar h2 {*/
+/*  margin-bottom: 20px;*/
+/*  font-size: 1.3em;*/
+/*  border-bottom: 2px solid rgba(255, 255, 255, 0.3);*/
+/*  padding-bottom: 10px;*/
+/*}*/
+
+/*.sidebar ul {*/
+/*  list-style: none;*/
+/*  padding: 0;*/
+/*  margin: 0;*/
+/*}*/
+
+/*.sidebar li {*/
+/*  margin-bottom: 15px;*/
+/*}*/
+
+/*.sidebar a {*/
+/*  color: white;*/
+/*  text-decoration: none;*/
+/*  font-weight: bold;*/
+/*  transition: color 0.2s ease-in-out;*/
+/*}*/
+
+/*.sidebar a:hover {*/
+/*  color: #1abc9c;*/
+/*}*/
+
+/*!* ----------- Contenu principal ----------- *!*/
+/*.content {*/
+/*  flex: 1;*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  padding: 20px;*/
+/*  overflow: hidden; !* Empêche le dépassement *!*/
+/*}*/

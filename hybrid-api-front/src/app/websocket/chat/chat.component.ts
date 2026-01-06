@@ -5,7 +5,7 @@ import {FormsModule} from "@angular/forms";
 import {DatePipe, NgClass, NgFor, NgIf} from "@angular/common";
 import {Subscription} from "rxjs";
 import {RelativeTimePipe} from "../../pipes/relative-time.pipe";
-import {User} from "../../users/models/users";
+import {AppUser, BaseUser, User} from "../../users/models/users";
 
 @Component({
   selector: 'app-chat',
@@ -23,9 +23,10 @@ export class ChatComponent implements OnInit, OnDestroy  {
   senders: User[] = [];
   newMessage = '';
   //senderName: InputSignal<string> = input.required<string>();
-  user: InputSignal<User>=input.required<User>();
+  user: InputSignal<AppUser>=input.required<AppUser>();
   roomId: InputSignal<string> = input.required<string>();
   private sub?: Subscription;
+   // user: BaseUser;
   constructor(private chatService: ChatService) {}
   ngOnInit() {
     const room = this.roomId();

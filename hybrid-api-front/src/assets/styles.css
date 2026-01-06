@@ -32,8 +32,60 @@ fa-icon {
   /*color: #bbb;*/
 }
 
-/*fa-icon{*/
-/*  margin-left: 10px;*/
-/*  font-size: 3px;*/
-/*  margin-right: 10px;*/
-/*}*/
+
+
+/* === Mise à zéro des marges par défaut === */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Structure principale de l'application === */
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* occupe toute la hauteur visible */
+}
+
+/* === Zone principale qui contient le contenu dynamique === */
+.app-content {
+  flex: 1; /* prend tout l'espace disponible */
+  display: block;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* === Footer sticky === */
+app-footer {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* Si le contenu dépasse la hauteur de la page, le footer descend naturellement */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* === Optionnel : pour assurer un bon rendu sur mobiles === */
+.footer-container {
+  background-color: #2c3e50;
+  color: white;
+  text-align: center;
+  height: 40px; /* Hauteur standard */
+  width: 100%;
+  display: flex;
+  align-items: center;      /* Centre verticalement */
+  justify-content: center;  /* Centre horizontalement */
+  font-size: 0.95rem;       /* Taille de texte élégante */
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  margin-top: auto;         /* Le pousse vers le bas si peu de contenu */
+}
+
