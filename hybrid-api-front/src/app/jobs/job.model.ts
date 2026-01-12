@@ -3,9 +3,10 @@ import {IconName} from "@fortawesome/fontawesome-svg-core";
 import {Step} from "./Step.model.";
 
 
+
 export enum JobStatus {
-  PAST = 'PAST',
-  CURRENT = 'CURRENT',
+  DONE = 'DONE',
+  ONGOING = 'ONGOING',
   FUTURE = 'FUTURE'
 }
 
@@ -26,11 +27,21 @@ export interface Job {
   typeOfJob: TypeOfJob;
   status: JobStatus
   jobPictures: JobPictureDTO[];
-  jobPublicId:""
+  jobPublicId:string;
+  address: Address,
+  createdDate : string
+
 
 }
 
-
+export  type Address ={
+  country: string;      // Utilise 'string' (le type), pas "" (la valeur)
+  city: string;
+  street: string;
+  houseNumber: string;
+  latitude: number | null; // Accepte un nombre ou null
+  longitude: number | null;
+}
 
 
 
@@ -100,6 +111,14 @@ export const JOB_CATEGORIES: Category[] = [
   { technicalName: TypeOfJob.OTHER, displayName: TypeOfJobLabels[TypeOfJob.OTHER], icon: 'ellipsis-h', activated: false }
 ];
 
+export const ADDRESS= {
+  country: "",
+  city: "",
+  street: "",
+  houseNumber:"",
+  latitude: null, // ou 0
+  longitude: null // ou 0
+}
 
 export const INIT_JOB: Job = {
   "title": "",
@@ -116,6 +135,8 @@ export const INIT_JOB: Job = {
   "status": JobStatus.FUTURE,
   "jobPublicId":"",
   "jobPictures" : [],
+  "address" : ADDRESS,
+  createdDate:""
 };
 
 
@@ -157,14 +178,21 @@ export const STEPS: Step[] = [
   },
   {
     id: JOB_ID_SEQUENCE.TIMES,
-    idNext: JOB_ID_SEQUENCE.PICTURES,
+    idNext: JOB_ID_SEQUENCE.LOCATION,
     idPrevious: JOB_ID_SEQUENCE.DATE,
     isValid: false
   },
   {
+    id: JOB_ID_SEQUENCE.LOCATION ,
+    idNext: JOB_ID_SEQUENCE.PICTURES ,
+    idPrevious: JOB_ID_SEQUENCE.TIMES,
+    isValid: false
+  },
+
+  {
     id: JOB_ID_SEQUENCE.PICTURES ,
     idNext: null,
-    idPrevious: JOB_ID_SEQUENCE.TIMES,
+    idPrevious: JOB_ID_SEQUENCE.LOCATION,
     isValid: false
   },
 ];

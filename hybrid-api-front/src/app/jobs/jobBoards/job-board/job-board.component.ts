@@ -24,9 +24,10 @@ export class JobBoardComponent implements OnInit {
 
 
   ngOnInit() {
-  //  this.jobService.fetchAllJobs(); // Charge les jobs existants au démarrage
+    this.jobService.fetchAllJobs(); // Charge les jobs existants au démarrage
   }
   goToDetails(publicId: string) {
-    this.router.navigate(['/job-details', publicId]);
+    console.log("go to details",publicId);
+    this.router.navigate(['/job-detail', publicId]);
   }
 }

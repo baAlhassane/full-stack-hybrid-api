@@ -10,7 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -30,7 +32,7 @@ public class Job {
     private Long id;
 
     @UuidGenerator
-    @Column(name = "code", nullable = false)
+    @Column(name = "job_public_id", nullable = false)
     private UUID jobPublicId;
     private LocalDate date;
     @Column(name = "heure_debut")// Date de la mission
@@ -48,13 +50,16 @@ public class Job {
 
     @Enumerated(EnumType.STRING)
     private JOB_STATUS status;
+
     private String title;
 
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
 
-
+    @CreatedDate
+    @Column(updatable = false,name = "created_date")
+    private Instant createdDate=Instant.now();
 
 
    @ManyToMany(fetch = FetchType.EAGER)

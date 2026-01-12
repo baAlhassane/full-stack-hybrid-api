@@ -16,6 +16,7 @@ import {UserMissionsComponent} from "./user-dashboard/user-missions/user-mission
 import {UserCalendarComponent} from "./user-dashboard/user-calendar/user-calendar.component";
 import {CreateJobComponent} from "./jobs/create-job/create-job.component";
 import {JobBoardComponent} from "./jobs/jobBoards/job-board/job-board.component";
+import {JobDetailComponent} from "./jobs/jobBoards/job-detail/job-detail.component";
 
 export const routes: Routes = [
     {
@@ -94,7 +95,11 @@ export const routes: Routes = [
   },
 
   {
-    path:"job-board", component: JobBoardComponent
+    path:"jobs", component: JobBoardComponent
+  },
+
+  {
+    path:"jobs/:jobPublicId", component: JobDetailComponent
   },
 ];
 

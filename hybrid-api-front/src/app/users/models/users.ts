@@ -8,6 +8,8 @@ export interface BaseUser {
   imageUrl: string
   isAuthenticated: boolean
   authorities: string[]
+  accessToken: string,
+  token: string,
   notification: NotificationRegister
 }
 

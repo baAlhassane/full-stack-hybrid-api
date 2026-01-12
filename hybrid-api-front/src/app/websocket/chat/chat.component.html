@@ -31,7 +31,9 @@
   <div class="users-container">
     <h4>Utilisateurs connectés</h4>
     <ul>
-      <li *ngFor="let user of senders">{{ user.firstname + " " + user.lastname +" ("  +user.userType+ " )" }} </li>
+      <li *ngFor="let user of senders">
+
+        {{ user.firstname + " " + user.lastname +" ("  +user.userType+ " )" }} </li>
     </ul>
   </div>
 </div>

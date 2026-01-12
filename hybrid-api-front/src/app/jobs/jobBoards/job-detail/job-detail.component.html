@@ -1,0 +1,21 @@
+<p>job-detail works!</p>
+<!--<div *ngIf="job; else loader">-->
+
+<!--</div>-->
+
+@if (jobByPublicId.jobPublicId){
+
+  <h1>{{ jobByPublicId.title }}</h1>
+  <p><strong>Entreprise :</strong> {{  jobByPublicId.description }}</p>
+  <div class="description">
+    <!--    {{ jobByPublicid.description }}-->
+  </div>
+
+<br> 
+  <button class="p-button"> Postuler </button>
+}
+
+
+<ng-template #loader>
+  <p>Chargement du job...</p>
+</ng-template>

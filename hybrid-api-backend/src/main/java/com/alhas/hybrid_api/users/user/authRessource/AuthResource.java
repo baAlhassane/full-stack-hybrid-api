@@ -82,6 +82,7 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginReques
 
         // 5. Construisez la réponse avec le jeton JWT et d'autres infos utilisateur si nécessaire
         // Adaptez LoginResponse pour inclure le JWT et les informations de l'utilisateur
+
         String fullName=  user.getFirstname() + " " + user.getLastname();
         System.out.println(fullName+ " is logged successfully ");
          LoginResponse loginResponse = new LoginResponse();
@@ -92,7 +93,11 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginReques
         loginResponse.setUserType(user.getUserType());
          loginResponse.setToken(jwtToken);
          loginResponse.setUerfullname(fullName);
+        System.out.println(" jwtToken  : " + jwtToken );
         return ResponseEntity.ok(loginResponse);
+
+
+
         // Exemple: new LoginResponse(jwtToken, "Login successful", user.getEmail(), user.getFirstname(), user.getRoles(), etc.);
 
     } catch (BadCredentialsException ex) {

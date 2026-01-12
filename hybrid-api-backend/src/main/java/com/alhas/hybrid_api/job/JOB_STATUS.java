@@ -1,7 +1,10 @@
 package com.alhas.hybrid_api.job;
 
 public enum JOB_STATUS {
-    FUTURE,
-    PRESENT,
-    PASS
+    DONE,
+    ONGOING,
+    FUTURE
 }
+//  PAST = 'DONE',
+//  CURRENT = 'ONGOING',
+//  FUTURE = 'FUTURE'

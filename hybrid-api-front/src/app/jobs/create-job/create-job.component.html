@@ -1,7 +1,8 @@
 <p>create-job works!</p>
 
 
-@switch(this.currentStep.id) {
+
+@switch(currentStep.id) {
   @case (stepId.CATEGORY){
     <app-job-category
       [(selectedCategory)]="job.typeOfJob"
@@ -38,13 +39,18 @@
     (stepValidityChange)="onValidityChange($event)"
     ></app-job-time>
   }
+  @case(stepId.LOCATION){
+    <app-address-search
+      [(fullLocation)]="job.address"
+      (stepValidityChange)="onValidityChange($event)"
+    ></app-address-search>
+  }
 
   @case(stepId.PICTURES){
 <app-job-picure
   [(jobPictures)]="job.jobPictures"
 (stepValidityChange)="onValidityChange($event)"
->
-</app-job-picure>
+></app-job-picure>
   }
 }
 <app-foot-seq-step

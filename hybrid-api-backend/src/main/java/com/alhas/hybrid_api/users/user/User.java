@@ -50,9 +50,11 @@ public class User implements Serializable {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride( name = "street", column = @Column(name = "street")),
-            @AttributeOverride( name = "city", column = @Column(name = "city")),
-            @AttributeOverride( name = "streetNumber", column = @Column(name = "streetNumber"))
+            @AttributeOverride(name = "street", column = @Column(name = "addr_street")),
+            @AttributeOverride(name = "city", column = @Column(name = "addr_city")),
+            @AttributeOverride(name = "country", column = @Column(name = "addr_country")),
+            @AttributeOverride(name = "latitude", column = @Column(name = "addr_latitude")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "addr_longitude"))
     })
     private Address address;
     private String phoneNumber;

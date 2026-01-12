@@ -15,6 +15,7 @@ import {UserProfileComponent} from "../../user-dashboard/user-profile/user-profi
 import {JobPicureComponent} from "../createJobSteps/job-picure/job-picure.component";
 import {JobService} from "../job.service";
 import {Router} from "@angular/router";
+import {AddressSearchComponent} from "../jobMap/address-search/address-search.component";
 
 @Component({
   selector: 'app-create-job',
@@ -27,7 +28,8 @@ import {Router} from "@angular/router";
     JobDateComponent,
     JobTimeComponent,
     JobCategoryComponent,
-    JobPicureComponent
+    JobPicureComponent,
+    AddressSearchComponent
   ],
   templateUrl: './create-job.component.html',
   styleUrl: './create-job.component.css'
@@ -67,12 +69,29 @@ export class CreateJobComponent {
     }
   }
   finishStep() {
-    this.loardingCreation = true;
+    //this.loardingCreation = true;
     console.log( "this.job : ", this.job);
-    this.jobService.create(this.job);
-    this.router.navigate(['/job-board']);
+    //this.jobService.create(this.job);
+    // On appelle le service ET on s'abonne
+    this.jobService.create(this.job).subscribe({
+      next: (createdJob) => {
+        // ✅ SUCCÈS : Le job est créé en base de données
+        this.loardingCreation= false;
 
+        // On ne redirige QUE maintenant
+        this.router.navigate(['/jobs']);
 
+        // Optionnel : Afficher un petit message de succès
+        // this.toast.show('Job créé avec succès !');
+      },
+      error: (err) => {
+        // ❌ ERREUR : Le serveur a refusé (ex: 400 Bad Request)
+        this.loardingCreation
+        console.error("Erreur lors de la création", err);
+        // On reste sur la page pour que l'utilisateur puisse corriger
+      }
+    });
+    this.router.navigate(['/jobs']);// donne le job-boardCoponent
   }
 
 

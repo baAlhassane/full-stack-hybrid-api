@@ -21,7 +21,7 @@ public class ChatUserDTO {
     private String imageUrl;
     private boolean isAuthenticated;
     private String userRole;
-    private String type;
+    private String userType;
     private Set<String> authorities;
     private NotificationRgisgister notification;
 }

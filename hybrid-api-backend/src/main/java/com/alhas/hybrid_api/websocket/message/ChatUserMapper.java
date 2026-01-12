@@ -18,7 +18,7 @@ public class ChatUserMapper {
                 .imageUrl(user.getImageUrl())
                 .isAuthenticated(true) // ou selon ta logique
                 .userRole(user.getUserType())
-                .type(user.getUserType())
+                .userType(user.getUserType())
                 .authorities(user.getAuthorities()
                         .stream().map(Authority::getName).collect(Collectors.toSet()))
                 .notification(null) // TODO: à mapper si tu as un champ lié

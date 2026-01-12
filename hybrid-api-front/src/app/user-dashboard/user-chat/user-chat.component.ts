@@ -18,7 +18,7 @@ import {ChatService} from "../../websocket/chat.service";
 export class UserChatComponent implements OnInit {
 
   // userName = signal<string>('UnKnownUser'); // ⚡ à remplacer par le vrai utilisateur connecté
- emptyUser: User= {
+ emptyUser: AppUser= {
   //  firstname: "",
   //  lastname: "",
   //  fullname: "",
@@ -40,6 +40,8 @@ export class UserChatComponent implements OnInit {
    isAuthenticated: false,
    userType:"USER",
    authorities: [""],
+   token:"",
+   accessToken:"",
    notification: {
        name: "",
        email: ""

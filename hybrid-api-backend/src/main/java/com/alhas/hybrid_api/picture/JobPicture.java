@@ -30,7 +30,10 @@ public class JobPicture {
     @Column(name = "file_content_type")
     private String fileContentType;
 
-    @Column(name = "is_cover")
-    private boolean isCover;
+    @Column(name = "name")
+    private String name;
+
+//    @Column(name = "is_cover")
+//    private boolean isCover;
 
 }

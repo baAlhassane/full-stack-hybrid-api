@@ -51,20 +51,40 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // <-- Important pour CORS
+//                        .requestMatchers("/api/hybrid-api/auth/login").permitAll()
+//                        .requestMatchers("/api/hybrid-api/auth/register").permitAll()
+//                        .requestMatchers("/actuator/health").permitAll()
+//                        .requestMatchers("/api/hybrid-api/auth/logout-hybrid-api").permitAll()
+//                        .requestMatchers("/ws/**").permitAll()
+//                        .requestMatchers("/topic/**").permitAll()
+//                        .requestMatchers("/error").permitAll() // Permettre l'accès aux pages d'erreur
+//                        //.requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
+//                        .requestMatchers("/api/**").permitAll()// plus de vérification de rôle
+//                        .anyRequest()
+//                        .authenticated() // Toute autre requête nécessite une authentification
+//                )
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // <-- Important pour CORS
-                        .requestMatchers("/api/hybrid-api/auth/login").permitAll()
-                        .requestMatchers("/api/hybrid-api/auth/register").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/api/hybrid-api/auth/logout-hybrid-api").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // 1. Les routes publiques (Login / Register / Actuator)
+                        .requestMatchers("/api/hybrid-api/auth/login", "/api/hybrid-api/auth/register", "/actuator/health").permitAll()
+                        // 2. Les routes "Lecture seule" (Optionnel : si tu veux que tout le monde voie les jobs)
+                        .requestMatchers(HttpMethod.GET, "api/hybrid-api/job/jobs/**").permitAll()
+                                .requestMatchers("/api/hybrid-api/auth/logout-hybrid-api").permitAll()
                         .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/topic/**").permitAll()
+                      .requestMatchers("/topic/**").permitAll()  ///api/hybrid-api/job
                         .requestMatchers("/error").permitAll() // Permettre l'accès aux pages d'erreur
-                        //.requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
-                        .requestMatchers("/api/**").permitAll()// plus de vérification de rôle
-                        .anyRequest()
-                        .authenticated() // Toute autre requête nécessite une authentification
+                        .requestMatchers("/api/**").hasRole("LANDLORD") // reste du back sécurisé
+                        // 3. TOUT LE RESTE des API doit être authentifié
+                        .requestMatchers("/api/**").authenticated()
+
+                        .anyRequest().authenticated()
                 )
+
+
+
                 // Gestion de la session
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

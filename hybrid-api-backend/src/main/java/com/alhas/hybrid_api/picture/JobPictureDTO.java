@@ -12,6 +12,8 @@ import lombok.Setter;
 public class JobPictureDTO {
     private byte [] file;    // String fileBase64;
     private String fileContentType;
-    private boolean isCover;
+    private String name;
+
+    //private boolean isCover;
 
 }

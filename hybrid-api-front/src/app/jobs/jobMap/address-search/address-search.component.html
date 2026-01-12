@@ -1,0 +1,74 @@
+<p>address-search works!</p>
+
+
+
+<div class="grid p-fluid">
+  <div class="col-12 field">
+    <label class="font-bold">Rechercher une adresse précise</label>
+    <p-autoComplete
+      [(ngModel)]="searchQuery"
+      [suggestions]="suggestions"
+      (completeMethod)="onSearch($event)"
+      (onSelect)="onAddressSelect($event)"
+      field="display_name"
+      placeholder="Ex: 10 rue de la Paix, Paris">
+    </p-autoComplete>
+    <small>Astuce : Sélectionnez une adresse pour remplir les champs ci-dessous</small>
+  </div>
+
+  <div class="col-6 field">
+    <label>Numéro : </label>
+    <input pInputText
+           [(ngModel)]="addressDetails().houseNumber"
+           (input)="updateModel()"
+           placeholder="Ex: 15 Rue de Rivoli">
+
+    <label>Rue : </label>
+    <input pInputText
+           [(ngModel)]="addressDetails().street"
+           (input)="updateModel()"
+           placeholder="Ex: 15 Rue de Rivoli">
+  </div>
+  <div class="col-12 field">
+<!--    <label>Rue : </label>-->
+<!--    <input pInputText-->
+<!--           [(ngModel)]="addressDetails().street"-->
+<!--           (input)="updateModel()"-->
+<!--           placeholder="Ex: 15 Rue de Rivoli">-->
+<!--  </div>-->
+
+  <div class="col-6 field">
+    <label>Ville</label>
+    <input pInputText [(ngModel)]="addressDetails().city" (input)="updateModel()">
+  </div>
+  <div class="col-6 field">
+    <label>Pays</label>
+    <input pInputText [(ngModel)]="addressDetails().country" (input)="updateModel()">
+  </div>
+</div>
+
+
+<!--<div class="grid p-fluid">-->
+<!--  <div class="col-12 field">-->
+<!--    <label class="font-bold">Rechercher l'adresse</label>-->
+<!--    <p-autoComplete-->
+<!--      [(ngModel)]="searchQuery"-->
+<!--      [suggestions]="suggestions"-->
+<!--      (completeMethod)="onSearch($event)"-->
+<!--      (onSelect)="onAddressSelect($event)"-->
+<!--      field="display_name"-->
+<!--      placeholder="Entrez une adresse...">-->
+<!--    </p-autoComplete>-->
+<!--  </div>-->
+
+<!--  <div class="col-12 md:col-6 field">-->
+<!--    <input pInputText [ngModel]="addressDetails().street" placeholder="Rue" readonly>-->
+<!--  </div>-->
+<!--  <div class="col-12 md:col-6 field">-->
+<!--    <input pInputText [ngModel]="addressDetails().city" placeholder="Ville" readonly>-->
+<!--  </div>-->
+
+<!--  <div class="col-12">-->
+<!--    <div id="mini-map" style="height: 250px; border-radius: 10px; border: 1px solid #ccc;"></div>-->
+<!--  </div>-->
+<!--</div>-->

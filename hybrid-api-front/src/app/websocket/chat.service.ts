@@ -13,7 +13,7 @@ export class ChatService {
 
   private client: Client;
   private messages$ = new BehaviorSubject<ChatMessage[]>([]);
-  private senders$ = new BehaviorSubject<User[]>([]);
+  private senders$ = new BehaviorSubject<AppUser[]>([]);
   private activeSubscriptions: { [roomId: string]: StompSubscription } = {};
 
   constructor() {
@@ -43,7 +43,7 @@ export class ChatService {
     const subscriptionUsers = this.client.subscribe(
       `/topic/users/${roomId}`,
       (message: IMessage) => {
-        const users: User[] = JSON.parse(message.body);
+        const users: AppUser[] = JSON.parse(message.body);
         this.senders$.next(users);
         console.log(this.senders$.value);
       }
@@ -53,7 +53,7 @@ export class ChatService {
       lastname:  user.lastname,
       email:  user.email,
       imageUrl:  user.imageUrl,
-      type:  user.userType
+      userType:  user.userType
     };
     // prévenir le serveur qu’on rejoint
     this.client.publish({
@@ -65,18 +65,8 @@ export class ChatService {
   }
 
 
-  leaveRoom(roomId: string, user: AppUser) {
-    if (this.activeSubscriptions[roomId]) {
-      this.activeSubscriptions[roomId].unsubscribe();
-      console.log("leave room");
-      delete this.activeSubscriptions[roomId];
-    }
-    //  prévenir le serveur
-    this.client.publish({
-      destination: `/app/leave/${roomId}`,
-      body: JSON.stringify(user)
-    });
-  }
+
+
 
   sendMessage(roomId: string, msg: ChatMessage) {
     this.client.publish({
@@ -92,17 +82,55 @@ export class ChatService {
     return this.senders$.asObservable();
   }
 
-  leaveAllRooms(user: AppUser) {
-    Object.keys(this.activeSubscriptions).forEach(roomId => {
+
+// Dans ChatService.ts
+  leaveRoom(roomId: string, user: AppUser) {
+    if (this.activeSubscriptions[roomId]) {
+      // 1. On se désabonne d'abord
       this.activeSubscriptions[roomId].unsubscribe();
       delete this.activeSubscriptions[roomId];
 
+      // 2. On prévient le serveur SEULEMENT si on vient de supprimer la souscription
       this.client.publish({
         destination: `/app/leave/${roomId}`,
         body: JSON.stringify(user)
       });
+      console.log(`🚪 Signal de départ envoyé pour la salle : ${roomId}`);
+    }
+  }
+
+  // Dans ChatService.ts
+  leaveAllRooms(user: AppUser) {
+    Object.keys(this.activeSubscriptions).forEach(roomId => {
+      this.leaveRoom(roomId, user); // Appelle la version sécurisée
     });
   }
+
+
+  // leaveRoom(roomId: string, user: AppUser) {
+  //   if (this.activeSubscriptions[roomId]) {
+  //     this.activeSubscriptions[roomId].unsubscribe();
+  //     console.log("leave room");
+  //     delete this.activeSubscriptions[roomId];
+  //   }
+  //   //  prévenir le serveur
+  //   this.client.publish({
+  //     destination: `/app/leave/${roomId}`,
+  //     body: JSON.stringify(user)
+  //   });
+  // }
+
+  // leaveAllRooms(user: AppUser) {
+  //   Object.keys(this.activeSubscriptions).forEach(roomId => {
+  //     this.activeSubscriptions[roomId].unsubscribe();
+  //     delete this.activeSubscriptions[roomId];
+  //
+  //     this.client.publish({
+  //       destination: `/app/leave/${roomId}`,
+  //       body: JSON.stringify(user)
+  //     });
+  //   });
+  // }
 
 }
 

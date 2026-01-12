@@ -20,7 +20,7 @@ import {AppUser, BaseUser, User} from "../../users/models/users";
 })
 export class ChatComponent implements OnInit, OnDestroy  {
   messages: ChatMessage[] = [];
-  senders: User[] = [];
+  senders: AppUser[] = [];
   newMessage = '';
   //senderName: InputSignal<string> = input.required<string>();
   user: InputSignal<AppUser>=input.required<AppUser>();
@@ -37,6 +37,8 @@ export class ChatComponent implements OnInit, OnDestroy  {
       this.messages = msgs;
       console.log(" ChatComponent.ngOnInit this.sub = this.chatService.getMessages().subscribe + this.messages ", this.messages);
       console.log(" ChatComponent.ngOnInit this.sub = this.chatService.getMessages().subscribe + this.messages ", this.user().firstname);
+      console.log(" this.user() in joinRoom :  ", this.user());
+
     });
 
     this.chatService.getSenders().subscribe(senders => {
@@ -62,7 +64,7 @@ export class ChatComponent implements OnInit, OnDestroy  {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-   // this.chatService.leaveRoom(this.roomId(), this.user()); // deplacer dans logout
+   this.chatService.leaveRoom(this.roomId(), this.user()); // deplacer dans logout
   }
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;

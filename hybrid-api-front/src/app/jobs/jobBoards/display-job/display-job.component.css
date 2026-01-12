@@ -1,186 +1,64 @@
-
-
-
 .job-card {
-  width: 100%;
-  max-width: 420px;
-  background: var(--surface-card);
-  border-radius: 14px;
-  border: 1px solid var(--surface-border);
-  padding: 1.25rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .job-card:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
-.card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+/* Cibler le conteneur du Header de la carte */
+:host ::ng-deep .p-card-header {
+  background-color: #f1f5f9; /* Un bleu-gris très doux */
+  padding: 1rem 1.25rem 0.25rem 1.25rem;
+  /*padding: 1.5rem 1.5rem 0.5rem 1.5rem;*/
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
-/* Titre */
-.job-title {
-  margin: 0;
-  font-size: 1.1rem;
+/* Cibler le corps de la carte */
+:host ::ng-deep .p-card-body {
+  background-color: #ffffff;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 1rem;
+  /*padding: 1.5rem;*/
+}
+
+/* Amélioration des labels pour le contraste */
+.text-500 {
+  color: #475569 !important; /* Gris ardoise plus foncé pour être bien lisible */
   font-weight: 600;
-  color: var(--text-color);
 }
 
-/* Labels */
-.label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-color-secondary);
-  text-transform: uppercase;
+/* Style de la carte au survol */
+.job-card {
+  display: block;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 12px;
 }
 
-/* Catégorie */
-.job-category {
-  display: flex;
-  align-items: center;
+.job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
 }
 
-/* Description */
-.description {
-  margin: 0.25rem 0 0;
-  font-size: 0.85rem;
-  color: var(--text-color);
-  line-height: 1.4;
-}
 
-/* Tarif */
-.price-hour {
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-/* Footer */
-.card-footer {
-  border-top: 1px solid var(--surface-border);
-  padding-top: 0.75rem;
-  font-size: 0.8rem;
-  color: var(--text-color-secondary);
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.25rem;
-}
-
-.value {
-  font-weight: 500;
-  color: var(--text-color);
-}
-
-/* Prix total */
-.total-price {
-  text-align: right;
-  font-size: 0.9rem;
-  color: var(--text-color);
+.job-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* nombre de lignes visibles */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*!* Conteneur principal style PrimeNG *!*/
-/*.job-card {*/
-/*  background: #ffffff;*/
-/*  border-radius: 6px; !* Arrondi typique PrimeNG *!*/
-/*  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);*/
-/*  cursor: pointer;*/
-/*  transition: transform 0.2s, box-shadow 0.2s;*/
-/*  overflow: hidden;*/
-/*  height: 100%;*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  border: 1px solid #dee2e6; !* Surface border PrimeNG *!*/
-/*}*/
-
-/*.job-card:hover {*/
-/*  transform: translateY(-4px);*/
-/*  box-shadow: 0 4px 8px rgba(0,0,0,0.15);*/
-/*}*/
-
-/*!* Image *!*/
-/*.card-image img, .placeholder {*/
-/*  width: 100%;*/
-/*  height: 180px;*/
-/*  object-fit: cover;*/
-/*  border-bottom: 1px solid #dee2e6;*/
-/*}*/
-
-/*.placeholder {*/
-/*  background-color: #f8f9fa;*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  justify-content: center;*/
-/*  color: #6c757d;*/
-/*  font-style: italic;*/
-/*}*/
-
-/*!* Corps de la carte *!*/
-/*.card-body {*/
-/*  padding: 1.25rem;*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  gap: 0.5rem;*/
-/*}*/
-
-/*.title {*/
-/*  margin: 0;*/
-/*  font-size: 1.25rem;*/
-/*  font-weight: 700;*/
-/*  color: #343a40; !* Couleur texte sombre PrimeNG *!*/
-/*}*/
-
-/*.type-badge {*/
-/*  margin: 0;*/
-/*  font-size: 0.9rem;*/
-/*  color: #495057;*/
-/*  line-height: 1.4;*/
-/*}*/
-
-/*!* Footer avec prix et date *!*/
-/*.card-footer {*/
-/*  margin-top: auto;*/
-/*  padding-top: 1rem;*/
-/*  border-top: 1px solid #dee2e6;*/
-/*  display: flex;*/
-/*  justify-content: space-between;*/
-/*  align-items: center;*/
-/*}*/
-
-/*.price {*/
-/*  color: #2196F3; !* Bleu PrimeNG Primary *!*/
-/*  font-size: 1.1rem;*/
-/*}*/
-
-/*.date {*/
-/*  font-size: 0.85rem;*/
-/*  color: #6c757d;*/
-/*}*/
-
-/*!* Style spécifique pour les labels (ex: Title:, Type:) *!*/
-/*strong {*/
-/*  color: #343a40;*/
-/*}*/
+.job-address {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}

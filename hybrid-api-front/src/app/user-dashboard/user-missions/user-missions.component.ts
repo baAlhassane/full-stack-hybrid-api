@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Job, JobStatus, TypeOfJob} from "../../jobs/job.model";
+import {ADDRESS, Job, JobStatus, TypeOfJob} from "../../jobs/job.model";
 import { DateTime } from 'luxon';
 
 @Component({
@@ -23,9 +23,11 @@ missions: Job[] = [
     tarifPerHours: 25,
     totalPrice: 100,
     typeOfJob: TypeOfJob.IT,
-    status: JobStatus.PAST,
+    status: JobStatus.DONE,
     jobPublicId:"",
-    jobPictures:[]
+    jobPictures:[],
+    address: ADDRESS,
+    createdDate:""
   },
   {
     title:"job title",
@@ -36,9 +38,11 @@ missions: Job[] = [
     tarifPerHours: 20,
     totalPrice: 80,
     typeOfJob: TypeOfJob.CLEANING,
-    status: JobStatus.CURRENT,
+    status: JobStatus.FUTURE,
     jobPublicId:"",
-    jobPictures:[]
+    jobPictures:[],
+    address: ADDRESS,
+    createdDate:""
   },
   {
     title:"job title",
@@ -51,7 +55,9 @@ missions: Job[] = [
     typeOfJob: TypeOfJob.GARDENING,
     status: JobStatus.FUTURE,
     jobPublicId:"",
-    jobPictures:[]
+    jobPictures:[],
+    address: ADDRESS,
+    createdDate:""
   }
 ];
 
