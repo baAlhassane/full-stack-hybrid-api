@@ -68,6 +68,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/avatar/**").permitAll()
                         // 1. Les routes publiques (Login / Register / Actuator)
                         .requestMatchers("/api/hybrid-api/auth/login", "/api/hybrid-api/auth/register", "/actuator/health").permitAll()
                         // 2. Les routes "Lecture seule" (Optionnel : si tu veux que tout le monde voie les jobs)
@@ -115,7 +116,7 @@ public class SecurityConfig {
                     "http://127.0.0.1:*",
                     "http://hybrid-api-front-dev.local",
                     "http://hybrid-api-back-dev.local"));
-            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
             configuration.setAllowedHeaders(Arrays.asList("*"));
             configuration.setAllowCredentials(true);
 

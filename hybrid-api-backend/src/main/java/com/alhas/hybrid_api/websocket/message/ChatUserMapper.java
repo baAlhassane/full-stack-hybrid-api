@@ -15,7 +15,7 @@ public class ChatUserMapper {
                 .lastname(user.getLastname())
                 .uerfullname(user.getFirstname() + " " + user.getLastname())
                 .email(user.getEmail())
-                .imageUrl(user.getImageUrl())
+                //.imageUrl(user.getImageUrl())
                 .isAuthenticated(true) // ou selon ta logique
                 .userRole(user.getUserType())
                 .userType(user.getUserType())

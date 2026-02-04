@@ -16,6 +16,14 @@ export interface JobPictureDTO {
   urlDisplay:string
 }
 
+
+export interface AvatarPictureDTO {
+  file?: File,
+  fileContentType?:string,
+  urlDisplay:string,
+  url:string,
+}
+
 export interface Job {
   title:string;
   description:string;

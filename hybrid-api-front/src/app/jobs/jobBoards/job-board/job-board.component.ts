@@ -28,6 +28,6 @@ export class JobBoardComponent implements OnInit {
   }
   goToDetails(publicId: string) {
     console.log("go to details",publicId);
-    this.router.navigate(['/job-detail', publicId]);
+   // this.router.navigate(['/job-detail', publicId]);
   }
 }

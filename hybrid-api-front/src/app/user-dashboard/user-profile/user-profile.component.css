@@ -1,0 +1,26 @@
+/*.email-line {*/
+/*  display: inline-flex;*/
+/*  align-items: center;*/
+/*}*/
+
+/*.email-line i {*/
+/*  width: 1.25rem; !* réserve l’espace AVANT chargement *!*/
+/*  display: inline-block;*/
+/*}*/
+
+/*.pi {*/
+/*  display: inline-flex !important;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+/*  width: 1.25rem;*/
+/*  height: 1.25rem;*/
+/*  line-height: 1.25rem;*/
+/*  font-size: 1rem;*/
+/*  flex-shrink: 0;*/
+/*}*/
+
+/*.pi::before {*/
+/*  display: block;*/
+/*  width: 100%;*/
+/*  text-align: center;*/
+/*}*/

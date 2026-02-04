@@ -1,23 +1,19 @@
 package com.alhas.hybrid_api.job;
 
-import com.alhas.hybrid_api.picture.JobPictureDTO;
+import com.alhas.hybrid_api.picture.jobPicture.JobPictureDTO;
 import com.alhas.hybrid_api.users.Address;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter

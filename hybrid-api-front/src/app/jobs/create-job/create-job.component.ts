@@ -91,7 +91,7 @@ export class CreateJobComponent {
         // On reste sur la page pour que l'utilisateur puisse corriger
       }
     });
-    this.router.navigate(['/jobs']);// donne le job-boardCoponent
+
   }
 
 

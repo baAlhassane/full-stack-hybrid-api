@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.picture;
+package com.alhas.hybrid_api.picture.jobPicture;
 
 import org.springframework.stereotype.Service;
 

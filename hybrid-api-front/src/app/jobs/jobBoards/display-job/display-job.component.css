@@ -47,7 +47,7 @@
 
 .job-description {
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* nombre de lignes visibles */
+  -webkit-line-clamp: 1; /* nombre de lignes visibles */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -61,4 +61,7 @@
   text-overflow: ellipsis;
   display: block;
   max-width: 100%;
+}
+.no-wrap {
+  white-space: nowrap;
 }

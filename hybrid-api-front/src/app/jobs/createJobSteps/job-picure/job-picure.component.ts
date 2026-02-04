@@ -54,6 +54,8 @@ export class JobPicureComponent {
   constructor(library: FaIconLibrary) {
     library.addIcons(faTrashCan); // Disponible partout maintenant via icon="trash-can"
   }
+
+
   private validatedPicture() {
     if(this.jobPictures().length >=3){
       this.stepValidityChange.emit(true);

@@ -31,11 +31,25 @@
       </div>
 
       <!-- Type de job -->
+<!--      <div class="flex align-items-center gap-2">-->
+<!--        <small class="text-500">Type de job :</small>-->
+<!--        <span class="p-badge p-badge-info">-->
+<!--        {{ job().typeOfJob }}-->
+<!--      </span>-->
+<!--      </div>-->
+
       <div class="flex align-items-center gap-2">
-        <small class="text-500">Type de job :</small>
-        <span class="p-badge p-badge-info">
-        {{ job().typeOfJob }}
-      </span>
+        <small class="text-500">Secteur :</small>
+
+        <span class="p-badge p-badge-info flex align-items-center gap-2" style="padding: 0.5rem 0.8rem;">
+    <fa-icon [icon]="iconJob()"></fa-icon>
+    <span>{{ job().typeOfJob }}</span>
+  </span>
+
+<!--        <span class="p-badge p-badge-info flex align-items-center gap-2" style="padding: 0.5rem 0.8rem;">-->
+<!--  <fa-icon [icon]="iconJob()"></fa-icon>-->
+<!--  <span>{{ labelJob() }}</span>-->
+<!--</span>-->
       </div>
 
     </div>
@@ -97,12 +111,15 @@
         </span>
       </div>
 
-      <div class="col-4">
-        <small class="text-500 block mb-1">Nombre heures</small>
+
+
+      <div class="col-4 text-center" >
+        <small class="text-500 block mb-1 no-wrap">Nombre heures</small>
         <span class="font-medium">
           {{ +job().totalPrice/+job().tarifPerHours}} h
         </span>
       </div>
+
 
       <div class="col-4 text-right">
         <small class="text-500 block mb-1">Montant total</small>

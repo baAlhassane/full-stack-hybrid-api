@@ -1,11 +1,12 @@
-import {Job} from "../../jobs/job.model";
+import {AvatarPictureDTO, Job, JobPictureDTO} from "../../jobs/job.model";
 
 export interface BaseUser {
-  firstname: string
-  lastname: string
-  fullname: string
-  email: string
-  imageUrl: string
+  firstname: string;
+  lastname: string;
+  fullname: string;
+  email: string;
+   /* imageUrl: string*/
+  userPicture?: AvatarPictureDTO | null; // Doit correspondre au type du model
   isAuthenticated: boolean
   authorities: string[]
   accessToken: string,

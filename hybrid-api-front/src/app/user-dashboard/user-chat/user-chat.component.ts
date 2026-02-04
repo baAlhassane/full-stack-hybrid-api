@@ -36,7 +36,7 @@ export class UserChatComponent implements OnInit {
    lastname: "",
    fullname: "",
    email: "",
-   imageUrl: "",
+   userPicture: null ,
    isAuthenticated: false,
    userType:"USER",
    authorities: [""],

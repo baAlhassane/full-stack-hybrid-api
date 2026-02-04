@@ -1,6 +1,6 @@
 package com.alhas.hybrid_api.job;
 
-import com.alhas.hybrid_api.picture.JobPicture;
+import com.alhas.hybrid_api.picture.jobPicture.JobPicture;
 import com.alhas.hybrid_api.users.Address;
 import com.alhas.hybrid_api.users.jobber.Jobber;
 import com.alhas.hybrid_api.users.provider.Provider;

@@ -1,4 +1,4 @@
-package com.alhas.hybrid_api.picture;
+package com.alhas.hybrid_api.picture.jobPicture;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

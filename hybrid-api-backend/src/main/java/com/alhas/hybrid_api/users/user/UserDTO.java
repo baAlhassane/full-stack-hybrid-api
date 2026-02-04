@@ -1,6 +1,9 @@
-package com.alhas.hybrid_api.users.user.authRessource;
+package com.alhas.hybrid_api.users.user;
+
+
 
 import com.alhas.hybrid_api.picture.userPicture.UserPicture;
+import com.alhas.hybrid_api.picture.userPicture.UserPictureDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
+public class UserDTO {
     private String firstname;
     private String lastname;
     private String token;
@@ -18,12 +21,9 @@ public class LoginResponse {
     private String uerfullname;
     private String email;
     private String userType;
-    private boolean isAuthenticated;
-    private UserPicture userPicture;
-    public LoginResponse(String token, String username, String email) {
-        this.token = token;
-        this.uerfullname= username;
-        this.email = email;
-    }
+    private boolean isAuthenticated ;
+    private String url;
+    private UserPictureDTO userPicture;
+
 
 }

@@ -71,10 +71,16 @@ spring:
 ##          audiences:
 ##            - https://alhas.com/api
 #
-jwt:
-    secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
-    expiration-ms: 86400000
+#jwt:
+#    secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"  # Car ce n'est pas en base 64
+#    expiration-ms: 86400000
 #  secret: "WoslKZzExlBMQ5IdfaG2Gye5bIyEI0X17X0+6hyDAf7rWk2BvBbp9RPBrNZronFU/7Lxbk2CdNalrWm55Dk4Rw=="
+
+jwt:
+  secret: "bhmKjBdlIT205pfVH0FJYsIhsY+6tsYSNaL7XIFIfmjKQOgpaEkUye3fKKvOgw0gfdlzKLWNevfzH4/v6qxuCw=="
+  expiration-ms: 86400000
+
+
 
 server:
   port: 8081

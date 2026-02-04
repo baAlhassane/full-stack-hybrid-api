@@ -1,7 +1,8 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('hybrid_api_usre_token');
+  //const token = localStorage.getItem('hybrid_api_usre_token');
+  const token = sessionStorage.getItem('hybrid_api_user_token')
 
   // 1. LISTE DES ROUTES À EXCLURE (ne pas envoyer de token)
   const isAuthRoute = req.url.includes('/auth/login') || req.url.includes('/auth/register');

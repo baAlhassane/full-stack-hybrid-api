@@ -1,13 +1,11 @@
 package com.alhas.hybrid_api.job;
 
 import com.alhas.hybrid_api.infrastructure.config.SecurityUtils;
-import com.alhas.hybrid_api.picture.JobPicture;
-import com.alhas.hybrid_api.picture.JobPictureDTO;
-import com.alhas.hybrid_api.picture.JobPictureRepository;
+import com.alhas.hybrid_api.picture.jobPicture.JobPicture;
+import com.alhas.hybrid_api.picture.jobPicture.JobPictureDTO;
+import com.alhas.hybrid_api.picture.jobPicture.JobPictureRepository;
 import com.alhas.hybrid_api.users.provider.Provider;
 import com.alhas.hybrid_api.users.provider.ProviderRepository;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;

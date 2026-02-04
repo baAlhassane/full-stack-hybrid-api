@@ -1,21 +1,16 @@
 package com.alhas.hybrid_api.job;
 
 
-import com.alhas.hybrid_api.picture.JobPictureDTO;
-import com.alhas.hybrid_api.picture.JobPictureMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
+import com.alhas.hybrid_api.picture.jobPicture.JobPictureDTO;
+import com.alhas.hybrid_api.picture.jobPicture.JobPictureMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;

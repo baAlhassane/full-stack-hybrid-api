@@ -1,0 +1,54 @@
+
+.avatar-container {
+  /* Ombre douce pour le relief */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+}
+
+/* On anime uniquement le badge au survol */
+.camera-icon-badge:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.camera-icon-badge:active {
+  transform: scale(0.95);
+}
+
+/* L'image reste fixe et nette */
+img {
+  display: block;
+}
+
+
+
+
+
+
+
+
+
+
+/*.avatar-container {*/
+/*  !* Ombre portée pour donner du relief au rectangle *!*/
+/*  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);*/
+/*  transition: all 0.2s ease-in-out;*/
+/*}*/
+
+/*.avatar-overlay {*/
+/*  opacity: 0;*/
+/*  transition: opacity 0.2s;*/
+/*}*/
+
+/*.avatar-wrapper:hover .avatar-overlay {*/
+/*  opacity: 1;*/
+/*}*/
+
+/*.avatar-wrapper:hover .avatar-container {*/
+/*  transform: translateY(-2px);*/
+/*  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);*/
+/*}*/
+
+/*.camera-icon-badge {*/
+/*  z-index: 2;*/
+/*}*/

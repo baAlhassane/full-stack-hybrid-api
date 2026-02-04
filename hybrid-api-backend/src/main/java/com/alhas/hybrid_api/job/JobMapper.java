@@ -1,12 +1,6 @@
 package com.alhas.hybrid_api.job;
 
-import com.alhas.hybrid_api.picture.JobPicture;
-import com.alhas.hybrid_api.picture.JobPictureDTO;
 import org.springframework.stereotype.Service;
-
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class JobMapper {

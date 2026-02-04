@@ -28,7 +28,7 @@ export class UserDashboardComponent implements OnInit {
     this.authService.emitUserSubject().subscribe({
         next: (user)=>{
           this.user = user;
-          console.log("user in login ", user);
+         // console.log("user in login ", user);
         }
 
       }

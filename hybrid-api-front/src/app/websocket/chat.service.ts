@@ -52,7 +52,7 @@ export class ChatService {
       firstname: user.firstname,
       lastname:  user.lastname,
       email:  user.email,
-      imageUrl:  user.imageUrl,
+      userPicture:  user.userPicture,
       userType:  user.userType
     };
     // prévenir le serveur qu’on rejoint

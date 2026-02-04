@@ -64,7 +64,7 @@ export class ChatComponent implements OnInit, OnDestroy  {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-   this.chatService.leaveRoom(this.roomId(), this.user()); // deplacer dans logout
+    // this.chatService.leaveRoom(this.roomId(), this.user()); // deplacer dans logout
   }
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;

@@ -7,6 +7,7 @@ import {AppUser, FormLogin, FormRegister, RegistrationResponse, User} from "../m
 // import {environment} from "../../../environments/environment";
 import {environment} from "../../../environments/environment.development";
 import {ChatService} from "../../websocket/chat.service";
+import {AvatarPictureDTO, JobPictureDTO} from "../../jobs/job.model";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class AuthService {
   private validationErrorsSubject=new BehaviorSubject<any>(this.validationErrors) ;
   validationErrorsObs=this.validationErrorsSubject.asObservable();
   private chatService: ChatService=inject(ChatService);
+  private hybrid_api_user_token = 'hybrid_api_user_token';
 
 
   constructor(private http: HttpClient) {
@@ -59,7 +61,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     });
 
-    this.http.get<User>(`${this.API_URL}/auth/get-authenticated-user-auth0`, { headers: headers }).pipe(
+    this.http.get<AppUser>(`${this.API_URL}/auth/get-authenticated-user`, { headers: headers }).pipe(
       tap(userData => {
         this.userSubject.next(userData);
         this.isAuthenticated.next(true);
@@ -104,7 +106,7 @@ export class AuthService {
     this.http.post(`${environment.API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe({
       next: () => {
         // --- AJOUTS ICI POUR LE RECHARGEMENT ---
-        this.clearToken(); // Supprime 'hybrid_api_usre_token'
+        this.clearToken(); // Supprime 'hybrid_api_user_token'
         localStorage.removeItem('currentUser'); // Supprime l'objet user JSON
         // ---------------------------------------
 
@@ -126,30 +128,23 @@ export class AuthService {
     });
   }
 
-  // logout(): void {
-  //   const currentUser = this.userSubject.value;
-  //
-  //   if(currentUser){
-  //     this.chatService.leaveAllRooms(currentUser);
-  //   }
-  //  this.http.post(`${environment.API_URL}/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
-  //
-  //     this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
-  //     this.isAuthenticated.next(false);
-  //     this.validationErrorsSubject.next({});
-  //     setTimeout(() => {
-  //       this.router.navigate(['/signin']); // Redirection propre
-  //     }, 100);
-  //   }, error => {
-  //     console.error('Erreur de déconnexion', error);
-  //   });
-  // }
 
  public emitisAutSubject(): Observable<boolean> {
    return this.isAuthenticated$;
   }
   public emitUserSubject(): Observable<AppUser | null> {
     return this.user$;
+  }
+
+  getAuthenticatedUser(): AppUser | null {
+   // this.isAuthenticated.next(true);
+    return this.userSubject.value;
+  }
+
+// Quand le serveur répond après un login ou update :
+  updateUser(user: AppUser) {
+    this.isAuthenticated.next(true);
+    this.userSubject.next(user);
   }
 
   public hasAnyAuthority(authorities:string[] | string ):boolean{
@@ -178,7 +173,7 @@ export class AuthService {
     console.log("Utilisateur déconnecté dasn headerr.toggleShowLogging() ! ");
   }
 
-  private hybrid_api_usre_token = 'hybrid_api_usre_token';
+
   // formulaire d'authentification
   loginForm(email: string, password: string): void {
     this.http.post<AppUser>(`${this.API_URL}/auth/login`, { email, password }, { withCredentials: true }).subscribe({
@@ -186,11 +181,13 @@ export class AuthService {
         const token = response.token || response.accessToken;
         if (token) {
           // CORRECT : On passe la valeur 'token' à la méthode
-          this.setToken(token);
-
-          // ASTUCE : Pour ne pas perdre l'utilisateur au rechargement (F5),
-          // sauvegarde aussi l'objet user (sans le token pour la sécurité)
-          localStorage.setItem('currentUser', JSON.stringify(response));
+          // this.setToken(token);
+          // // ASTUCE : Pour ne pas perdre l'utilisateur au rechargement (F5),
+          // // sauvegarde aussi l'objet user (sans le token pour la sécurité)
+          // localStorage.setItem('currentUser', JSON.stringify(response));
+          // Dans ton loginForm
+          sessionStorage.setItem('currentUser', JSON.stringify(response));
+          this.setToken(token); // Assure-toi que setToken utilise aussi sessionStorage
 
           this.userSubject.next(response);
           this.isAuthenticated.next(true);
@@ -267,12 +264,12 @@ getvalidationErrorsObs():Observable<any> {
   }
 
 
-  public fetchAuth0(){
-    console.log(" this.isAuthenticated nlogin  ", this.isAuthenticated);
-    window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
-    console.log("Utilisateur connecté ! ");
-   // this.getUserInfo();
-  }
+  // public fetchAuth0(){
+  //   console.log(" this.isAuthenticated nlogin  ", this.isAuthenticated);
+  //   window.location.href = 'http://localhost:8080/oauth2/authorization/auth0';
+  //   console.log("Utilisateur connecté ! ");
+  //  // this.getUserInfo();
+  // }
 
 
   public upDateisAUthenticated( isAuth: boolean): void {
@@ -295,18 +292,18 @@ getvalidationErrorsObs():Observable<any> {
     this.isAuthenticated.next(!this.isAuthenticated.value);
   }
 
-  logoutHybridApi(): void {
-    this.http.post(`${this.API_URL}/hybrid-api/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
-      this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
-      setTimeout(() => {
-        this.isAuthenticated.next(true);
-        window.location.href = '/login'; // Redirige vers la page de login
-
-      }, 100);
-    }, error => {
-      console.error('Erreur de déconnexion', error);
-    });
-  }
+  // logoutHybridApi(): void {
+  //   this.http.post(`${this.API_URL}/hybrid-api/auth/logout-hybrid-api`, {}, { responseType: 'text' }).subscribe(() => {
+  //     this.userSubject.next(null); // Supprime les infos utilisateur immédiatement
+  //     setTimeout(() => {
+  //       this.isAuthenticated.next(true);
+  //       window.location.href = '/login'; // Redirige vers la page de login
+  //
+  //     }, 100);
+  //   }, error => {
+  //     console.error('Erreur de déconnexion', error);
+  //   });
+  // }
 
 
 
@@ -319,89 +316,126 @@ getvalidationErrorsObs():Observable<any> {
     });
   }
 
-
-  //
-  // private tokenKey = 'auth_token';
-  //
-  // public setToken(token: string): void {
-  //   localStorage.setItem(this.tokenKey, token);
-  // }
-  //
-  // public getToken(): string | null {
-  //   return localStorage.getItem(this.tokenKey);
-  // }
-  //
-  // public clearToken(): void {
-  //   localStorage.removeItem(this.tokenKey);
-  // }
-  // // Méthode pour supprimer le token (lors de la déconnexion)
-  // removeToken(): void {
-  //   localStorage.removeItem('jwt_token');
-  //   this.userSubject.next(null);
-  //   this.isAuthenticated.next(false);
-  // }
-
-
-
+// Remplace localStorage par sessionStorage partout
   public setToken(token: string): void {
-    localStorage.setItem(this.hybrid_api_usre_token, token);
+    sessionStorage.setItem(this.hybrid_api_user_token, token);
   }
 
   public getToken(): string | null {
-    return localStorage.getItem(this.hybrid_api_usre_token);
+    return sessionStorage.getItem(this.hybrid_api_user_token);
   }
 
   public clearToken(): void {
-    localStorage.removeItem(this.hybrid_api_usre_token);
+    sessionStorage.removeItem(this.hybrid_api_user_token);
+    sessionStorage.removeItem('currentUser'); // Ne pas oublier de supprimer l'objet user aussi
   }
 
-// méthode de déconnexion correcte
   removeToken(): void {
-    localStorage.removeItem(this.hybrid_api_usre_token);
+    this.clearToken();
     this.userSubject.next(null);
     this.isAuthenticated.next(false);
   }
 
-
   private initAuth(): void {
     const token = this.getToken();
-    const userJson = localStorage.getItem('currentUser'); // On récupère les infos stockées
+    const userJson = sessionStorage.getItem('currentUser');
 
     if (token && userJson) {
-      // Si on a le token ET les infos, on restaure tout
       this.isAuthenticated.next(true);
       this.userSubject.next(JSON.parse(userJson));
-      console.log("Utilisateur restauré : ", JSON.parse(userJson).email);
     } else {
-      // Sinon, on s'assure d'être bien déconnecté
-      this.clearToken();
-      this.isAuthenticated.next(false);
+      this.removeToken();
     }
+
+
   }
 
-  // private initAuth(): void {
-  //   const token = this.getToken(); // Utilise ta méthode getToken()
-  //   if (token) {
-  //     // Optionnel : Vérifier l'expiration ici avec le code atob() vu plus haut
-  //     this.isAuthenticated.next(true);
-  //     // Récupérer l'utilisateur stocké pour que le profil s'affiche
-  //     const userJson = localStorage.getItem('currentUser');
-  //     if (userJson) {
-  //       this.userSubject.next(JSON.parse(userJson));
-  //     }
-  //   }
-  // }
+  getAvatarBlob(): Observable<Blob> {
+    const token = this.getToken(); // ton JWT
+
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    // ⚡ Important : on force le cast en Observable<Blob>
+    return this.http.get('http://localhost:8081/api/avatar/me', {
+      headers,
+      responseType: 'blob' //  pas de cast
+    });
+
+  }
 
 
-  // initAuth(): void {
-  //   const token = this.getToken();
-  //   console.log("auth token : ", token);
-  //   if (token && this.isAuthenticated.value) {
-  //     // Tu peux ajouter une vérification ici : expiration, JWT valide, etc.
-  //     this.isAuthenticated.next(true);
-  //   } else {
-  //     this.isAuthenticated.next(false);
-  //   }
-  // }
+
+
+  updateAvatar(file: File): Observable<AppUser> {
+
+    const formData = new FormData();
+    formData.append('avatar',  file, file.name); // Le Backend recevra un MultipartFile
+
+    //return this.http.C(`${this.API_URL}/auth/update-avatar`, formData);/**/
+    return this.http.patch<AppUser>(`${this.API_URL}/auth/update-avatar`, formData, {
+      responseType: 'json' // Assure-toi que c'est bien du JSON
+      // Si ton backend renvoie juste du texte, mets 'text' ici
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  code marche car remplacé par sessionStorage à la place de localStrorage
+//   public setToken(token: string): void {
+//     localStorage.setItem(this.hybrid_api_user_token, token);
+//   }
+//
+//   public getToken(): string | null {
+//     return localStorage.getItem(this.hybrid_api_user_token);
+//   }
+//
+//   public clearToken(): void {
+//     localStorage.removeItem(this.hybrid_api_user_token);
+//   }
+//
+// // méthode de déconnexion correcte
+//   removeToken(): void {
+//     localStorage.removeItem(this.hybrid_api_user_token);
+//     this.userSubject.next(null);
+//     this.isAuthenticated.next(false);
+//   }
+//
+//
+//   private initAuth(): void {
+//     const token = this.getToken();
+//     const userJson = localStorage.getItem('currentUser'); // On récupère les infos stockées
+//
+//     if (token && userJson) {
+//       // Si on a le token ET les infos, on restaure tout
+//       this.isAuthenticated.next(true);
+//       this.userSubject.next(JSON.parse(userJson));
+//       console.log("Utilisateur restauré : ", JSON.parse(userJson).email);
+//     } else {
+//       // Sinon, on s'assure d'être bien déconnecté
+//       this.clearToken();
+//       this.isAuthenticated.next(false);
+//     }
+//   }
+//
+
 
 }

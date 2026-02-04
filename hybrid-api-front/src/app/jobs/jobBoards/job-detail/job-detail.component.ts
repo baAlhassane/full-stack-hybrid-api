@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {JobService} from "../../job.service";
 import {INIT_JOB, Job} from "../../job.model";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
 interface OnInitt {
 }
@@ -9,7 +10,9 @@ interface OnInitt {
 @Component({
   selector: 'app-job-detail',
   standalone: true,
-  imports: [],
+  imports: [
+    ProgressSpinnerModule
+  ],
   templateUrl: './job-detail.component.html',
   styleUrl: './job-detail.component.css'
 })
@@ -22,6 +25,7 @@ export class JobDetailComponent implements OnInit {
 
  jobByPublicId:Job={...INIT_JOB};
   private loading: boolean=true;
+  isLoading: boolean=true;
 
   constructor() {
   }
@@ -34,18 +38,22 @@ export class JobDetailComponent implements OnInit {
 
 
     if (publicId) {
+       const allJobs = this.jobService.getAllJobs();
+      this.isLoading = false;
       // 2. Appeler le service
       this.jobService.getOneJobByPublicId(publicId).subscribe({
         next: (data) => {
           this.jobByPublicId = data;
-          this.loading = false;
+          this.isLoading = false;
 
         },
         error: (err) => {
           console.error('Erreur lors de la récupération du job ici error ngOnInit()', err);
-          this.loading = false;
+          this.isLoading = false;
         }
       });
+
+
     }
   }
 

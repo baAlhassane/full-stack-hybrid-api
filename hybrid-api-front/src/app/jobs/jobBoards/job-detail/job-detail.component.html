@@ -3,19 +3,44 @@
 
 <!--</div>-->
 
-@if (jobByPublicId.jobPublicId){
+<!--@if (jobByPublicId.jobPublicId){-->
 
+<!--  <h1>{{ jobByPublicId.title }}</h1>-->
+<!--  <p><strong>Entreprise :</strong> {{  jobByPublicId.description }}</p>-->
+<!--  <div class="description">-->
+<!--    &lt;!&ndash;    {{ jobByPublicid.description }}&ndash;&gt;-->
+<!--  </div>-->
+
+<!--<br> -->
+<!--  <button class="p-button"> Postuler </button>-->
+<!--}-->
+<!--<div *ngIf="!loading; else skeleton">-->
+<!--  <h1>{{ jobByPublicId.title }}</h1>-->
+<!--</div>-->
+
+@if (!isLoading) {
   <h1>{{ jobByPublicId.title }}</h1>
-  <p><strong>Entreprise :</strong> {{  jobByPublicId.description }}</p>
+  <p><strong>Entreprise :</strong> {{ jobByPublicId.description }}</p>
   <div class="description">
-    <!--    {{ jobByPublicid.description }}-->
+    {{ jobByPublicId.description }}
   </div>
-
-<br> 
+  <br>
   <button class="p-button"> Postuler </button>
 }
+@else {
+  <div class="loader-container">
+    <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+    <p>Chargement des détails de l'offre...</p>
+  </div>
+}
 
-
-<ng-template #loader>
-  <p>Chargement du job...</p>
+<ng-template #skeleton>
+  <div class="loading-container" style="text-align: center; padding: 50px;">
+    <p-progressSpinner></p-progressSpinner>
+    <p>Chargement des détails du poste...</p>
+  </div>
 </ng-template>
+
+<!--<ng-template #loader>-->
+<!--  <p>Chargement du job...</p>-->
+<!--</ng-template>-->

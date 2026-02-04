@@ -21,7 +21,7 @@ import {RegistrationNotificationComponent} from "./websocket/registration-notifi
 export class AppComponent implements OnInit {
   authService=inject(AuthService);
   ngOnInit(): void {
-    // this.authService.getUserInfo();
+    this.authService.getUserInfo();
     //this.authService.initAuth();
   }
   title = 'my-projet';

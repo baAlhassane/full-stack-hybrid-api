@@ -2,8 +2,7 @@
 <div class="job-grid">
   @for (item of jobs(); track item.jobPublicId) {
     <app-display-job
-      [job]="item"
-      (selectedCard)="goToDetails($event)">
+      [job]="item">
     </app-display-job>
   }
 </div>

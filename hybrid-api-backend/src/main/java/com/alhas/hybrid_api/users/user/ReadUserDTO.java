@@ -1,5 +1,6 @@
 package com.alhas.hybrid_api.users.user;
 
+import com.alhas.hybrid_api.picture.userPicture.UserPicture;
 import lombok.Builder;
 
 import java.util.Set;
@@ -9,10 +10,9 @@ public record ReadUserDTO(
          String firstname,
          String lastname,
          String email,
-         String imageUrl,
+         UserPicture userPicture,
          boolean isAuthenticated,
          String userType,
-         String password,
          boolean passwordSet,
          Set<String> authorities
 

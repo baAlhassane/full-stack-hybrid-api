@@ -1,5 +1,6 @@
 package com.alhas.hybrid_api.users.user;
 
+import com.alhas.hybrid_api.picture.userPicture.UserPicture;
 import com.alhas.hybrid_api.users.Address;
 import com.alhas.hybrid_api.users.user.authRessource.Authority;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,7 +40,10 @@ public class User implements Serializable {
     private String lastname;
     @Column(unique = true)
     private String email;
-    private String imageUrl;
+//    private String imageUrl;
+@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+@JoinColumn(name = "avatar_picture_id")
+private UserPicture avatar;
     @JsonIgnore
     private String password;
     @Column(name = "user_type", insertable = false, updatable = false)
@@ -78,5 +82,7 @@ public class User implements Serializable {
 
     @Column(name="password_set" ,nullable = false)
     private boolean passwordSet = false;
+
+
 
 }

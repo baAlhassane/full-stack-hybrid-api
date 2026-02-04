@@ -64,9 +64,9 @@ this.initFontAwesome();
     })
   }
 
-  logoutHybridApi(): void {
-    this.authService.logoutHybridApi();
-  }
+  // logoutHybridApi(): void {
+  //   this.authService.logoutHybridApi();
+  // }
 
 
 

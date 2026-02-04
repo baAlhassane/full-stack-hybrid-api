@@ -1,0 +1,86 @@
+<p>avatar works!</p>
+
+
+<div class="avatar-wrapper relative inline-block">
+
+  <div
+    class="avatar-container border-round shadow-4 overflow-hidden bg-gray-200 flex align-items-center justify-content-center"
+    style="width: 80px; height: 80px; border: 2px solid white;">
+
+    <!-- Si avatar existant -->
+    <img *ngIf="user()?.userPicture?.urlDisplay"
+         [src]="user()?.userPicture?.urlDisplay"
+         class="w-full h-full object-cover"
+         alt="Avatar">
+
+    <!-- Sinon, icône placeholder -->
+    <fa-icon *ngIf="!user()?.userPicture?.urlDisplay"
+             [icon]="faUser"
+             class="text-3xl text-gray-400">
+    </fa-icon>
+
+  </div>
+
+  <!-- ⚡ SEULE ICONE CLIQUABLE -->
+  <div
+    class="camera-icon-badge absolute flex align-items-center justify-content-center
+           border-circle shadow-2 bg-primary cursor-pointer"
+    style="width: 24px; height: 24px; bottom: -5px; right: -5px; border: 2px solid white;"
+    (click)="fileInput.click()"
+    title="Changer la photo">
+
+    <fa-icon [icon]="faCamera" class="text-white text-xs"></fa-icon>
+  </div>
+
+  <!-- Input caché pour sélectionner le fichier -->
+  <input #fileInput
+         type="file"
+         hidden
+         accept="image/*"
+         (change)="onAvatarUpload($event)">
+</div>
+
+
+
+
+
+<!--<div class="avatar-wrapper relative inline-block">-->
+<!--  <div-->
+<!--    class="avatar-container border-round shadow-4 overflow-hidden bg-gray-200 flex align-items-center justify-content-center"-->
+<!--    style="width: 80px; height: 80px; border: 2px solid white;">-->
+
+<!--    @if (user()?.userPicture?.urlDisplay) {-->
+<!--      <img-->
+<!--        [src]="user()?.userPicture?.urlDisplay"-->
+<!--        class="w-full h-full object-cover"-->
+<!--        alt="Avatar">-->
+<!--    } @else {-->
+<!--&lt;!&ndash;      <i class="pi pi-user text-3xl text-400"></i>&ndash;&gt;-->
+<!--      <fa-icon-->
+<!--        [icon]="faUser"-->
+<!--        class="text-3xl text-400">-->
+<!--      </fa-icon>-->
+
+<!--    }-->
+
+<!--  </div>-->
+
+<!--  &lt;!&ndash; 🎯 SEUL ÉLÉMENT CLIQUABLE &ndash;&gt;-->
+<!--  <div-->
+<!--    class="camera-icon-badge absolute flex align-items-center justify-content-center-->
+<!--           border-circle shadow-2 bg-primary cursor-pointer"-->
+<!--    style="width: 24px; height: 24px; bottom: -5px; right: -5px; border: 2px solid white;"-->
+<!--    (click)="fileInput.click()"-->
+<!--    title="Changer la photo">-->
+
+<!--    <i class="pi pi-camera" style="font-size: 0.7rem; color: white;"></i>-->
+<!--  </div>-->
+
+<!--  <input-->
+<!--    #fileInput-->
+<!--    type="file"-->
+<!--    hidden-->
+<!--    accept="image/*"-->
+<!--    (change)="onUpload($event)">-->
+<!--</div>-->
+

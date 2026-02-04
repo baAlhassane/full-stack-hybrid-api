@@ -1,15 +1,15 @@
 package com.alhas.hybrid_api.users.user.authRessource;
 
-import com.alhas.hybrid_api.users.user.ReadUserDTO;
-import com.alhas.hybrid_api.users.user.User;
-import com.alhas.hybrid_api.users.user.UserRepository;
-import com.alhas.hybrid_api.users.user.UserService;
+import com.alhas.hybrid_api.infrastructure.config.SecurityUtils;
+import com.alhas.hybrid_api.picture.userPicture.UserPicture;
+import com.alhas.hybrid_api.users.user.*;
 import com.alhas.hybrid_api.users.user.mapper.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.validation.Valid;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,16 +18,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import java.io.IOException;
 
-
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/hybrid-api/auth")
 public class AuthResource {
 
     private final UserService userService;
+
 
     private final UserRepository userRepository;
     private final JwtService jwtService; // Nécessaire pour générer le JWT
@@ -51,69 +54,31 @@ public class AuthResource {
     }
 
 
-@PostMapping("/login")
-public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest,  HttpServletRequest httpRequest) {
-    System.out.println("Login successsss ");
-    System.out.println("loginRequest = " + loginRequest + ", " + loginRequest.getPassword());
+    @GetMapping("/get-authenticated-user")
+    public ResponseEntity<UserDTO> getUser (){
+//        String currentUserEmail = SecurityUtils.getCurrentUserEmail();
+//        String email=principal.getUsername();
+//
+//        User user=userRepository.findOneByEmail(currentUserEmail);
 
-    System.out.println("Attempting login for loginRequest.getEmail(): " + loginRequest.getEmail());
+        return ResponseEntity.ok(userService.getUser());
 
-    try {
-        // 1. Authentification de l'utilisateur
-        // C'est cette ligne qui utilise votre CustomUserDetailsService et PasswordEncoder
-        System.out.println("Attempting login for try authenticationManager : "  );
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-        );
-
-        // 2. Si l'authentification réussit, obtenez les UserDetails
-        // authentication.getPrincipal() contient l'objet UserDetails retourné par votre CustomUserDetailsService
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        System.out.println("Attempting login for userDetails: " + userDetails);
-        // 3. Générez le jeton JWT
-        String jwtToken = jwtService.generateToken(userDetails);
-
-        // 4. Si vous avez besoin de l'objet User complet pour la réponse (par exemple, pour son ID, nom, etc.)
-        // Assurez-vous que l'email est le même que celui utilisé pour l'authentification
-        User user = userRepository.findOneByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found after authentication: " + loginRequest.getEmail()));
-        // Note: Une UsernameNotFoundException ici après une authentification réussie est très improbable
-        // car l'utilisateur a déjà été trouvé par CustomUserDetailsService.
-
-        // 5. Construisez la réponse avec le jeton JWT et d'autres infos utilisateur si nécessaire
-        // Adaptez LoginResponse pour inclure le JWT et les informations de l'utilisateur
-
-        String fullName=  user.getFirstname() + " " + user.getLastname();
-        System.out.println(fullName+ " is logged successfully ");
-         LoginResponse loginResponse = new LoginResponse();
-         loginResponse.setEmail(user.getEmail());
-         loginResponse.setFirstname(user.getFirstname());
-         loginResponse.setLastname(user.getLastname());
-         //loginResponse.set(user.getUserType());
-        loginResponse.setUserType(user.getUserType());
-         loginResponse.setToken(jwtToken);
-         loginResponse.setUerfullname(fullName);
-        System.out.println(" jwtToken  : " + jwtToken );
-        return ResponseEntity.ok(loginResponse);
-
-
-
-        // Exemple: new LoginResponse(jwtToken, "Login successful", user.getEmail(), user.getFirstname(), user.getRoles(), etc.);
-
-    } catch (BadCredentialsException ex) {
-        // Gérer les informations d'identification incorrectes
-        System.err.println("Login failed for " + loginRequest.getEmail() + ": " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(null, "Invalid email or password", null));
-    } catch (UsernameNotFoundException ex) {
-        // Gérer l'utilisateur non trouvé (peut être intercepté par BadCredentialsException selon la config Spring Security)
-        System.err.println("User not found during login attempt: " + loginRequest.getEmail() + ": " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(null, "User not found", null));
-    } catch (Exception ex) {
-        // Gérer toute autre exception inattendue
-        System.err.println("An unexpected error occurred during login: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponse(null, "An internal server error occurred", null));
     }
-}
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            LoginResponse response = userService.authenticate(loginRequest);
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse(null, "Email ou mot de passe incorrect", null));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new LoginResponse(null, "Erreur interne du serveur", null));
+        }
+    }
+
 
 
 
@@ -126,6 +91,30 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginReques
         userService.registerUser(registrationRequest);
     return ResponseEntity.ok(new RegistrationResponse(true, fullName,"User registered successfully", registrationRequest.getUserRole()));
 }
+
+
+    @PatchMapping("/update-avatar")
+    public ResponseEntity<UserDTO> updateAvatar(@RequestParam("avatar") MultipartFile file) {
+        try {
+            // 1. Récupérer l'email de l'utilisateur connecté via ton SecurityUtils
+            String email = SecurityUtils.getCurrentUserEmail();
+
+            // 2. Appeler le service pour la logique métier
+            UserDTO updatedUser = userService.updateUserAvatar(email, file);
+
+            System.out.println("  @PatchMapping(update-avatar)  updatedUser.setUserPictureDTO();      : " + updatedUser.getUserPicture().getFile().length);
+            // 3. Retourner l'utilisateur mis à jour
+            return ResponseEntity.ok(updatedUser);
+
+
+        } catch (IOException e) {
+            // Erreur lors de la lecture des bytes du fichier
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 
 
 }

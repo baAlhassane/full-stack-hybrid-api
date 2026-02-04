@@ -56,7 +56,7 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, claims -> claims.getSubject());
+        return extractClaim(token, claims -> claims.getSubject()); // evoie l'email en realité
     }
 
     public <T> T extractClaim(String token, Function<io.jsonwebtoken.Claims, T> claimsResolver) {
@@ -65,7 +65,7 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claimsResolver.apply(claims);
+        return claimsResolver.apply(claims); 
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

@@ -1,6 +1,7 @@
-package com.alhas.hybrid_api.picture;
+package com.alhas.hybrid_api.picture.jobPicture;
 
 import com.alhas.hybrid_api.job.Job;
+import com.alhas.hybrid_api.picture.AbstractPicture;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,9 +11,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class JobPicture {
+public class JobPicture extends AbstractPicture {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jobPictureSequenceGenerator")
     @SequenceGenerator(name = "jobPictureSequenceGenerator",sequenceName = "job_picture_generator", allocationSize = 1)
@@ -23,15 +23,15 @@ public class JobPicture {
     @JoinColumn(name = "job_fk" ,  referencedColumnName = "job_id")
     private Job jobListing;
 
-    @Lob
-    @Column(name ="file" ,nullable = false)
-    private byte[] file;
-
-    @Column(name = "file_content_type")
-    private String fileContentType;
-
-    @Column(name = "name")
-    private String name;
+//    @Lob
+//    @Column(name ="file" ,nullable = false)
+//    private byte[] file;
+//
+//    @Column(name = "file_content_type")
+//    private String fileContentType;
+//
+//    @Column(name = "name")
+//    private String name;
 
 //    @Column(name = "is_cover")
 //    private boolean isCover;

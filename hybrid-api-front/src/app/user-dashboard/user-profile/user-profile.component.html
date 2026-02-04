@@ -1,9 +1,95 @@
 <p>user-profile works!</p>
-<h2>👤 Mon profil</h2>
-<li><a routerLink="profile"><i class="pi pi-briefcase"></i> Profil</a></li>
-<img [src]="user?.imageUrl" alt="Photo" width="100">
-<p><strong>Nom :</strong> {{ user?.firstname }} {{ user?.lastname }}</p>
-<p><strong>Email :</strong> {{ user?.email }}</p>
-<p><strong>Type :</strong> {{ user?.userType }}</p>
-<p><strong>Rôle :</strong> {{ user?.userType }}</p>
+
+
+@if (user()!==null) {
+
+
+
+<div class="surface-card p-5 shadow-2 border-round">
+  <div class="flex flex-column md:flex-row gap-5">
+
+    <div class="flex flex-column align-items-center">
+      <app-avatar [(user)]="user"></app-avatar>
+<!--      <pre>{{ user()?.userPicture?.urlDisplay?.substring(0, 50) }}...</pre>-->
+
+      @if(!user()?.userPicture){
+        <small class="text-red-500 mt-2 font-italic">
+<!--          <i class="pi pi-exclamation-circle text-xs"></i> -->
+          <fa-icon
+            [icon]="faCircleExclamation"
+            class="text-red-500 text-xs mr-1">
+          </fa-icon>
+          Aucune photo
+        </small>
+      }
+    </div>
+
+    <div class="flex-grow-1">
+      <div class="flex align-items-center justify-content-between mb-3">
+        <h2 class="m-0 text-3xl font-bold text-900">👤 Mon profil</h2>
+        <span class="p-tag p-tag-info p-tag-rounded px-3">
+           {{ user()?.userType }}
+        </span>
+      </div>
+
+      <p class="text-600 mb-4 border-bottom-1 border-200 pb-2">
+        Gérez vos informations personnelles et votre photo de profil.
+      </p>
+
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <label class="block text-500 font-medium mb-1">Prénom</label>
+          <div class="text-900 font-semibold p-2 surface-100 border-round">
+            {{ user()?.firstname }}
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label class="block text-500 font-medium mb-1">Nom</label>
+          <div class="text-900 font-semibold p-2 surface-100 border-round">
+            {{ user()?.lastname }}
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="block text-500 font-medium mb-1">Email</label>
+          <div class="text-900 font-semibold p-2 surface-100 border-round">
+<!--            <i class="pi pi-envelope mr-2 text-primary"></i> {{ user.email }}-->
+
+            <fa-icon [icon]="faEnvelope" class="mr-2 text-primary"></fa-icon>
+            {{ user()?.email }}
+
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex gap-2">
+        <button pButton label="Modifier mes infos" icon="pi pi-user-edit" class="p-button-outlined"></button>
+        <li><a routerLink="../chat" class="no-underline"><button pButton label="Mes messages" icon="pi pi-comments" class="p-button-secondary"></button></a></li>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+} @else {
+  <p-skeleton width="100%" height="300px"></p-skeleton>
+}
+
+
+<!--@if(!avatarPicture()){-->
+<!--  <span class="text-red-500 "> Vous n'avez pas encore ajouter votre photo de profil</span>-->
+<!--  <app-avatar [(avatar)]="avatarPicture" ></app-avatar>-->
+
+<!--}-->
+<!--<h2>👤 Mon profil</h2>-->
+
+<!--<li><a routerLink="profile"><i class="pi pi-briefcase"></i> Profil</a></li>-->
+<!--<img [src]="avatarPicture()?.urlDisplay" alt="Photo" width="100">-->
+<!--&lt;!&ndash;<app-avatar [(avatar)]="avatarPicture" ></app-avatar>&ndash;&gt;-->
+<!--<p><strong>Nom :</strong> {{ user?.firstname }} {{ user?.lastname }}</p>-->
+<!--<p><strong>Email :</strong> {{ user?.email }}</p>-->
+<!--<p><strong>Type :</strong> {{ user?.userType }}</p>-->
+<!--<p><strong>Rôle :</strong> {{ user?.userType }}</p>-->
 
